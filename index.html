@@ -32,6 +32,548 @@
       font-family: 'Be Vietnam Pro', sans-serif;
       color: var(--ink-main);
       background-color: var(--bg-sky);
+      background-image:
+        linear-gradient(180deg, rgba(224, 243, 252, 0.92) 0%, rgba(232, 248, 237, 0.94) 60%, rgba(213, 240, 222, 0.96) 100%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='240' viewBox='0 0 360 240'%3E%3Cg fill='none' stroke='%23578aa4' stroke-width='1' stroke-opacity='0.22'%3E%3Cpath d='M0 155 Q75 128 150 152 T300 144 T360 154'/%3E%3Cpath d='M0 176 Q95 154 185 174 T360 168'/%3E%3Cpath d='M48 152 L48 128 M38 136 Q48 118 58 136 Q48 140 38 136 Z'/%3E%3Cpath d='M255 144 L255 118 M243 128 Q255 108 267 128 Q255 133 243 128 Z'/%3E%3Cpath d='M120 198 Q185 185 255 199'/%3E%3Cpath d='M308 92 C308 74 332 74 332 92 C332 106 308 106 308 92 Z' stroke='%23488a6a'/%3E%3C/g%3E%3C/svg%3E");
+      background-attachment: fixed;
+      overflow-x: hidden;
+    }
+
+    .verse-text {
+      font-family: 'Open Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1.55;
+      color: #0f293a;
+      white-space: pre-line;
+    }
+
+    .meaning-text {
+      font-family: 'Roboto', sans-serif;
+      font-size: 14px;
+      font-style: italic;
+      line-height: 1.45;
+      color: #36596e;
+    }
+
+    .folk-card {
+      position: relative;
+      background: rgba(255, 255, 255, 0.92);
+      border: 1.5px solid var(--border-soft);
+      border-radius: 18px;
+      box-shadow: 0 6px 18px rgba(27, 108, 161, 0.08);
+      overflow: hidden;
+    }
+
+    .corner-bamboo {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 56px;
+      height: 56px;
+      pointer-events: none;
+      opacity: 0.42;
+    }
+
+    .corner-flower {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 60px;
+      height: 60px;
+      pointer-events: none;
+      opacity: 0.42;
+    }
+
+    .btn-pill {
+      border-radius: 14px;
+      font-weight: 600;
+      transition: all 0.15s ease;
+      box-shadow: 0 3px 0 rgba(18, 78, 117, 0.16);
+    }
+
+    .btn-pill:active:not(:disabled) {
+      transform: translateY(2px);
+      box-shadow: 0 1px 0 rgba(18, 78, 117, 0.14);
+    }
+
+    .btn-pill:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    #settingsModal[hidden],
+    #accountModal[hidden],
+    #feedbackModal[hidden] {
+      display: none !important;
+    }
+  </style>
+</head>
+
+<body class="pb-12">
+  <!-- Thanh đầu trang gồm tên ứng dụng, Tài khoản, Phản hồi, Cài đặt (⚙️) và 4 tab chính -->
+  <header class="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-[#bfe0ec] shadow-sm">
+    <div class="max-w-3xl mx-auto px-3 pt-2.5 pb-2">
+      <div class="flex items-center justify-between gap-1.5 mb-2">
+        <div class="flex items-center gap-2 min-w-0">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-[#d5eef9] to-[#d5f2df] border border-[#9fd0e3] flex items-center justify-center shrink-0">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1b6ca1" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 20V10" />
+              <path d="M12 14c-3.5 0-6-2-6-5 3 0 5.5 1.5 6 5z" fill="#d7f0df" stroke="#2a7a58" />
+              <path d="M12 14c3.5 0 6-2 6-5-3 0-5.5 1.5-6 5z" fill="#d7f0df" stroke="#2a7a58" />
+              <path d="M12 10c-2-2.5-2-5.5 0-7 2 1.5 2 4.5 0 7z" fill="#dff2fc" />
+            </svg>
+          </div>
+          <div class="min-w-0">
+            <div class="flex items-center gap-1.5 min-w-0">
+              <h1 class="text-base sm:text-lg font-bold text-[#124e75] leading-tight truncate">Nét Đẹp Tiếng Việt</h1>
+              <span id="accountBadge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#e3f4fd] text-[#155780] border border-[#b5dceb] truncate max-w-[150px] sm:max-w-[220px]"></span>
+            </div>
+            <p id="headerSummary" class="text-[11px] text-[#476d82] truncate">Đang tải kho ngữ liệu...</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-1.5 shrink-0">
+          <button
+            type="button"
+            onclick="openAccountModal()"
+            aria-label="Tài khoản"
+            title="Tài khoản"
+            class="btn-pill px-2.5 py-2 bg-[#eef8ec] hover:bg-[#dcf1d8] text-[#216648] border border-[#b6dec0] flex items-center gap-1 text-xs"
+          >
+            <span>👤</span>
+            <span class="hidden md:inline">Tài khoản</span>
+          </button>
+
+          <button
+            type="button"
+            onclick="openFeedbackModal()"
+            aria-label="Phản hồi"
+            title="Gửi phản hồi cho admin"
+            class="btn-pill px-2.5 py-2 bg-[#fff6e3] hover:bg-[#fceac2] text-[#855400] border border-[#efd08a] flex items-center gap-1 text-xs"
+          >
+            <span>✉️</span>
+            <span class="hidden md:inline">Phản hồi</span>
+          </button>
+
+          <button
+            type="button"
+            onclick="openSettingsModal()"
+            aria-label="Mở Cài đặt"
+            title="Cài đặt"
+            class="btn-pill px-2.5 py-2 bg-[#e7f4fa] hover:bg-[#d5ebf5] text-[#124e75] border border-[#b3d9ea] flex items-center gap-1 text-xs sm:text-sm"
+          >
+            <span>⚙️</span>
+            <span class="hidden sm:inline">Cài đặt</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 4 tab chính trên đầu -->
+      <nav aria-label="Điều hướng chính" class="grid grid-cols-4 gap-1.5">
+        <button type="button" id="tab-all" onclick="switchTab('all')" class="btn-pill py-2 px-2 text-xs sm:text-sm border truncate">
+          Tất cả
+        </button>
+        <button type="button" id="tab-study" onclick="switchTab('study')" class="btn-pill py-2 px-2 text-xs sm:text-sm border truncate">
+          Góc học tập
+        </button>
+        <button type="button" id="tab-games" onclick="switchTab('games')" class="btn-pill py-2 px-2 text-xs sm:text-sm border truncate">
+          Trò chơi
+        </button>
+        <button type="button" id="tab-mastered" onclick="switchTab('mastered')" class="btn-pill py-2 px-2 text-xs sm:text-sm border truncate">
+          Đã thuộc
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Khung thông báo hệ thống thay thế alert() -->
+  <div id="toastBanner" class="max-w-3xl mx-auto px-3 pt-2.5 hidden">
+    <div id="toastInner" class="px-3.5 py-2.5 rounded-xl border text-xs sm:text-sm font-medium flex items-center justify-between gap-2 shadow-sm">
+      <span id="toastMessage"></span>
+      <button type="button" onclick="hideToast()" class="text-xs font-bold px-2 py-0.5 rounded-lg bg-white/70 hover:bg-white">Đóng</button>
+    </div>
+  </div>
+
+  <!-- Nội dung chính theo tab -->
+  <main id="mainContainer" class="max-w-3xl mx-auto px-3 pt-3"></main>
+
+  <!-- Hộp thoại Tài khoản & Lịch sử bài học -->
+  <div id="accountModal" hidden class="fixed inset-0 z-50 bg-[#0d2738]/50 backdrop-blur-[2px] flex items-center justify-center p-3">
+    <div class="bg-[#f4fbfe] border-2 border-[#a4d1e4] rounded-2xl max-w-2xl w-full max-h-[88vh] overflow-y-auto shadow-2xl p-4 sm:p-5">
+      <div class="flex items-center justify-between border-b border-[#cce6f1] pb-3 mb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">👤</span>
+          <h2 class="text-base sm:text-lg font-bold text-[#124e75]">Tài khoản & Lịch sử bài học</h2>
+        </div>
+        <button type="button" onclick="closeAccountModal()" class="btn-pill px-3 py-1.5 bg-white hover:bg-[#e5f3f9] text-[#124e75] border border-[#b6dceb] text-xs sm:text-sm">
+          Đóng
+        </button>
+      </div>
+
+      <div class="space-y-4 text-xs sm:text-sm">
+        <!-- Form đăng nhập / cập nhật hồ sơ tài khoản -->
+        <section class="bg-white rounded-xl border border-[#cde7f2] p-3.5">
+          <h3 class="font-bold text-[#124e75] mb-1">Thông tin tài khoản</h3>
+          <p class="text-xs text-[#4d7185] mb-3">
+            Tài khoản thường dùng <b>Tên · Lớp · Trường</b> (và tùy chọn email). Nhập email <b>alitran2810@gmail.com</b> để đăng nhập <b>Admin</b> truy cập toàn quyền.
+          </p>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-2.5">
+            <div>
+              <label class="block text-xs font-semibold text-[#195378] mb-1" for="accNameInput">Tên</label>
+              <input id="accNameInput" type="text" placeholder="Ví dụ: Minh Anh" class="w-full px-3 py-2 rounded-xl border border-[#b9dceb] bg-[#f8fcfe] text-xs sm:text-sm" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-[#195378] mb-1" for="accClassInput">Lớp</label>
+              <input id="accClassInput" type="text" placeholder="Ví dụ: 4A2" class="w-full px-3 py-2 rounded-xl border border-[#b9dceb] bg-[#f8fcfe] text-xs sm:text-sm" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-[#195378] mb-1" for="accSchoolInput">Trường</label>
+              <input id="accSchoolInput" type="text" placeholder="Ví dụ: TH Nguyễn Bỉnh Khiêm" class="w-full px-3 py-2 rounded-xl border border-[#b9dceb] bg-[#f8fcfe] text-xs sm:text-sm" />
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="block text-xs font-semibold text-[#195378] mb-1" for="accEmailInput">Email (nhập alitran2810@gmail.com để mở quyền Admin)</label>
+            <input id="accEmailInput" type="email" placeholder="alitran2810@gmail.com (không bắt buộc với tài khoản thường)" class="w-full px-3 py-2 rounded-xl border border-[#b9dceb] bg-[#f8fcfe] text-xs sm:text-sm" />
+          </div>
+
+          <div class="flex flex-wrap gap-2">
+            <button type="button" onclick="saveAccountProfile()" class="btn-pill px-4 py-2 bg-[#1b6ca1] hover:bg-[#124e75] text-white text-xs sm:text-sm font-semibold">
+              Lưu / Chuyển tài khoản
+            </button>
+            <button type="button" onclick="quickLoginAdmin()" class="btn-pill px-3.5 py-2 bg-[#e1f4e8] hover:bg-[#ccebd7] text-[#216648] border border-[#9fd4b3] text-xs font-semibold">
+              Đăng nhập Admin (alitran2810@gmail.com)
+            </button>
+          </div>
+
+          <!-- Danh sách tài khoản đã lưu trên thiết bị -->
+          <div id="savedAccountsList" class="mt-3 pt-3 border-t border-[#e5f1f7]"></div>
+        </section>
+
+        <!-- Lịch sử bài học của tài khoản hiện tại -->
+        <section class="bg-white rounded-xl border border-[#cde7f2] p-3.5">
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <div>
+              <h3 class="font-bold text-[#124e75]">Lịch sử bài học của tài khoản</h3>
+              <p class="text-xs text-[#4d7185]">Ghi lại các bài đã đánh dấu thuộc, chơi trò chơi hoặc nhắc ôn tập.</p>
+            </div>
+            <button type="button" onclick="clearCurrentAccountHistory()" class="btn-pill px-2.5 py-1 bg-[#fdeaea] hover:bg-[#fad6d6] text-[#a62626] border border-[#ebb3b3] text-xs font-semibold">
+              Xóa lịch sử
+            </button>
+          </div>
+          <div id="accountHistoryList" class="max-h-60 overflow-y-auto space-y-1.5"></div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hộp thoại Phản hồi gửi về email admin -->
+  <div id="feedbackModal" hidden class="fixed inset-0 z-50 bg-[#0d2738]/50 backdrop-blur-[2px] flex items-center justify-center p-3">
+    <div class="bg-[#f4fbfe] border-2 border-[#a4d1e4] rounded-2xl max-w-lg w-full max-h-[88vh] overflow-y-auto shadow-2xl p-4 sm:p-5">
+      <div class="flex items-center justify-between border-b border-[#cce6f1] pb-3 mb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">✉️</span>
+          <h2 class="text-base sm:text-lg font-bold text-[#124e75]">Gửi ý kiến phản hồi</h2>
+        </div>
+        <button type="button" onclick="closeFeedbackModal()" class="btn-pill px-3 py-1.5 bg-white hover:bg-[#e5f3f9] text-[#124e75] border border-[#b6dceb] text-xs sm:text-sm">
+          Đóng
+        </button>
+      </div>
+
+      <p class="text-xs text-[#476d82] mb-3">
+        Ý kiến của bạn sẽ được gửi tới email quản trị viên: <b>alitran2810@gmail.com</b>.
+      </p>
+
+      <div class="space-y-2.5 text-xs sm:text-sm">
+        <div>
+          <label class="block text-xs font-semibold text-[#195378] mb-1" for="fbSenderInfo">Người gửi (Tên · Lớp · Trường)</label>
+          <input id="fbSenderInfo" type="text" placeholder="Tên · Lớp · Trường" class="w-full px-3 py-2 rounded-xl border border-[#b9dceb] bg-white text-xs sm:text-sm" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-[#195378] mb-1" for="fbSubject">Chủ đề góp ý</label>
+          <input id="fbSubject" type="text" placeholder="Ví dụ: Góp ý nội dung bài học / Lỗi hiển thị / Đề xuất trò chơi..." class="w-full px-3 py-2 rounded-xl border border-[#b9dceb] bg-white text-xs sm:text-sm" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-[#195378] mb-1" for="fbMessage">Nội dung phản hồi</label>
+          <textarea id="fbMessage" rows="4" placeholder="Nhập ý kiến phản hồi chi tiết của bạn..." class="w-full px-3 py-2 rounded-xl border border-[#b9dceb] bg-white text-xs sm:text-sm"></textarea>
+        </div>
+
+        <div class="flex flex-wrap gap-2 pt-1">
+          <button type="button" onclick="submitFeedbackToAdmin()" class="btn-pill px-4 py-2 bg-[#1b6ca1] hover:bg-[#124e75] text-white text-xs sm:text-sm font-semibold">
+            Gửi tới alitran2810@gmail.com
+          </button>
+          <button type="button" onclick="copyFeedbackDraft()" class="btn-pill px-3 py-2 bg-[#eef6fa] hover:bg-[#dfeef6] text-[#195378] border border-[#c3dfec] text-xs font-semibold">
+            Sao chép nội dung
+          </button>
+        </div>
+
+        <div id="adminFeedbackInboxSection" class="hidden mt-3 pt-3 border-t border-[#dceef6]">
+          <h3 class="text-xs font-bold text-[#124e75] mb-1.5">Nhật ký phản hồi đã ghi nhận (Admin)</h3>
+          <div id="adminFeedbackList" class="max-h-40 overflow-y-auto space-y-1.5"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hộp thoại Cài đặt -->
+  <div id="settingsModal" hidden class="fixed inset-0 z-50 bg-[#0d2738]/50 backdrop-blur-[2px] flex items-center justify-center p-3">
+    <div class="bg-[#f4fbfe] border-2 border-[#a4d1e4] rounded-2xl max-w-2xl w-full max-h-[88vh] overflow-y-auto shadow-2xl p-4 sm:p-5">
+      <div class="flex items-center justify-between border-b border-[#cce6f1] pb-3 mb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">⚙️</span>
+          <div>
+            <h2 class="text-base sm:text-lg font-bold text-[#124e75]">Cài đặt & Quản lý</h2>
+            <p id="settingsRoleSubtitle" class="text-[11px] text-[#4d7185]"></p>
+          </div>
+        </div>
+        <button type="button" onclick="closeSettingsModal()" class="btn-pill px-3 py-1.5 bg-white hover:bg-[#e5f3f9] text-[#124e75] border border-[#b6dceb] text-xs sm:text-sm">
+          Đóng
+        </button>
+      </div>
+
+      <!-- Thông báo khi đang ở tài khoản thường -->
+      <div id="regularUserSettingsNotice" class="hidden mb-3 p-3 rounded-xl bg-[#eef8ec] border border-[#b7dfc0] text-xs text-[#206245]">
+        Tài khoản thường được mở <b>Mục 1 (Chọn 20 bài học)</b>. Để quản lý toàn quyền kho bài, sao lưu, chủ đề và chu kỳ 10 ngày, hãy đăng nhập bằng email <b>alitran2810@gmail.com</b> trong mục <b>Tài khoản</b>.
+      </div>
+
+      <!-- Danh sách mục cài đặt -->
+      <div class="space-y-2 mb-3 text-xs sm:text-sm">
+        <button type="button" onclick="selectSettingsSection('study20')" id="settings-nav-study20" class="w-full p-3 rounded-xl border text-left flex items-center justify-between transition bg-white hover:bg-[#eaf5fa] border-[#c5e0ec] text-[#124e75] font-bold">
+          <span>1. Chọn 20 bài Góc học tập</span>
+          <span id="settingsNavStudyBadge" class="text-xs px-2 py-0.5 rounded-lg bg-[#dff3e6] text-[#216648]">20 bài</span>
+        </button>
+
+        <button type="button" onclick="selectSettingsSection('editor')" id="settings-nav-editor" class="w-full p-3 rounded-xl border text-left flex items-center justify-between transition bg-white hover:bg-[#eaf5fa] border-[#c5e0ec] text-[#124e75] font-bold">
+          <span>2. Thêm / Sửa / Xóa bài (Admin)</span>
+          <span class="text-xs text-[#4d7185]">Mở ▾</span>
+        </button>
+
+        <button type="button" onclick="selectSettingsSection('backup')" id="settings-nav-backup" class="w-full p-3 rounded-xl border text-left flex items-center justify-between transition bg-white hover:bg-[#eaf5fa] border-[#c5e0ec] text-[#124e75] font-bold">
+          <span>3. Sao lưu & Tải .JSON (&gt;90% trùng) (Admin)</span>
+          <span class="text-xs text-[#4d7185]">Mở ▾</span>
+        </button>
+
+        <button type="button" onclick="selectSettingsSection('topics')" id="settings-nav-topics" class="w-full p-3 rounded-xl border text-left flex items-center justify-between transition bg-white hover:bg-[#eaf5fa] border-[#c5e0ec] text-[#124e75] font-bold">
+          <span>4. Chủ đề, Ôn 10 ngày & Khôi phục dữ liệu (Admin)</span>
+          <span class="text-xs text-[#4d7185]">Mở ▾</span>
+        </button>
+      </div>
+
+      <div class="space-y-4 text-xs sm:text-sm">
+        <!-- 1. Chọn 20 bài Góc học tập -->
+        <section id="settings-panel-study20" hidden class="bg-white rounded-xl border border-[#cde7f2] p-3.5">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+            <div>
+              <h3 class="font-bold text-[#124e75]">1. Chọn 20 bài cho Góc học tập</h3>
+              <p class="text-xs text-[#4d7185]">Các trò chơi xoay quanh 20 bài này. Nếu bài đã có sao (đã thuộc), hệ thống nhắc chọn thêm bài mới hoặc tự lấy ngẫu nhiên các bài chưa sao cho đủ 20 bài.</p>
+            </div>
+            <span id="selectedStudyCountBadge" class="px-2.5 py-1 rounded-lg bg-[#dff3e6] text-[#23694b] font-bold text-xs">20 / 20 bài</span>
+          </div>
+
+          <div class="flex flex-wrap gap-2 mb-2.5">
+            <input id="studyPickerSearch" type="text" oninput="renderStudyPickerList()" placeholder="Tìm câu hoặc ý nghĩa để chọn vào Góc học tập..." class="flex-1 min-w-[180px] px-3 py-2 rounded-xl border border-[#b9dceb] bg-[#f8fcfe] text-xs sm:text-sm focus:outline-none focus:border-[#1b6ca1]" />
+            <button type="button" onclick="autoFillStudyTo20()" class="btn-pill px-3 py-2 bg-[#e1f4e8] hover:bg-[#ccebd7] text-[#216648] border border-[#9fd4b3] text-xs font-semibold">
+              Tự đủ 20 bài (ưu tiên chưa sao)
+            </button>
+            <button type="button" onclick="saveStudySelection()" class="btn-pill px-3.5 py-2 bg-[#1b6ca1] hover:bg-[#124e75] text-white text-xs font-semibold">
+              Lưu 20 bài học
+            </button>
+          </div>
+
+          <div id="studyPickerList" class="max-h-48 overflow-y-auto divide-y divide-[#eaf4f9] border bccSchoolInput">Trường</label>
+              <input id="accSchoolInput" type="text" placeholder="Ví dụ: TH Nguyễn Bỉnh Khiêm" class="w-full px-3 py-2 rounded-xl border border-[#b9dceb] bg-[#f8fcfe] text-xs sm:text-sm" />
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="block text-xs font-semibold text-[#195378] mb-1" for="accEmailInput">Email (nhập alitran2810@gmail.com để mở quyền Admin)</label>
+            <input id="accEmailInput" type="email" placeholder="alitran2810@gmail.com (không bắt buộc với tài khoản thường)" class="w-full px-3 py-2 rounded-xl border border-[#b9dceb] bg-[#f8fcfe] text-xs sm:text-sm" />
+          </div>
+
+          <div class="flex flex-wrap gap-2">
+            <button type="button" onclick="saveAccountProfile()" class="btn-pill px-4 py-2 bg-[#1b6ca1] hover:bg-[#124e75] text-white text-xs sm:text-sm font-semibold">
+              Lưu / Chuyển tài khoản
+            </button>
+            <button type="button" onclick="quickLoginAdmin()" class="btn-pill px-3.5 py-2 bg-[#e1f4e8] hover:bg-[#ccebd7] text-[#216648] border border-[#9fd4b3] text-xs font-semibold">
+              Đăng nhập Admin (alitran2810@gmail.com)
+            </button>
+          </div>
+
+          <!-- Danh sách tài khoản đã lưu trên thiết bị -->
+          <div id="savedAccountsList" class="mt-3 pt-3 border-t border-[#e5f1f7]"></div>
+        </section>
+
+        <!-- Lịch sử bài học của tài khoản hiện tại -->
+        <section class="bg-white rounded-xl border border-[#cde7f2] p-3.5">
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <div>
+              <h3 class="font-bold text-[#124e75]">Lịch sử bài học của tài khoản</h3>
+              <p class="text-xs text-[#4d7185]">Ghi lại các bài đã đánh dấu thuộc, chơi trò chơi hoặc nhắc ôn tập.</p>
+            </div>
+            <button type="button" onclick="clearCurrentAccountHistory()" class="btn-pill px-2.5 py-1 bg-[#fdeaea] hover:bg-[#fad6d6] text-[#a62626] border border-[#ebb3b3] text-xs font-semibold">
+              Xóa lịch sử
+            </button>
+          </div>
+          <div id="accountHistoryList" class="max-h-60 overflow-y-auto space-y-1.5"></div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hộp thoại Phản hồi gửi về email admin -->
+  <div id="feedbackModal" hidden class="fixed inset-0 z-50 bg-[#0d2738]/50 backdrop-blur-[2px] flex items-center justify-center p-3">
+    <div class="bg-[#f4fbfe] border-2 border-[#a4d1e4] rounded-2xl max-w-lg w-full max-h-[88vh] overflow-y-auto shadow-2xl p-4 sm:p-5">
+      <div class="flex items-center justify-between border-b border-[#cce6f1] pb-3 mb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">✉️</span>
+          <h2 class="text-base sm:text-lg font-bold text-[#124e75]">Gửi ý kiến phản hồi</h2>
+        </div>
+        <button type="button" onclick="closeFeedbackModal()" class="btn-pill px-3 py-1.5 bg-white hover:bg-[#e5f3f9] text-[#124e75] border border-[#b6dceb] text-xs sm:text-sm">
+          Đóng
+        </button>
+      </div>
+
+      <p class="text-xs text-[#476d82] mb-3">
+        Ý kiến của bạn sẽ được gửi tới email quản trị viên: <b>alitran2810@gmail.com</b>.
+      </p>
+
+      <div class="space-y-2.5 text-xs sm:text-sm">
+        <div>
+          <label class="block text-xs font-semibold text-[#195378] mb-1" for="fbSenderInfo">Người gửi (Tên · Lớp · Trường)</label>
+          <input id="fbSenderInfo" type="text" placeholder="Tên · Lớp · Trường" class="w-full px-3 py-2 rounded-xl border border-[#b9dceb] bg-white text-xs sm:text-sm" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-[#195378] mb-1" for="fbSubject">Chủ đề góp ý</label>
+          <input id="fbSubject" type="text" placeholder="Ví dụ: Góp ý nội dung bài học / Lỗi hiển thị / Đề xuất trò chơi..." class="w-full px-3 py-2 rounded-xl border border-[#b9dceb] bg-white text-xs sm:text-sm" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-[#195378] mb-1" for="fbMessage">Nội dung phản hồi</label>
+          <textarea id="fbMessage" rows="4" placeholder="Nhập ý kiến phản hồi chi tiết của bạn..." class="w-full px-3 py-2 rounded-xl border border-[#b9dceb] bg-white text-xs sm:text-sm"></textarea>
+        </div>
+
+        <div class="flex flex-wrap gap-2 pt-1">
+          <button type="button" onclick="submitFeedbackToAdmin()" class="btn-pill px-4 py-2 bg-[#1b6ca1] hover:bg-[#124e75] text-white text-xs sm:text-sm font-semibold">
+            Gửi tới alitran2810@gmail.com
+          </button>
+          <button type="button" onclick="copyFeedbackDraft()" class="btn-pill px-3 py-2 bg-[#eef6fa] hover:bg-[#dfeef6] text-[#195378] border border-[#c3dfec] text-xs font-semibold">
+            Sao chép nội dung
+          </button>
+        </div>
+
+        <div id="adminFeedbackInboxSection" class="hidden mt-3 pt-3 border-t border-[#dceef6]">
+          <h3 class="text-xs font-bold text-[#124e75] mb-1.5">Nhật ký phản hồi đã ghi nhận (Admin)</h3>
+          <div id="adminFeedbackList" class="max-h-40 overflow-y-auto space-y-1.5"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hộp thoại Cài đặt -->
+  <div id="settingsModal" hidden class="fixed inset-0 z-50 bg-[#0d2738]/50 backdrop-blur-[2px] flex items-center justify-center p-3">
+    <div class="bg-[#f4fbfe] border-2 border-[#a4d1e4] rounded-2xl max-w-2xl w-full max-h-[88vh] overflow-y-auto shadow-2xl p-4 sm:p-5">
+      <div class="flex items-center justify-between border-b border-[#cce6f1] pb-3 mb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">⚙️</span>
+          <div>
+            <h2 class="text-base sm:text-lg font-bold text-[#124e75]">Cài đặt & Quản lý</h2>
+            <p id="settingsRoleSubtitle" class="text-[11px] text-[#4d7185]"></p>
+          </div>
+        </div>
+        <button type="button" onclick="closeSettingsModal()" class="btn-pill px-3 py-1.5 bg-white hover:bg-[#e5f3f9] text-[#124e75] border border-[#b6dceb] text-xs sm:text-sm">
+          Đóng
+        </button>
+      </div>
+
+      <!-- Thông báo khi đang ở tài khoản thường -->
+      <div id="regularUserSettingsNotice" class="hidden mb-3 p-3 rounded-xl bg-[#eef8ec] border border-[#b7dfc0] text-xs text-[#206245]">
+        Tài khoản thường được mở <b>Mục 1 (Chọn 20 bài học)</b>. Để quản lý toàn quyền kho bài, sao lưu, chủ đề và chu kỳ 10 ngày, hãy đăng nhập bằng email <b>alitran2810@gmail.com</b> trong mục <b>Tài khoản</b>.
+      </div>
+
+      <!-- Danh sách mục cài đặt -->
+      <div class="space-y-2 mb-3 text-xs sm:text-sm">
+        <button type="button" onclick="selectSettingsSection('study20')" id="settings-nav-study20" class="w-full p-3 rounded-xl border text-left flex items-center justify-between transition bg-white hover:bg-[#eaf5fa] border-[#c5e0ec] text-[#124e75] font-bold">
+          <span>1. Chọn 20 bài Góc học tập</span>
+          <span id="settingsNavStudyBadge" class="text-xs px-2 py-0.5 rounded-lg bg-[#dff3e6] text-[#216648]">20 bài</span>
+        </button>
+
+        <button type="button" onclick="selectSettingsSection('editor')" id="settings-nav-editor" class="w-full p-3 rounded-xl border text-left flex items-center justify-between transition bg-white hover:bg-[#eaf5fa] border-[#c5e0ec] text-[#124e75] font-bold">
+          <span>2. Thêm / Sửa / Xóa bài (Admin)</span>
+          <span class="text-xs text-[#4d7185]">Mở ▾</span>
+        </button>
+
+        <button type="button" onclick="selectSettingsSection('backup')" id="settings-nav-backup" class="w-full p-3 rounded-xl border text-left flex items-center justify-between transition bg-white hover:bg-[#eaf5fa] border-[#c5e0ec] text-[#124e75] font-bold">
+          <span>3. Sao lưu & Tải .JSON (&gt;90% trùng) (Admin)</span>
+          <span class="text-xs text-[#4d7185]">Mở ▾</span>
+        </button>
+
+        <button type="button" onclick="selectSettingsSection('topics')" id="settings-nav-topics" class="w-full p-3 rounded-xl border text-left flex items-center justify-between transition bg-white hover:bg-[#eaf5fa] border-[#c5e0ec] text-[#124e75] font-bold">
+          <span>4. Chủ đề, Ôn 10 ngày & Khôi phục dữ liệu (Admin)</span>
+          <span class="text-xs text-[#4d7185]">Mở ▾</span>
+        </button>
+      </div>
+
+      <div class="space-y-4 text-xs sm:text-sm">
+        <!-- 1. Chọn 20 bài Góc học tập -->
+        <section id="settings-panel-study20" hidden class="bg-white rounded-xl border border-[#cde7f2] p-3.5">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+            <div>
+              <h3 class="font-bold text-[#124e75]">1. Chọn 20 bài cho Góc học tập</h3>
+              <p class="text-xs text-[#4d7185]">Các trò chơi xoay quanh 20 bài này. Nếu bài đã có sao (đã thuộc), hệ thống nhắc chọn thêm bài mới hoặc tự lấy ngẫu nhiên các bài chưa sao cho đủ 20 bài.</p>
+            </div>
+            <span id="selectedStudyCountBadge" class="px-2.5 py-1 rounded-lg bg-[#dff3e6] text-[#23694b] font-bold text-xs">20 / 20 bài</span>
+          </div>
+
+          <div class="flex flex-wrap gap-2 mb-2.5">
+            <input id="studyPickerSearch" type="text" oninput="renderStudyPickerList()" placeholder="Tìm câu hoặc ý nghĩa để chọn vào Góc học tập..." class="flex-1 min-w-[180px] px-3 py-2 rounded-xl border border-[#b9dceb] bg-[#f8fcfe] text-xs sm:text-sm focus:outline-none focus:border-[#1b6ca1]" />
+            <button type="button" onclick="autoFillStudyTo20()" class="btn-pill px-3 py-2 bg-[#e1f4e8] hover:bg-[#ccebd7] text-[#216648] border border-[#9fd4b3] text-xs font-semibold">
+              Tự đủ 20 bài (ưu tiên chưa sao)
+            </button>
+            <button type="button" onclick="saveStudySelection()" class="btn-pill px-3.5 py-2 bg-[#1b6ca1] hover:bg-[#124e75] text-white text-xs font-semibold">
+              Lưu 20 bài học
+            </button>
+          </div>
+
+          <div id="studyPickerList" class="max-h-48 overflow-y-auto divide-y divide-[#eaf4f9] border b<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <!-- Cấu hình hiển thị di động và hỗ trợ tiếng Việt đầy đủ -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Nét Đẹp Tiếng Việt</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Open+Sans:wght@600;700&family=Roboto:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg-sky: #e4f3fa;
+      --bg-green: #e7f6ec;
+      --blue-main: #1b6ca1;
+      --blue-dark: #124e75;
+      --green-main: #2a7a58;
+      --border-soft: #b8dce9;
+      --ink-main: #153142;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: 'Be Vietnam Pro', sans-serif;
+      color: var(--ink-main);
+      background-color: var(--bg-sky);
       /* Nền tranh vẽ bút chì làng quê xanh dương - xanh lá nhạt */
       background-image:
         linear-gradient(180deg, rgba(224, 243, 252, 0.92) 0%, rgba(232, 248, 237, 0.94) 60%, rgba(213, 240, 222, 0.96) 100%),
