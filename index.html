@@ -2,138 +2,194 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Nét Đẹp Tiếng Việt</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Open+Sans:wght@600;700&family=Roboto:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Trang web mẫu tối giản sẵn sàng cho GitHub Pages" />
+  <title>Dự án của tôi | GitHub</title>
+
   <style>
     :root {
-      --bg-sky: #e4f3fa;
-      --bg-green: #e7f6ec;
-      --blue: #1b6ca1;
-      --blue-deep: #124e75;
-      --blue-soft: #e2f2fb;
-      --green: #2a7a58;
-      --border: #b8dce9;
-      --ink: #153142;
-      --ink-soft: #476d82;
-      --right-bg: #dcfce7;
-      --right-bd: #16a34a;
-      --wrong-bg: #fee2e2;
-      --wrong-bd: #dc2626;
+      --bg: #0f172a;
+      --card: #1e293b;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-hover: #0284c7;
+      --border: #334155;
     }
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    body {
+
+    * {
+      box-sizing: border-box;
       margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
       min-height: 100vh;
-      font-family: 'Be Vietnam Pro', sans-serif;
-      color: var(--ink);
-      background: linear-gradient(180deg, rgba(224,243,252,0.92) 0%, rgba(232,248,237,0.94) 60%, rgba(213,240,222,0.96) 100%);
-      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
     }
-    .verse-text {
-      font-family: 'Open Sans', sans-serif;
-      font-size: 16px;
+
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 1.5rem;
+    }
+
+    .nav {
+      max-width: 960px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand {
       font-weight: 700;
-      line-height: 1.55;
-      color: #0f293a;
-      white-space: pre-line;
-      margin: 8px 0;
+      font-size: 1.15rem;
+      color: var(--text);
+      text-decoration: none;
     }
-    .verse-meaning {
-      font-family: 'Roboto', sans-serif;
-      font-size: 14px;
-      font-style: italic;
-      line-height: 1.45;
-      color: #36596e;
-      margin: 4px 0 0;
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      margin-left: 1.25rem;
+      font-size: 0.95rem;
     }
-    .verse-card {
-      position: relative;
-      background: rgba(255,255,255,0.96);
-      border: 1.5px solid var(--border);
-      border-radius: 18px;
-      box-shadow: 0 6px 18px rgba(27,108,161,0.08);
-      padding: 14px 44px 14px 16px;
-      margin-bottom: 12px;
+
+    .nav-links a:hover {
+      color: var(--text);
     }
-    .star-btn {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      width: 34px;
-      height: 34px;
-      border-radius: 10px;
-      border: 1px solid rgba(27,108,161,0.25);
-      background: #ffffff;
-      font-size: 17px;
+
+    main {
+      flex: 1;
+      max-width: 960px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 3rem 1.5rem;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 2rem 0 3rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .hero p {
+      color: var(--muted);
+      max-width: 600px;
+      margin: 0 auto 1.75rem;
+      font-size: 1.05rem;
+    }
+
+    .btn {
+      display: inline-block;
+      background-color: var(--accent);
+      color: #0f172a;
+      font-weight: 600;
+      text-decoration: none;
+      padding: 0.7rem 1.4rem;
+      border-radius: 8px;
+      border: none;
       cursor: pointer;
+      transition: background-color 0.2s ease;
     }
-    .star-btn.active { background: #fef9c3; border-color: #eab308; }
-    .card-top-line, .card-tags { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-    .kind-badge { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: #e2f1fa; color: var(--blue-deep); }
-    .topic-pill { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; color: #173647; }
-    .review-pill { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: #ffedd5; color: #9a3412; }
-    .btn-pill, .acc-badge-btn { border-radius: 14px; font-weight: 600; cursor: pointer; }
-    .tab-btn.active { background: linear-gradient(135deg, var(--blue), var(--green)) !important; color: #ffffff !important; border-color: transparent !important; }
-    .toolbar-card { background: rgba(255,255,255,0.92); border: 1px solid var(--border); border-radius: 16px; padding: 10px; margin-bottom: 10px; }
-    .search-row { display: flex; gap: 6px; align-items: center; }
-    .search-input { flex: 1; min-width: 0; border: 1px solid rgba(27,108,161,0.28); border-radius: 12px; padding: 8px 12px; font-size: 13.5px; background: #fff; color: var(--ink); }
-    .tool-icon-btn { border: 1px solid rgba(27,108,161,0.28); background: #f4fafe; color: var(--blue-deep); border-radius: 12px; padding: 8px 10px; font-size: 12.5px; font-weight: 700; cursor: pointer; }
-    .tool-icon-btn.active { background: var(--blue); color: #fff; border-color: var(--blue); }
-    .filter-panel { display: none; margin-top: 8px; padding-top: 8px; border-top: 1px dashed rgba(27,108,161,0.22); }
-    .filter-panel.open { display: block; }
-    .filter-mode-switch { display: flex; gap: 6px; margin-bottom: 8px; }
-    .chip-btn { border: 1px solid rgba(27,108,161,0.28); background: #fff; color: var(--ink); border-radius: 999px; padding: 5px 11px; font-size: 12px; font-weight: 600; cursor: pointer; }
-    .chip-btn.active { background: var(--blue); color: #fff; border-color: var(--blue); }
-    .filter-select { width: 100%; border: 1px solid rgba(27,108,161,0.28); border-radius: 11px; padding: 7px 10px; font-size: 13px; background: #fff; color: var(--ink); }
-    .meta-strip { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--ink-soft); margin-bottom: 10px; padding: 0 2px; }
-    .study-note-banner { background: #fffbeb; border: 1px solid #f59e0b; color: #78350f; border-radius: 14px; padding: 10px 12px; font-size: 12.5px; margin-bottom: 10px; }
-    .pagination-bar { display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; margin-top: 14px; }
-    .page-btn { min-width: 34px; height: 34px; border-radius: 10px; border: 1px solid rgba(27,108,161,0.28); background: #fff; color: var(--ink); font-weight: 600; font-size: 13px; cursor: pointer; }
-    .page-btn.active { background: var(--blue); color: #fff; border-color: var(--blue); }
-    .game-menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
-    .game-mode-card, .game-stage { background: rgba(255,255,255,0.96); border: 1.5px solid var(--border); border-radius: 18px; padding: 16px; }
-    .game-mode-title { font-size: 15px; font-weight: 700; color: var(--blue-deep); margin: 0 0 6px; }
-    .game-mode-desc { font-size: 12.5px; color: var(--ink-soft); margin: 0 0 12px; }
-    .game-top-bar { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 12px; }
-    .score-pill { font-size: 12.5px; font-weight: 700; padding: 5px 11px; border-radius: 999px; background: #e2f2fb; color: var(--blue-deep); }
-    .primary-btn, .secondary-btn, .success-btn, .warn-btn { border-radius: 12px; padding: 8px 13px; font-size: 12.5px; font-weight: 700; cursor: pointer; border: 1px solid transparent; }
-    .primary-btn { background: var(--blue); color: #fff; }
-    .secondary-btn { background: #eef6fb; color: var(--blue-deep); border-color: rgba(27,108,161,0.28); }
-    .success-btn { background: var(--green); color: #fff; }
-    .warn-btn { background: #fef3c7; color: #92400e; border-color: #f59e0b; }
-    .option-list { display: grid; gap: 8px; margin-top: 10px; }
-    .option-btn { width: 100%; text-align: left; border: 1px solid rgba(27,108,161,0.28); border-radius: 12px; padding: 10px 12px; background: #fff; color: var(--ink); font-size: 13.5px; cursor: pointer; }
-    .option-btn.selected { background: var(--blue-soft); border-color: var(--blue); font-weight: 600; }
-    .option-btn.correct { background: var(--right-bg); border-color: var(--right-bd); color: #14532d; font-weight: 600; }
-    .option-btn.wrong { background: var(--wrong-bg); border-color: var(--wrong-bd); color: #7f1d1d; }
-    .blank-slot { display: inline-block; min-width: 58px; padding: 1px 8px; margin: 0 2px; border-bottom: 2px solid var(--blue); background: #f0f8fd; border-radius: 6px; font-weight: 700; cursor: pointer; text-align: center; }
-    .blank-slot.correct { background: var(--right-bg); border-color: var(--right-bd); color: #14532d; }
-    .blank-slot.wrong { background: var(--wrong-bg); border-color: var(--wrong-bd); color: #7f1d1d; }
-    .word-bank { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px; border-radius: 14px; background: #f4fafe; border: 1px dashed rgba(27,108,161,0.3); min-height: 52px; margin-top: 8px; }
-    .word-chip { border: 1px solid rgba(27,108,161,0.3); background: #fff; color: var(--ink); border-radius: 10px; padding: 7px 11px; font-size: 13.5px; font-weight: 600; cursor: pointer; }
-    .word-chip.right { background: var(--right-bg); border-color: var(--right-bd); color: #14532d; }
-    .word-chip.wrong { background: var(--wrong-bg); border-color: var(--wrong-bd); color: #7f1d1d; }
-    .line-box { border: 1px solid rgba(27,108,161,0.22); background: #fff; border-radius: 12px; padding: 8px 10px; min-height: 44px; display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
-    .match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
-    .match-item { border: 1px solid rgba(27,108,161,0.25); background: #fff; border-radius: 12px; padding: 9px; font-size: 12.5px; line-height: 1.38; text-align: left; cursor: pointer; }
-    .match-item.selected { background: var(--blue-soft); border-color: var(--blue); font-weight: 600; }
-    .match-item.paired { background: #eef8f1; border-color: var(--green); }
-    .match-item.correct { background: var(--right-bg); border-color: var(--right-bd); }
-    .match-item.wrong { background: var(--wrong-bg); border-color: var(--wrong-bd); }
-    .feedback-box { margin-top: 12px; padding: 12px; border-radius: 14px; font-size: 13px; line-height: 1.5; }
-    .feedback-box.ok { background: var(--right-bg); border: 1px solid var(--right-bd); color: #14532d; font-weight: 600; }
-    .feedback-box.err { background: var(--wrong-bg); border: 1px solid var(--wrong-bd); color: #7f1d1d; }
-    .game-controls { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
-    .modal-backdrop { position: fixed; inset: 0; background: rgba(16,38,54,0.48); z-index: 50; display: none; align-items: center; justify-content: center; padding: 14px; }
-    .modal-backdrop.open { display: flex; }
-    .modal-sheet { width: 100%; max-width: 520px; max-height: 88vh; overflow-y: auto; background: #f8fcff; border-radius: 22px; border: 1px solid var(--border); padding: 16px; }
-    .modal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-    .modal-title { margin: 0; font-size: 17px; font-weight: 700; color: var(--blue-deep); }
-    .close-x { width: 34px; height: 34px; border-radius: 10px; border: 1px solid rgba(27,108,161,0.25); background: #fff; font-size: 18px; cursor: pointer; }
+
+    .btn:hover {
+      background-color: var(--accent-hover);
+      color: #ffffff;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem;
+      margin-top: 1rem;
+    }
+
+    .card {
+      background-color: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+
+    .card h2 {
+      font-size: 1.15rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .card p {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      text-align: center;
+      padding: 1.25rem;
+      color: var(--muted);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="nav">
+      <a href="#" class="brand">MyProject</a>
+      <div class="nav-links">
+        <a href="#features">Tính năng</a>
+        <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1>Xin chào, đây là trang chủ của bạn</h1>
+      <p>
+        File <code>index.html</code> mẫu đã tích hợp sẵn giao diện responsive, dễ tùy chỉnh và sẵn sàng xuất bản bằng GitHub Pages.
+      </p>
+      <button class="btn" id="actionBtn" type="button">Nhấn thử tương tác</button>
+    </section>
+
+    <section id="features" class="grid">
+      <article class="card">
+        <h2>Nhanh & Nhẹ</h2>
+        <p>Không phụ thuộc thư viện ngoài, tải trang tức thì trên mọi trình duyệt.</p>
+      </article>
+      <article class="card">
+        <h2>Tương thích đa thiết bị</h2>
+        <p>Tự động co giãn gọn gàng trên điện thoại, máy tính bảng và màn hình lớn.</p>
+      </article>
+      <article class="card">
+        <h2>Dễ mở rộng</h2>
+        <p>Tách riêng CSS/JS hoặc thêm trang mới bất cứ lúc nào khi dự án phát triển.</p>
+      </article>
+    </section>
+  </main>
+
+  <footer>
+    <p>© <span id="year"></span> MyProject. Chạy trên GitHub.</p>
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    document.getElementById("actionBtn").addEventListener("click", () => {
+      alert("Chào bạn! File index.html đang hoạt động tốt.");
+    });
+  </script>
+</body>
+</html>18px; cursor: pointer; }
     .setting-list { display: grid; gap: 7px; margin-bottom: 12px; }
     .setting-row-btn { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 11px 13px; border-radius: 13px; border: 1px solid rgba(27,108,161,0.22); background: #fff; color: var(--ink); font-size: 13.5px; font-weight: 600; cursor: pointer; text-align: left; }
     .setting-row-btn.active { background: linear-gradient(135deg, #e5f3fd, #e7f6ec); border-color: var(--blue); color: var(--blue-deep); }
