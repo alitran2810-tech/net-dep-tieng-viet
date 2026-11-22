@@ -8,7 +8,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Open+Sans:wght@600;700&family=Roboto:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet" />
-
   <style>
     :root {
       --bg-sky: #e4f3fa;
@@ -25,25 +24,15 @@
       --wrong-bg: #fee2e2;
       --wrong-bd: #dc2626;
     }
-
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
-
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     body {
       margin: 0;
       min-height: 100vh;
       font-family: 'Be Vietnam Pro', sans-serif;
       color: var(--ink);
-      background-color: var(--bg-sky);
-      background-image:
-        linear-gradient(180deg, rgba(224, 243, 252, 0.92) 0%, rgba(232, 248, 237, 0.94) 60%, rgba(213, 240, 222, 0.96) 100%),
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='240' viewBox='0 0 360 240'%3E%3Cg fill='none' stroke='%23578aa4' stroke-width='1' stroke-opacity='0.22'%3E%3Cpath d='M0 155 Q75 128 150 152 T300 144 T360 154'/%3E%3Cpath d='M0 176 Q95 154 185 174 T360 168'/%3E%3Cpath d='M48 152 L48 128 M38 136 Q48 118 58 136 Q48 140 38 136 Z'/%3E%3Cpath d='M255 144 L255 118 M243 128 Q255 108 267 128 Q255 133 243 128 Z'/%3E%3Cpath d='M120 198 Q185 185 255 199'/%3E%3Cpath d='M308 92 C308 74 332 74 332 92 C332 106 308 106 308 92 Z' stroke='%23488a6a'/%3E%3C/g%3E%3C/svg%3E");
-      background-attachment: fixed;
+      background: linear-gradient(180deg, rgba(224,243,252,0.92) 0%, rgba(232,248,237,0.94) 60%, rgba(213,240,222,0.96) 100%);
       overflow-x: hidden;
     }
-
     .verse-text {
       font-family: 'Open Sans', sans-serif;
       font-size: 16px;
@@ -53,7 +42,6 @@
       white-space: pre-line;
       margin: 8px 0;
     }
-
     .verse-meaning {
       font-family: 'Roboto', sans-serif;
       font-size: 14px;
@@ -62,18 +50,15 @@
       color: #36596e;
       margin: 4px 0 0;
     }
-
     .verse-card {
       position: relative;
-      background: rgba(255, 255, 255, 0.94);
+      background: rgba(255,255,255,0.95);
       border: 1.5px solid var(--border);
       border-radius: 18px;
-      box-shadow: 0 6px 18px rgba(27, 108, 161, 0.08);
+      box-shadow: 0 6px 18px rgba(27,108,161,0.08);
       padding: 14px 44px 14px 16px;
       margin-bottom: 12px;
-      overflow: hidden;
     }
-
     .star-btn {
       position: absolute;
       top: 10px;
@@ -81,540 +66,114 @@
       width: 34px;
       height: 34px;
       border-radius: 10px;
-      border: 1px solid rgba(27, 108, 161, 0.25);
+      border: 1px solid rgba(27,108,161,0.25);
       background: #ffffff;
       font-size: 17px;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
-
-    .star-btn.active {
-      background: #fef9c3;
-      border-color: #eab308;
-    }
-
-    .card-top-line {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-
-    .card-tags {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-
-    .kind-badge {
-      font-size: 11px;
-      font-weight: 700;
-      padding: 2px 8px;
-      border-radius: 999px;
-      background: #e2f1fa;
-      color: var(--blue-deep);
-    }
-
-    .topic-pill {
-      font-size: 11px;
-      font-weight: 600;
-      padding: 2px 8px;
-      border-radius: 999px;
-      color: #173647;
-    }
-
-    .review-pill {
-      font-size: 11px;
-      font-weight: 700;
-      padding: 2px 8px;
-      border-radius: 999px;
-      background: #ffedd5;
-      color: #9a3412;
-    }
-
-    .btn-pill, .acc-badge-btn {
-      border-radius: 14px;
-      font-weight: 600;
-      transition: all 0.15s ease;
-      box-shadow: 0 3px 0 rgba(18, 78, 117, 0.14);
-      cursor: pointer;
-    }
-
-    .tab-btn.active {
-      background: linear-gradient(135deg, var(--blue), var(--green)) !important;
-      color: #ffffff !important;
-      border-color: transparent !important;
-    }
-
-    .toolbar-card {
-      background: rgba(255, 255, 255, 0.9);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 10px;
-      margin-bottom: 10px;
-      box-shadow: 0 4px 12px rgba(27, 108, 161, 0.06);
-    }
-
-    .search-row {
-      display: flex;
-      gap: 6px;
-      align-items: center;
-    }
-
-    .search-input {
-      flex: 1;
-      min-width: 0;
-      border: 1px solid rgba(27, 108, 161, 0.28);
-      border-radius: 12px;
-      padding: 8px 12px;
-      font-size: 13.5px;
-      background: #ffffff;
-      color: var(--ink);
-    }
-
-    .tool-icon-btn {
-      border: 1px solid rgba(27, 108, 161, 0.28);
-      background: #f4fafe;
-      color: var(--blue-deep);
-      border-radius: 12px;
-      padding: 8px 10px;
-      font-size: 12.5px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .tool-icon-btn.active {
-      background: var(--blue);
-      color: #ffffff;
-      border-color: var(--blue);
-    }
-
-    .filter-panel {
-      display: none;
-      margin-top: 8px;
-      padding-top: 8px;
-      border-top: 1px dashed rgba(27, 108, 161, 0.22);
-    }
-
-    .filter-panel.open {
-      display: block;
-    }
-
-    .filter-mode-switch {
-      display: flex;
-      gap: 6px;
-      margin-bottom: 8px;
-    }
-
-    .chip-btn {
-      border: 1px solid rgba(27, 108, 161, 0.28);
-      background: #ffffff;
-      color: var(--ink);
-      border-radius: 999px;
-      padding: 5px 11px;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .chip-btn.active {
-      background: var(--blue);
-      color: #ffffff;
-      border-color: var(--blue);
-    }
-
-    .filter-select {
-      width: 100%;
-      border: 1px solid rgba(27, 108, 161, 0.28);
-      border-radius: 11px;
-      padding: 7px 10px;
-      font-size: 13px;
-      background: #ffffff;
-      color: var(--ink);
-    }
-
-    .meta-strip {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 12px;
-      color: var(--ink-soft);
-      margin-bottom: 10px;
-      padding: 0 2px;
-    }
-
-    .study-note-banner {
-      background: #fffbeb;
-      border: 1px solid #f59e0b;
-      color: #78350f;
-      border-radius: 14px;
-      padding: 10px 12px;
-      font-size: 12.5px;
-      margin-bottom: 10px;
-    }
-
-    .pagination-bar {
-      display: flex;
-      justify-content: center;
-      gap: 6px;
-      flex-wrap: wrap;
-      margin-top: 14px;
-    }
-
-    .page-btn {
-      min-width: 34px;
-      height: 34px;
-      border-radius: 10px;
-      border: 1px solid rgba(27, 108, 161, 0.28);
-      background: #ffffff;
-      color: var(--ink);
-      font-weight: 600;
-      font-size: 13px;
-      cursor: pointer;
-    }
-
-    .page-btn.active {
-      background: var(--blue);
-      color: #ffffff;
-      border-color: var(--blue);
-    }
-
-    .game-menu-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 12px;
-    }
-
-    .game-mode-card, .game-stage {
-      background: rgba(255, 255, 255, 0.95);
-      border: 1.5px solid var(--border);
-      border-radius: 18px;
-      padding: 16px;
-      box-shadow: 0 6px 16px rgba(27, 108, 161, 0.07);
-    }
-
-    .game-mode-title {
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--blue-deep);
-      margin: 0 0 6px;
-    }
-
-    .game-mode-desc {
-      font-size: 12.5px;
-      color: var(--ink-soft);
-      margin: 0 0 12px;
-    }
-
-    .game-top-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-
-    .score-pill {
-      font-size: 12.5px;
-      font-weight: 700;
-      padding: 5px 11px;
-      border-radius: 999px;
-      background: #e2f2fb;
-      color: var(--blue-deep);
-    }
-
-    .primary-btn, .secondary-btn, .success-btn, .warn-btn {
-      border-radius: 12px;
-      padding: 8px 13px;
-      font-size: 12.5px;
-      font-weight: 700;
-      cursor: pointer;
-      border: 1px solid transparent;
-    }
-
-    .primary-btn { background: var(--blue); color: #ffffff; }
-    .secondary-btn { background: #eef6fb; color: var(--blue-deep); border-color: rgba(27, 108, 161, 0.28); }
-    .success-btn { background: var(--green); color: #ffffff; }
+    .star-btn.active { background: #fef9c3; border-color: #eab308; }
+    .card-top-line, .card-tags { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .kind-badge { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: #e2f1fa; color: var(--blue-deep); }
+    .topic-pill { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; color: #173647; }
+    .review-pill { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: #ffedd5; color: #9a3412; }
+    .btn-pill, .acc-badge-btn { border-radius: 14px; font-weight: 600; cursor: pointer; }
+    .tab-btn.active { background: linear-gradient(135deg, var(--blue), var(--green)) !important; color: #ffffff !important; border-color: transparent !important; }
+    .toolbar-card { background: rgba(255,255,255,0.92); border: 1px solid var(--border); border-radius: 16px; padding: 10px; margin-bottom: 10px; }
+    .search-row { display: flex; gap: 6px; align-items: center; }
+    .search-input { flex: 1; min-width: 0; border: 1px solid rgba(27,108,161,0.28); border-radius: 12px; padding: 8px 12px; font-size: 13.5px; background: #fff; color: var(--ink); }
+    .tool-icon-btn { border: 1px solid rgba(27,108,161,0.28); background: #f4fafe; color: var(--blue-deep); border-radius: 12px; padding: 8px 10px; font-size: 12.5px; font-weight: 700; cursor: pointer; }
+    .tool-icon-btn.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+    .filter-panel { display: none; margin-top: 8px; padding-top: 8px; border-top: 1px dashed rgba(27,108,161,0.22); }
+    .filter-panel.open { display: block; }
+    .filter-mode-switch { display: flex; gap: 6px; margin-bottom: 8px; }
+    .chip-btn { border: 1px solid rgba(27,108,161,0.28); background: #fff; color: var(--ink); border-radius: 999px; padding: 5px 11px; font-size: 12px; font-weight: 600; cursor: pointer; }
+    .chip-btn.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+    .filter-select { width: 100%; border: 1px solid rgba(27,108,161,0.28); border-radius: 11px; padding: 7px 10px; font-size: 13px; background: #fff; color: var(--ink); }
+    .meta-strip { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--ink-soft); margin-bottom: 10px; padding: 0 2px; }
+    .study-note-banner { background: #fffbeb; border: 1px solid #f59e0b; color: #78350f; border-radius: 14px; padding: 10px 12px; font-size: 12.5px; margin-bottom: 10px; }
+    .pagination-bar { display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; margin-top: 14px; }
+    .page-btn { min-width: 34px; height: 34px; border-radius: 10px; border: 1px solid rgba(27,108,161,0.28); background: #fff; color: var(--ink); font-weight: 600; font-size: 13px; cursor: pointer; }
+    .page-btn.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+    .game-menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+    .game-mode-card, .game-stage { background: rgba(255,255,255,0.95); border: 1.5px solid var(--border); border-radius: 18px; padding: 16px; }
+    .game-mode-title { font-size: 15px; font-weight: 700; color: var(--blue-deep); margin: 0 0 6px; }
+    .game-mode-desc { font-size: 12.5px; color: var(--ink-soft); margin: 0 0 12px; }
+    .game-top-bar { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 12px; }
+    .score-pill { font-size: 12.5px; font-weight: 700; padding: 5px 11px; border-radius: 999px; background: #e2f2fb; color: var(--blue-deep); }
+    .primary-btn, .secondary-btn, .success-btn, .warn-btn { border-radius: 12px; padding: 8px 13px; font-size: 12.5px; font-weight: 700; cursor: pointer; border: 1px solid transparent; }
+    .primary-btn { background: var(--blue); color: #fff; }
+    .secondary-btn { background: #eef6fb; color: var(--blue-deep); border-color: rgba(27,108,161,0.28); }
+    .success-btn { background: var(--green); color: #fff; }
     .warn-btn { background: #fef3c7; color: #92400e; border-color: #f59e0b; }
-
     .option-list { display: grid; gap: 8px; margin-top: 10px; }
-    .option-btn {
-      width: 100%;
-      text-align: left;
-      border: 1px solid rgba(27, 108, 161, 0.28);
-      border-radius: 12px;
-      padding: 10px 12px;
-      background: #ffffff;
-      color: var(--ink);
-      font-size: 13.5px;
-      line-height: 1.4;
-      cursor: pointer;
-    }
-
+    .option-btn { width: 100%; text-align: left; border: 1px solid rgba(27,108,161,0.28); border-radius: 12px; padding: 10px 12px; background: #fff; color: var(--ink); font-size: 13.5px; cursor: pointer; }
     .option-btn.selected { background: var(--blue-soft); border-color: var(--blue); font-weight: 600; }
     .option-btn.correct { background: var(--right-bg); border-color: var(--right-bd); color: #14532d; font-weight: 600; }
     .option-btn.wrong { background: var(--wrong-bg); border-color: var(--wrong-bd); color: #7f1d1d; }
-
-    .blank-slot {
-      display: inline-block;
-      min-width: 58px;
-      padding: 1px 8px;
-      margin: 0 2px;
-      border-bottom: 2px solid var(--blue);
-      background: #f0f8fd;
-      border-radius: 6px;
-      font-weight: 700;
-      cursor: pointer;
-      text-align: center;
-    }
-
+    .blank-slot { display: inline-block; min-width: 58px; padding: 1px 8px; margin: 0 2px; border-bottom: 2px solid var(--blue); background: #f0f8fd; border-radius: 6px; font-weight: 700; cursor: pointer; text-align: center; }
     .blank-slot.correct { background: var(--right-bg); border-color: var(--right-bd); color: #14532d; }
     .blank-slot.wrong { background: var(--wrong-bg); border-color: var(--wrong-bd); color: #7f1d1d; }
-
-    .word-bank {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      padding: 10px;
-      border-radius: 14px;
-      background: #f4fafe;
-      border: 1px dashed rgba(27, 108, 161, 0.3);
-      min-height: 52px;
-      margin-top: 8px;
-    }
-
-    .word-chip {
-      border: 1px solid rgba(27, 108, 161, 0.3);
-      background: #ffffff;
-      color: var(--ink);
-      border-radius: 10px;
-      padding: 7px 11px;
-      font-size: 13.5px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
+    .word-bank { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px; border-radius: 14px; background: #f4fafe; border: 1px dashed rgba(27,108,161,0.3); min-height: 52px; margin-top: 8px; }
+    .word-chip { border: 1px solid rgba(27,108,161,0.3); background: #fff; color: var(--ink); border-radius: 10px; padding: 7px 11px; font-size: 13.5px; font-weight: 600; cursor: pointer; }
     .word-chip.right { background: var(--right-bg); border-color: var(--right-bd); color: #14532d; }
     .word-chip.wrong { background: var(--wrong-bg); border-color: var(--wrong-bd); color: #7f1d1d; }
-
-    .line-box {
-      border: 1px solid rgba(27, 108, 161, 0.22);
-      background: #ffffff;
-      border-radius: 12px;
-      padding: 8px 10px;
-      min-height: 44px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-bottom: 8px;
-    }
-
+    .line-box { border: 1px solid rgba(27,108,161,0.22); background: #fff; border-radius: 12px; padding: 8px 10px; min-height: 44px; display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
     .match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
-    .match-item {
-      border: 1px solid rgba(27, 108, 161, 0.25);
-      background: #ffffff;
-      border-radius: 12px;
-      padding: 9px;
-      font-size: 12.5px;
-      line-height: 1.38;
-      text-align: left;
-      cursor: pointer;
-    }
-
+    .match-item { border: 1px solid rgba(27,108,161,0.25); background: #fff; border-radius: 12px; padding: 9px; font-size: 12.5px; line-height: 1.38; text-align: left; cursor: pointer; }
     .match-item.selected { background: var(--blue-soft); border-color: var(--blue); font-weight: 600; }
     .match-item.paired { background: #eef8f1; border-color: var(--green); }
     .match-item.correct { background: var(--right-bg); border-color: var(--right-bd); }
     .match-item.wrong { background: var(--wrong-bg); border-color: var(--wrong-bd); }
-
     .feedback-box { margin-top: 12px; padding: 12px; border-radius: 14px; font-size: 13px; line-height: 1.5; }
     .feedback-box.ok { background: var(--right-bg); border: 1px solid var(--right-bd); color: #14532d; font-weight: 600; }
     .feedback-box.err { background: var(--wrong-bg); border: 1px solid var(--wrong-bd); color: #7f1d1d; }
     .game-controls { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
-
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(16, 38, 54, 0.48);
-      backdrop-filter: blur(4px);
-      z-index: 50;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 14px;
-    }
-
+    .modal-backdrop { position: fixed; inset: 0; background: rgba(16,38,54,0.48); z-index: 50; display: none; align-items: center; justify-content: center; padding: 14px; }
     .modal-backdrop.open { display: flex; }
-
-    .modal-sheet {
-      width: 100%;
-      max-width: 500px;
-      max-height: 88vh;
-      overflow-y: auto;
-      background: #f8fcff;
-      border-radius: 22px;
-      border: 1px solid var(--border);
-      padding: 16px;
-    }
-
+    .modal-sheet { width: 100%; max-width: 500px; max-height: 88vh; overflow-y: auto; background: #f8fcff; border-radius: 22px; border: 1px solid var(--border); padding: 16px; }
     .modal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
     .modal-title { margin: 0; font-size: 17px; font-weight: 700; color: var(--blue-deep); }
-    .close-x { width: 34px; height: 34px; border-radius: 10px; border: 1px solid rgba(27, 108, 161, 0.25); background: #fff; font-size: 18px; cursor: pointer; }
+    .close-x { width: 34px; height: 34px; border-radius: 10px; border: 1px solid rgba(27,108,161,0.25); background: #fff; font-size: 18px; cursor: pointer; }
     .setting-list { display: grid; gap: 7px; margin-bottom: 12px; }
-    .setting-row-btn {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 11px 13px;
-      border-radius: 13px;
-      border: 1px solid rgba(27, 108, 161, 0.22);
-      background: #ffffff;
-      color: var(--ink);
-      font-size: 13.5px;
-      font-weight: 600;
-      cursor: pointer;
-      text-align: left;
-    }
-
+    .setting-row-btn { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 11px 13px; border-radius: 13px; border: 1px solid rgba(27,108,161,0.22); background: #fff; color: var(--ink); font-size: 13.5px; font-weight: 600; cursor: pointer; text-align: left; }
     .setting-row-btn.active { background: linear-gradient(135deg, #e5f3fd, #e7f6ec); border-color: var(--blue); color: var(--blue-deep); }
-    .setting-detail-panel { background: #ffffff; border: 1px solid var(--border); border-radius: 15px; padding: 13px; }
+    .setting-detail-panel { background: #fff; border: 1px solid var(--border); border-radius: 15px; padding: 13px; }
     .field-group { margin-bottom: 10px; }
     .field-label { display: block; font-size: 12px; font-weight: 700; color: var(--ink-soft); margin-bottom: 4px; }
-    .field-input, .field-textarea, .field-select {
-      width: 100%;
-      border-radius: 11px;
-      border: 1px solid rgba(27, 108, 161, 0.28);
-      padding: 8px 10px;
-      font-size: 13px;
-      color: var(--ink);
-      background: #fff;
-    }
-
+    .field-input, .field-textarea, .field-select { width: 100%; border-radius: 11px; border: 1px solid rgba(27,108,161,0.28); padding: 8px 10px; font-size: 13px; color: var(--ink); background: #fff; }
     .field-textarea { min-height: 68px; resize: vertical; }
-    .picker-list {
-      max-height: 220px;
-      overflow-y: auto;
-      border: 1px solid rgba(27, 108, 161, 0.2);
-      border-radius: 12px;
-      padding: 6px;
-      background: #fbfdff;
-      margin: 8px 0;
-    }
-
-    .picker-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
-      padding: 7px 6px;
-      border-bottom: 1px dashed rgba(27, 108, 161, 0.14);
-      font-size: 12.5px;
-      line-height: 1.38;
-    }
-
-    .toast-msg {
-      position: fixed;
-      left: 50%;
-      bottom: 18px;
-      transform: translateX(-50%) translateY(20px);
-      background: #143246;
-      color: #ffffff;
-      padding: 10px 16px;
-      border-radius: 999px;
-      font-size: 13px;
-      font-weight: 500;
-      opacity: 0;
-      pointer-events: none;
-      transition: all 0.22s ease;
-      z-index: 90;
-      max-width: 92vw;
-      text-align: center;
-    }
-
+    .picker-list { max-height: 220px; overflow-y: auto; border: 1px solid rgba(27,108,161,0.2); border-radius: 12px; padding: 6px; background: #fbfdff; margin: 8px 0; }
+    .picker-item { display: flex; align-items: flex-start; gap: 8px; padding: 7px 6px; border-bottom: 1px dashed rgba(27,108,161,0.14); font-size: 12.5px; line-height: 1.38; }
+    .toast-msg { position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%) translateY(20px); background: #143246; color: #fff; padding: 10px 16px; border-radius: 999px; font-size: 13px; opacity: 0; pointer-events: none; transition: all 0.22s ease; z-index: 90; max-width: 92vw; text-align: center; }
     .toast-msg.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-    .acc-pill-info {
-      background: #e9f7ee;
-      border: 1px solid #8fd1a8;
-      color: #165436;
-      border-radius: 12px;
-      padding: 8px 10px;
-      font-size: 12.5px;
-      margin-bottom: 10px;
-    }
-    .progress-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin: 10px 0 12px;
-    }
-    .progress-stat-card {
-      background: #f4fafe;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 8px;
-      text-align: center;
-    }
-    .progress-stat-num {
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--blue-deep);
-      display: block;
-    }
-    .progress-stat-lbl {
-      font-size: 11px;
-      color: var(--ink-soft);
-    }
+    .acc-pill-info { background: #e9f7ee; border: 1px solid #8fd1a8; color: #165436; border-radius: 12px; padding: 8px 10px; font-size: 12.5px; margin-bottom: 10px; }
+    .progress-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 10px 0 12px; }
+    .progress-stat-card { background: #f4fafe; border: 1px solid var(--border); border-radius: 12px; padding: 8px; text-align: center; }
+    .progress-stat-num { font-size: 16px; font-weight: 700; color: var(--blue-deep); display: block; }
+    .progress-stat-lbl { font-size: 11px; color: var(--ink-soft); }
   </style>
 </head>
-
 <body class="pb-12">
   <header class="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-[#bfe0ec] shadow-sm">
     <div class="max-w-3xl mx-auto px-3 pt-2.5 pb-2">
       <div class="flex items-center justify-between gap-2 mb-2">
         <div class="flex items-center gap-2 min-w-0">
-          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-[#d5eef9] to-[#d5f2df] border border-[#9fd0e3] flex items-center justify-center shrink-0">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1b6ca1" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 20V10" />
-              <path d="M12 14c-3.5 0-6-2-6-5 3 0 5.5 1.5 6 5z" fill="#d7f0df" stroke="#2a7a58" />
-              <path d="M12 14c3.5 0 6-2 6-5-3 0-5.5 1.5-6 5z" fill="#d7f0df" stroke="#2a7a58" />
-              <path d="M12 10c-2-2.5-2-5.5 0-7 2 1.5 2 4.5 0 7z" fill="#dff2fc" />
-            </svg>
-          </div>
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-[#d5eef9] to-[#d5f2df] border border-[#9fd0e3] flex items-center justify-center shrink-0">🌿</div>
           <div class="min-w-0">
             <h1 class="text-base sm:text-lg font-bold text-[#124e75] leading-tight truncate">Nét Đẹp Tiếng Việt</h1>
-            <p id="headerSummary" class="text-[11px] text-[#476d82] truncate">Ca dao • Tục ngữ • Thành ngữ</p>
+            <p class="text-[11px] text-[#476d82] truncate">Ca dao • Tục ngữ • Thành ngữ</p>
           </div>
         </div>
-
         <div class="flex items-center gap-1.5 shrink-0">
-          <button
-            id="openAccountBtn"
-            type="button"
-            aria-label="Tài khoản học tập"
-            title="Tài khoản học tập"
-            class="acc-badge-btn px-2.5 py-2 bg-[#e8f7ee] hover:bg-[#d5efe0] text-[#165436] border border-[#9fd4b5] flex items-center gap-1.5 text-xs sm:text-sm"
-          >
-            <span>👤</span>
-            <span id="headerAccountLabel" class="max-w-[100px] truncate">Tài khoản</span>
+          <button id="openAccountBtn" type="button" class="acc-badge-btn px-2.5 py-2 bg-[#e8f7ee] text-[#165436] border border-[#9fd4b5] flex items-center gap-1.5 text-xs sm:text-sm">
+            <span>👤</span><span id="headerAccountLabel" class="max-w-[100px] truncate">Tài khoản</span>
           </button>
-
-          <button
-            id="openSettingsBtn"
-            type="button"
-            aria-label="Mở Cài đặt"
-            title="Cài đặt"
-            class="btn-pill px-3 py-2 bg-[#e7f4fa] hover:bg-[#d5ebf5] text-[#124e75] border border-[#b3d9ea] flex items-center gap-1.5 text-xs sm:text-sm"
-          >
-            <span>⚙️</span>
-            <span class="hidden sm:inline">Cài đặt</span>
+          <button id="openSettingsBtn" type="button" class="btn-pill px-3 py-2 bg-[#e7f4fa] text-[#124e75] border border-[#b3d9ea] flex items-center gap-1.5 text-xs sm:text-sm">
+            <span>⚙️</span><span class="hidden sm:inline">Cài đặt</span>
           </button>
         </div>
       </div>
-
-      <nav aria-label="Điều hướng chính" class="grid grid-cols-4 gap-1.5">
+      <nav class="grid grid-cols-4 gap-1.5">
         <button type="button" class="tab-btn active btn-pill py-2 px-2 text-xs sm:text-sm border truncate bg-white text-[#124e75] border-[#b8dce9]" data-tab="all">Tất cả</button>
         <button type="button" class="tab-btn btn-pill py-2 px-2 text-xs sm:text-sm border truncate bg-white text-[#124e75] border-[#b8dce9]" data-tab="study">Góc học tập</button>
         <button type="button" class="tab-btn btn-pill py-2 px-2 text-xs sm:text-sm border truncate bg-white text-[#124e75] border-[#b8dce9]" data-tab="games">Trò chơi</button>
@@ -627,826 +186,39 @@
     <section id="searchFilterSection" class="toolbar-card">
       <div class="search-row">
         <input id="searchInput" class="search-input" type="search" placeholder="Tìm câu, ý nghĩa, chủ đề..." />
-        <button id="toggleFilterBtn" class="tool-icon-btn" type="button" title="Bộ lọc" aria-label="Bộ lọc">⏷</button>
-        <button id="sortOrderBtn" class="tool-icon-btn" type="button" title="Sắp xếp A-Z / Z-A" aria-label="Sắp xếp A-Z / Z-A">⇅</button>
+        <button id="toggleFilterBtn" class="tool-icon-btn" type="button">⏷</button>
+        <button id="sortOrderBtn" class="tool-icon-btn" type="button">⇅</button>
       </div>
       <div id="filterPanel" class="filter-panel">
         <div class="filter-mode-switch">
           <button id="modeTopicBtn" class="chip-btn active" type="button">Lọc theo chủ đề</button>
           <button id="modeLetterBtn" class="chip-btn" type="button">Chữ cái đầu tiên</button>
         </div>
-        <div id="topicFilterBox">
-          <select id="topicSelect" class="filter-select"><option value="">-- Tất cả chủ đề --</option></select>
-        </div>
-        <div id="letterFilterBox" style="display:none;">
-          <select id="letterSelect" class="filter-select"><option value="">-- Tất cả chữ cái đầu --</option></select>
-        </div>
+        <div id="topicFilterBox"><select id="topicSelect" class="filter-select"><option value="">-- Tất cả chủ đề --</option></select></div>
+        <div id="letterFilterBox" style="display:none;"><select id="letterSelect" class="filter-select"><option value="">-- Tất cả chữ cái đầu --</option></select></div>
       </div>
     </section>
-
-    <div id="studyBanner" class="study-note-banner" style="display:none;"></div>
-    <   margin-top: 8px;
-    }
-
-    .word-chip {
-      border: 1px solid rgba(27, 108, 161, 0.3);
-      background: #ffffff;
-      color: var(--ink);
-      border-radius: 10px;
-      padding: 7px 11px;
-      font-size: 13.5px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .word-chip.right { background: var(--right-bg); border-color: var(--right-bd); color: #14532d; }
-    .word-chip.wrong { background: var(--wrong-bg); border-color: var(--wrong-bd); color: #7f1d1d; }
-
-    .line-box {
-      border: 1px solid rgba(27, 108, 161, 0.22);
-      background: #ffffff;
-      border-radius: 12px;
-      padding: 8px 10px;
-      min-height: 44px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-bottom: 8px;
-    }
-
-    .match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
-    .match-item {
-      border: 1px solid rgba(27, 108, 161, 0.25);
-      background: #ffffff;
-      border-radius: 12px;
-      padding: 9px;
-      font-size: 12.5px;
-      line-height: 1.38;
-      text-align: left;
-      cursor: pointer;
-    }
-
-    .match-item.selected { background: var(--blue-soft); border-color: var(--blue); font-weight: 600; }
-    .match-item.paired { background: #eef8f1; border-color: var(--green); }
-    .match-item.correct { background: var(--right-bg); border-color: var(--right-bd); }
-    .match-item.wrong { background: var(--wrong-bg); border-color: var(--wrong-bd); }
-
-    .feedback-box { margin-top: 12px; padding: 12px; border-radius: 14px; font-size: 13px; line-height: 1.5; }
-    .feedback-box.ok { background: var(--right-bg); border: 1px solid var(--right-bd); color: #14532d; font-weight: 600; }
-    .feedback-box.err { background: var(--wrong-bg); border: 1px solid var(--wrong-bd); color: #7f1d1d; }
-    .game-controls { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
-
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(16, 38, 54, 0.48);
-      backdrop-filter: blur(4px);
-      z-index: 50;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 14px;
-    }
-
-    .modal-backdrop.open { display: flex; }
-
-    .modal-sheet {
-      width: 100%;
-      max-width: 500px;
-      max-height: 88vh;
-      overflow-y: auto;
-      background: #f8fcff;
-      border-radius: 22px;
-      border: 1px solid var(--border);
-      padding: 16px;
-    }
-
-    .modal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-    .modal-title { margin: 0; font-size: 17px; font-weight: 700; color: var(--blue-deep); }
-    .close-x { width: 34px; height: 34px; border-radius: 10px; border: 1px solid rgba(27, 108, 161, 0.25); background: #fff; font-size: 18px; cursor: pointer; }
-    .setting-list { display: grid; gap: 7px; margin-bottom: 12px; }
-    .setting-row-btn {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 11px 13px;
-      border-radius: 13px;
-      border: 1px solid rgba(27, 108, 161, 0.22);
-      background: #ffffff;
-      color: var(--ink);
-      font-size: 13.5px;
-      font-weight: 600;
-      cursor: pointer;
-      text-align: left;
-    }
-
-    .setting-row-btn.active { background: linear-gradient(135deg, #e5f3fd, #e7f6ec); border-color: var(--blue); color: var(--blue-deep); }
-    .setting-detail-panel { background: #ffffff; border: 1px solid var(--border); border-radius: 15px; padding: 13px; }
-    .field-group { margin-bottom: 10px; }
-    .field-label { display: block; font-size: 12px; font-weight: 700; color: var(--ink-soft); margin-bottom: 4px; }
-    .field-input, .field-textarea, .field-select {
-      width: 100%;
-      border-radius: 11px;
-      border: 1px solid rgba(27, 108, 161, 0.28);
-      padding: 8px 10px;
-      font-size: 13px;
-      color: var(--ink);
-      background: #fff;
-    }
-
-    .field-textarea { min-height: 68px; resize: vertical; }
-    .picker-list {
-      max-height: 220px;
-      overflow-y: auto;
-      border: 1px solid rgba(27, 108, 161, 0.2);
-      border-radius: 12px;
-      padding: 6px;
-      background: #fbfdff;
-      margin: 8px 0;
-    }
-
-    .picker-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
-      padding: 7px 6px;
-      border-bottom: 1px dashed rgba(27, 108, 161, 0.14);
-      font-size: 12.5px;
-      line-height: 1.38;
-    }
-
-    .toast-msg {
-      position: fixed;
-      left: 50%;
-      bottom: 18px;
-      transform: translateX(-50%) translateY(20px);
-      background: #143246;
-      color: #ffffff;
-      padding: 10px 16px;
-      border-radius: 999px;
-      font-size: 13px;
-      font-weight: 500;
-      opacity: 0;
-      pointer-events: none;
-      transition: all 0.22s ease;
-      z-index: 90;
-      max-width: 92vw;
-      text-align: center;
-    }
-
-    .toast-msg.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-    .acc-badge-btn {
-      border-radius: 14px;
-      font-weight: 600;
-      transition: all 0.15s ease;
-      box-shadow: 0 3px 0 rgba(18, 78, 117, 0.14);
-      cursor: pointer;
-    }
-    .acc-pill-info {
-      background: #e9f7ee;
-      border: 1px solid #8fd1a8;
-      color: #165436;
-      border-radius: 12px;
-      padding: 8px 10px;
-      font-size: 12.5px;
-      margin-bottom: 10px;
-    }
-    .auth-tabs {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 6px;
-      margin-bottom: 12px;
-    }
-    .auth-tab-btn {
-      padding: 8px 10px;
-      border-radius: 12px;
-      border: 1px solid rgba(27, 108, 161, 0.25);
-      background: #ffffff;
-      color: var(--blue-deep);
-      font-weight: 700;
-      font-size: 13px;
-      cursor: pointer;
-    }
-    .auth-tab-btn.active {
-      background: linear-gradient(135deg, var(--blue), var(--green));
-      color: #ffffff;
-      border-color: transparent;
-    }
-    .progress-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin: 10px 0 12px;
-    }
-    .progress-stat-card {
-      background: #f4fafe;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 8px;
-      text-align: center;
-    }
-    .progress-stat-num {
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--blue-deep);
-      display: block;
-    }
-    .progress-stat-lbl {
-      font-size: 11px;
-      color: var(--ink-soft);
-    }
-    .history-list {
-      max-height: 150px;
-      overflow-y: auto;
-      border: 1px solid rgba(27, 108, 161, 0.2);
-      border-radius: 12px;
-      padding: 6px 8px;
-      background: #fbfdff;
-      font-size: 12px;
-    }
-    .history-row {
-      padding: 5px 0;
-      border-bottom: 1px dashed rgba(27, 108, 161, 0.14);
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-    }
-    .history-row:last-child {
-      border-bottom: none;
-    }
-  </style>
-</head>
-
-<body class="pb-12">
-  <header class="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-[#bfe0ec] shadow-sm">
-    <div class="max-w-3xl mx-auto px-3 pt-2.5 pb-2">
-      <div class="flex items-center justify-between gap-2 mb-2">
-        <div class="flex items-center gap-2 min-w-0">
-          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-[#d5eef9] to-[#d5f2df] border border-[#9fd0e3] flex items-center justify-center shrink-0">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1b6ca1" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 20V10" />
-              <path d="M12 14c-3.5 0-6-2-6-5 3 0 5.5 1.5 6 5z" fill="#d7f0df" stroke="#2a7a58" />
-              <path d="M12 14c3.5 0 6-2 6-5-3 0-5.5 1.5-6 5z" fill="#d7f0df" stroke="#2a7a58" />
-              <path d="M12 10c-2-2.5-2-5.5 0-7 2 1.5 2 4.5 0 7z" fill="#dff2fc" />
-            </svg>
-          </div>
-          <div class="min-w-0">
-            <h1 class="text-base sm:text-lg font-bold text-[#124e75] leading-tight truncate">Nét Đẹp Tiếng Việt</h1>
-            <p id="headerSummary" class="text-[11px] text-[#476d82] truncate">Ca dao • Tục ngữ • Thành ngữ</p>
-          </div>
-        </div>
-
-        <button
-          id="openAccountBtn"
-          type="button"
-          aria-label="Tài khoản học tập"
-          title="Tài khoản học tập"
-          class="acc-badge-btn px-2.5 py-2 bg-[#e8f7ee] hover:bg-[#d5efe0] text-[#165436] border border-[#9fd4b5] flex items-center gap-1.5 text-xs sm:text-sm shrink-0"
-        >
-          <span>👤</span>
-          <span id="headerAccountLabel" class="max-w-[110px] truncate">Tài khoản</span>
-        </button>
-
-        <button
-          id="openSettingsBtn"
-          type="button"
-          aria-label="Mở Cài đặt"
-          title="Cài đặt"
-          class="btn-pill px-3 py-2 bg-[#e7f4fa] hover:bg-[#d5ebf5] text-[#124e75] border border-[#b3d9ea] flex items-center gap-1.5 text-xs sm:text-sm shrink-0"
-        >
-          <span>⚙️</span>
-          <span class="hidden sm:inline">Cài đặt</span>
-        </button>
-      </div>
-
-      <nav aria-label="Điều hướng chính" class="grid grid-cols-4 gap-1.5">
-        <button type="button" class="tab-btn active btn-pill py-2 px-2 text-xs sm:text-sm border truncate bg-white text-[#124e75] border-[#b8dce9]" data-tab="all">Tất cả</button>
-        <button type="button" class="tab-btn btn-pill py-2 px-2 text-xs sm:text-sm border truncate bg-white text-[#124e75] border-[#b8dce9]" data-tab="study">Góc học tập</button>
-        <button type="button" class="tab-btn btn-pill py-2 px-2 text-xs sm:text-sm border truncate bg-white text-[#124e75] border-[#b8dce9]" data-tab="games">Trò chơi</button>
-        <button type="button" class="tab-btn btn-pill py-2 px-2 text-xs sm:text-sm border truncate bg-white text-[#124e75] border-[#b8dce9]" data-tab="mastered">Đã thuộc</button>
-      </nav>
-    </div>
-  </header>
-
-  <div class="max-w-3xl mx-auto px-3 pt-3">
-    <section id="searchFilterSection" class="toolbar-card">
-      <div class="search-row">
-        <input id="searchInput" class="search-input" type="searc   margin-top: 8px;
-    }
-
-    .word-chip {
-      border: 1px solid rgba(27, 108, 161, 0.3);
-      background: #ffffff;
-      color: var(--ink);
-      border-radius: 10px;
-      padding: 7px 11px;
-      font-size: 13.5px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .word-chip.right { background: var(--right-bg); border-color: var(--right-bd); color: #14532d; }
-    .word-chip.wrong { background: var(--wrong-bg); border-color: var(--wrong-bd); color: #7f1d1d; }
-
-    .line-box {
-      border: 1px solid rgba(27, 108, 161, 0.22);
-      background: #ffffff;
-      border-radius: 12px;
-      padding: 8px 10px;
-      min-height: 44px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-bottom: 8px;
-    }
-
-    .match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
-    .match-item {
-      border: 1px solid rgba(27, 108, 161, 0.25);
-      background: #ffffff;
-      border-radius: 12px;
-      padding: 9px;
-      font-size: 12.5px;
-      line-height: 1.38;
-      text-align: left;
-      cursor: pointer;
-    }
-
-    .match-item.selected { background: var(--blue-soft); border-color: var(--blue); font-weight: 600; }
-    .match-item.paired { background: #eef8f1; border-color: var(--green); }
-    .match-item.correct { background: var(--right-bg); border-color: var(--right-bd); }
-    .match-item.wrong { background: var(--wrong-bg); border-color: var(--wrong-bd); }
-
-    .feedback-box { margin-top: 12px; padding: 12px; border-radius: 14px; font-size: 13px; line-height: 1.5; }
-    .feedback-box.ok { background: var(--right-bg); border: 1px solid var(--right-bd); color: #14532d; font-weight: 600; }
-    .feedback-box.err { background: var(--wrong-bg); border: 1px solid var(--wrong-bd); color: #7f1d1d; }
-    .game-controls { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
-
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(16, 38, 54, 0.48);
-      backdrop-filter: blur(4px);
-      z-index: 50;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 14px;
-    }
-
-    .modal-backdrop.open { display: flex; }
-
-    .modal-sheet {
-      width: 100%;
-      max-width: 500px;
-      max-height: 88vh;
-      overflow-y: auto;
-      background: #f8fcff;
-      border-radius: 22px;
-      border: 1px solid var(--border);
-      padding: 16px;
-    }
-
-    .modal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-    .modal-title { margin: 0; font-size: 17px; font-weight: 700; color: var(--blue-deep); }
-    .close-x { width: 34px; height: 34px; border-radius: 10px; border: 1px solid rgba(27, 108, 161, 0.25); background: #fff; font-size: 18px; cursor: pointer; }
-    .setting-list { display: grid; gap: 7px; margin-bottom: 12px; }
-    .setting-row-btn {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 11px 13px;
-      border-radius: 13px;
-      border: 1px solid rgba(27, 108, 161, 0.22);
-      background: #ffffff;
-      color: var(--ink);
-      font-size: 13.5px;
-      font-weight: 600;
-      cursor: pointer;
-      text-align: left;
-    }
-
-    .setting-row-btn.active { background: linear-gradient(135deg, #e5f3fd, #e7f6ec); border-color: var(--blue); color: var(--blue-deep); }
-    .setting-detail-panel { background: #ffffff; border: 1px solid var(--border); border-radius: 15px; padding: 13px; }
-    .field-group { margin-bottom: 10px; }
-    .field-label { display: block; font-size: 12px; font-weight: 700; color: var(--ink-soft); margin-bottom: 4px; }
-    .field-input, .field-textarea, .field-select {
-      width: 100%;
-      border-radius: 11px;
-      border: 1px solid rgba(27, 108, 161, 0.28);
-      padding: 8px 10px;
-      font-size: 13px;
-      color: var(--ink);
-      background: #fff;
-    }
-
-    .field-textarea { min-height: 68px; resize: vertical; }
-    .picker-list {
-      max-height: 220px;
-      overflow-y: auto;
-      border: 1px solid rgba(27, 108, 161, 0.2);
-      border-radius: 12px;
-      padding: 6px;
-      background: #fbfdff;
-      margin: 8px 0;
-    }
-
-    .picker-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
-      padding: 7px 6px;
-      border-bottom: 1px dashed rgba(27, 108, 161, 0.14);
-      font-size: 12.5px;
-      line-height: 1.38;
-    }
-
-    .toast-msg {
-      position: fixed;
-      left: 50%;
-      bottom: 18px;
-      transform: translateX(-50%) translateY(20px);
-      background: #143246;
-      color: #ffffff;
-      padding: 10px 16px;
-      border-radius: 999px;
-      font-size: 13px;
-      font-weight: 500;
-      opacity: 0;
-      pointer-events: none;
-      transition: all 0.22s ease;
-      z-index: 90;
-      max-width: 92vw;
-      text-align: center;
-    }
-
-    .toast-msg.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-    .acc-badge-btn {
-      border-radius: 14px;
-      font-weight: 600;
-      transition: all 0.15s ease;
-      box-shadow: 0 3px 0 rgba(18, 78, 117, 0.14);
-      cursor: pointer;
-    }
-    .acc-pill-info {
-      background: #e9f7ee;
-      border: 1px solid #8fd1a8;
-      color: #165436;
-      border-radius: 12px;
-      padding: 8px 10px;
-      font-size: 12.5px;
-      margin-bottom: 10px;
-    }
-    .auth-tabs {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 6px;
-      margin-bottom: 12px;
-    }
-    .auth-tab-btn {
-      padding: 8px 10px;
-      border-radius: 12px;
-      border: 1px solid rgba(27, 108, 161, 0.25);
-      background: #ffffff;
-      color: var(--blue-deep);
-      font-weight: 700;
-      font-size: 13px;
-      cursor: pointer;
-    }
-    .auth-tab-btn.active {
-      background: linear-gradient(135deg, var(--blue), var(--green));
-      color: #ffffff;
-      border-color: transparent;
-    }
-    .progress-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin: 10px 0 12px;
-    }
-    .progress-stat-card {
-      background: #f4fafe;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 8px;
-      text-align: center;
-    }
-    .progress-stat-num {
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--blue-deep);
-      display: block;
-    }
-    .progress-stat-lbl {
-      font-size: 11px;
-      color: var(--ink-soft);
-    }
-    .history-list {
-      max-height: 150px;
-      overflow-y: auto;
-      border: 1px solid rgba(27, 108, 161, 0.2);
-      border-radius: 12px;
-      padding: 6px 8px;
-      background: #fbfdff;
-      font-size: 12px;
-    }
-    .history-row {
-      padding: 5px 0;
-      border-bottom: 1px dashed rgba(27, 108, 161, 0.14);
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-    }
-    .history-row:last-child {
-      border-bottom: none;
-    }
-  </style>
-</head>
-
-<body class="pb-12">
-  <header class="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-[#bfe0ec] shadow-sm">
-    <div class="max-w-3xl mx-auto px-3 pt-2.5 pb-2">
-      <div class="flex items-center justify-between gap-2 mb-2">
-        <div class="flex items-center gap-2 min-w-0">
-          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-[#d5eef9] to-[#d5f2df] border border-[#9fd0e3] flex items-center justify-center shrink-0">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1b6ca1" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 20V10" />
-              <path d="M12 14c-3.5 0-6-2-6-5 3 0 5.5 1.5 6 5z" fill="#d7f0df" stroke="#2a7a58" />
-              <path d="M12 14c3.5 0 6-2 6-5-3 0-5.5 1.5-6 5z" fill="#d7f0df" stroke="#2a7a58" />
-              <path d="M12 10c-2-2.5-2-5.5 0-7 2 1.5 2 4.5 0 7z" fill="#dff2fc" />
-            </svg>
-          </div>
-          <div class="min-w-0">
-            <h1 class="text-base sm:text-lg font-bold text-[#124e75] leading-tight truncate">Nét Đẹp Tiếng Việt</h1>
-            <p id="headerSummary" class="text-[11px] text-[#476d82] truncate">Ca dao • Tục ngữ • Thành ngữ</p>
-          </div>
-        </div>
-
-        <button
-          id="openAccountBtn"
-          type="button"
-          aria-label="Tài khoản học tập"
-          title="Tài khoản học tập"
-          class="acc-badge-btn px-2.5 py-2 bg-[#e8f7ee] hover:bg-[#d5efe0] text-[#165436] border border-[#9fd4b5] flex items-center gap-1.5 text-xs sm:text-sm shrink-0"
-        >
-          <span>👤</span>
-          <span id="headerAccountLabel" class="max-w-[110px] truncate">Tài khoản</span>
-        </button>
-
-        <button
-          id="openSettingsBtn"
-          type="button"
-          aria-label="Mở Cài đặt"
-          title="Cài đặt"
-          class="btn-pill px-3 py-2 bg-[#e7f4fa] hover:bg-[#d5ebf5] text-[#124e75] border border-[#b3d9ea] flex items-center gap-1.5 text-xs sm:text-sm shrink-0"
-        >
-          <span>⚙️</span>
-          <span class="hidden sm:inline">Cài đặt</span>
-        </button>
-      </div>
-
-      <nav aria-label="Điều hướng chính" class="grid grid-cols-4 gap-1.5">
-        <button type="button" class="tab-btn active btn-pill py-2 px-2 text-xs sm:text-sm border truncate bg-white text-[#124e75] border-[#b8dce9]" data-tab="all">Tất cả</button>
-        <button type="button" class="tab-btn btn-pill py-2 px-2 text-xs sm:text-sm border truncate bg-white text-[#124e75] border-[#b8dce9]" data-tab="study">Góc học tập</button>
-        <button type="button" class="tab-btn btn-pill py-2 px-2 text-xs sm:text-sm border truncate bg-white text-[#124e75] border-[#b8dce9]" data-tab="games">Trò chơi</button>
-        <button type="button" class="tab-btn btn-pill py-2 px-2 text-xs sm:text-sm border truncate bg-white text-[#124e75] border-[#b8dce9]" data-tab="mastered">Đã thuộc</button>
-      </nav>
-    </div>
-  </header>
-
-  <div class="max-w-3xl mx-auto px-3 pt-3">
-    <section id="searchFilterSection" class="toolbar-card">
-      <div class="search-row">
-        <input id="searchInput" class="search-input" type="searc   margin-top: 8px;
-    }
-
-    .word-chip {
-      border: 1px solid rgba(27, 108, 161, 0.3);
-      background: #ffffff;
-      color: var(--ink);
-      border-radius: 10px;
-      padding: 7px 11px;
-      font-size: 13.5px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .word-chip.right { background: var(--right-bg); border-color: var(--right-bd); color: #14532d; }
-    .word-chip.wrong { background: var(--wrong-bg); border-color: var(--wrong-bd); color: #7f1d1d; }
-
-    .line-box {
-      border: 1px solid rgba(27, 108, 161, 0.22);
-      background: #ffffff;
-      border-radius: 12px;
-      padding: 8px 10px;
-      min-height: 44px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-bottom: 8px;
-    }
-
-    .match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
-    .match-item {
-      border: 1px solid rgba(27, 108, 161, 0.25);
-      background: #ffffff;
-      border-radius: 12px;
-      padding: 9px;
-      font-size: 12.5px;
-      line-height: 1.38;
-      text-align: left;
-      cursor: pointer;
-    }
-
-    .match-item.selected { background: var(--blue-soft); border-color: var(--blue); font-weight: 600; }
-    .match-item.paired { background: #eef8f1; border-color: var(--green); }
-    .match-item.correct { background: var(--right-bg); border-color: var(--right-bd); }
-    .match-item.wrong { background: var(--wrong-bg); border-color: var(--wrong-bd); }
-
-    .feedback-box { margin-top: 12px; padding: 12px; border-radius: 14px; font-size: 13px; line-height: 1.5; }
-    .feedback-box.ok { background: var(--right-bg); border: 1px solid var(--right-bd); color: #14532d; font-weight: 600; }
-    .feedback-box.err { background: var(--wrong-bg); border: 1px solid var(--wrong-bd); color: #7f1d1d; }
-    .game-controls { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
-
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(16, 38, 54, 0.48);
-      backdrop-filter: blur(4px);
-      z-index: 50;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 14px;
-    }
-
-    .modal-backdrop.open { display: flex; }
-
-    .modal-sheet {
-      width: 100%;
-      max-width: 500px;
-      max-height: 88vh;
-      overflow-y: auto;
-      background: #f8fcff;
-      border-radius: 22px;
-      border: 1px solid var(--border);
-      padding: 16px;
-    }
-
-    .modal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-    .modal-title { margin: 0; font-size: 17px; font-weight: 700; color: var(--blue-deep); }
-    .close-x { width: 34px; height: 34px; border-radius: 10px; border: 1px solid rgba(27, 108, 161, 0.25); background: #fff; font-size: 18px; cursor: pointer; }
-    .setting-list { display: grid; gap: 7px; margin-bottom: 12px; }
-    .setting-row-btn {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 11px 13px;
-      border-radius: 13px;
-      border: 1px solid rgba(27, 108, 161, 0.22);
-      background: #ffffff;
-      color: var(--ink);
-      font-size: 13.5px;
-      font-weight: 600;
-      cursor: pointer;
-      text-align: left;
-    }
-
-    .setting-row-btn.active { background: linear-gradient(135deg, #e5f3fd, #e7f6ec); border-color: var(--blue); color: var(--blue-deep); }
-    .setting-detail-panel { background: #ffffff; border: 1px solid var(--border); border-radius: 15px; padding: 13px; }
-    .field-group { margin-bottom: 10px; }
-    .field-label { display: block; font-size: 12px; font-weight: 700; color: var(--ink-soft); margin-bottom: 4px; }
-    .field-input, .field-textarea, .field-select {
-      width: 100%;
-      border-radius: 11px;
-      border: 1px solid rgba(27, 108, 161, 0.28);
-      padding: 8px 10px;
-      font-size: 13px;
-      color: var(--ink);
-      background: #fff;
-    }
-
-    .field-textarea { min-height: 68px; resize: vertical; }
-    .picker-list {
-      max-height: 220px;
-      overflow-y: auto;
-      border: 1px solid rgba(27, 108, 161, 0.2);
-      border-radius: 12px;
-      padding: 6px;
-      background: #fbfdff;
-      margin: 8px 0;
-    }
-
-    .picker-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
-      padding: 7px 6px;
-      border-bottom: 1px dashed rgba(27, 108, 161, 0.14);
-      font-size: 12.5px;
-      line-height: 1.38;
-    }
-
-    .toast-msg {
-      position: fixed;
-      left: 50%;
-      bottom: 18px;
-      transform: translateX(-50%) translateY(20px);
-      background: #143246;
-      color: #ffffff;
-      padding: 10px 16px;
-      border-radius: 999px;
-      font-size: 13px;
-      font-weight: 500;
-      opacity: 0;
-      pointer-events: none;
-      transition: all 0.22s ease;
-      z-index: 90;
-      max-width: 92vw;
-      text-align: center;
-    }
-
-    .toast-msg.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-  </style>
-</head>
-
-<body class="pb-12">
-  <header class="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-[#bfe0ec] shadow-sm">
-    <div class="max-w-3xl mx-auto px-3 pt-2.5 pb-2">
-      <div class="flex items-center justify-between gap-2 mb-2">
-        <div class="flex items-center gap-2 min-w-0">
-          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-[#d5eef9] to-[#d5f2df] border border-[#9fd0e3] flex items-center justify-center shrink-0">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1b6ca1" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 20V10" />
-              <path d="M12 14c-3.5 0-6-2-6-5 3 0 5.5 1.5 6 5z" fill="#d7f0df" stroke="#2a7a58" />
-              <path d="M12 14c3.5 0 6-2 6-5-3 0-5.5 1.5-6 5z" fill="#d7f0df" stroke="#2a7a58" />
-              <path d="M12 10c-2-2.5-2-5.5 0-7 2 1.5 2 4.5 0 7z" fill="#dff2fc" />
-            </svg>
-          </div>
-          <div class="min-w-0">
-            <h1 class="text-base sm:text-lg font-bold text-[#124e75] leading-tight truncate">Nét Đẹp Tiếng Việt</h1>
-            <p id="headerSummary" class="text-[11px] text-[#476d82] truncate">Ca dao • Tục ngữ • Thành ngữ</p>
-          </div>
-        </div>
-
-        <button
-          id="openSettingsBtn"
-          type="button"
-          aria-label="Mở Cài đặt"
-          title="Cài đặt"
-          class="btn-pill px-3 py-2 bg-[#e7f4fa] hover:bg-[#d5ebf5] text-[#124e75] border border-[#b3d9ea] flex items-center gap-1.5 text-xs sm:text-sm shrink-0"
-        >
-          <span>⚙️</span>
-          <span class="hidden sm:inline">Cài đặt</span>
-        </button>
-      </div>
-
-      <nav aria-label="Điều hướng chính" class="grid grid-cols-4 gap-1.5">
-        <button type="button" class="tab-btn active btn-pill py-2 px-2 text-xs sm:text-sm border truncate bg-white text-[#124e75] border-[#b8dce9]" data-tab="all">Tất cả</button>
-        <button type="button" class="tab-btn btn-pill py-2 px-2 text-xs sm:text-sm border truncate bg-white text-[#124e75] border-[#b8dce9]" data-tab="study">Góc học tập</button>
-        <button type="button" class="tab-btn btn-pill py-2 px-2 text-xs sm:text-sm border truncate bg-white text-[#124e75] border-[#b8dce9]" data-tab="games">Trò chơi</button>
-        <button type="button" class="tab-btn btn-pill py-2 px-2 text-xs sm:text-sm border truncate bg-white text-[#124e75] border-[#b8dce9]" data-tab="mastered">Đã thuộc</button>
-      </nav>
-    </div>
-  </header>
-
-  <div class="max-w-3xl mx-auto px-3 pt-3">
-    <section id="searchFilterSection" class="toolbar-card">
-      <div class="search-row">
-        <input id="searchInput" class="search-input" type="search" placeholder="Tìm câu, ý nghĩa, chủ đề..." />
-        <button id="toggleFilterBtn" class="tool-icon-btn" type="button" title="Bộ lọc" aria-label="Bộ lọc">⏷</button>
-        <button id="sortOrderBtn" class="tool-icon-btn" type="button" title="Sắp xếp A-Z / Z-A" aria-label="Sắp xếp A-Z / Z-A">⇅</button>
-      </div>
-      <div id="filterPanel" class="filter-panel">
-        <div class="filter-mode-switch">
-          <button id="modeTopicBtn" class="chip-btn active" type="button">Lọc theo chủ đề</button>
-          <button id="modeLetterBtn" class="chip-btn" type="button">Chữ cái đầu tiên</button>
-        </div>
-        <div id="topicFilterBox">
-          <select id="topicSelect" class="filter-select"><option value="">-- Tất cả chủ đề --</option></select>
-        </div>
-        <div id="letterFilterBox" style="display:none;">
-          <select id="letterSelect" class="filter-select"><option value="">-- Tất cả chữ cái đầu --</option></select>
-        </div>
-      </div>
-    </section>
-
     <div id="studyBanner" class="study-note-banner" style="display:none;"></div>
     <div id="metaStrip" class="meta-strip"></div>
     <main id="mainContent"></main>
     <div id="paginationBar" class="pagination-bar"></div>
   </div>
 
-  <div id="settingsModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="settingsModalTitle">
+  <div id="accountModal" class="modal-backdrop">
     <div class="modal-sheet">
       <div class="modal-head">
-        <h2 id="settingsModalTitle" class="modal-title">Cài đặt hệ thống</h2>
-        <button id="closeSettingsBtn" class="close-x" type="button" aria-label="Đóng">✕</button>
+        <h2 class="modal-title">Tài khoản &amp; Tiến độ</h2>
+        <button id="closeAccountBtn" class="close-x" type="button">✕</button>
+      </div>
+      <div id="accountDetailPanel" class="setting-detail-panel"></div>
+    </div>
+  </div>
+
+  <div id="settingsModal" class="modal-backdrop">
+    <div class="modal-sheet">
+      <div class="modal-head">
+        <h2 class="modal-title">Cài đặt hệ thống</h2>
+        <button id="closeSettingsBtn" class="close-x" type="button">✕</button>
       </div>
       <div class="setting-list">
         <button class="setting-row-btn active" data-setting="study20" type="button"><span>1. Chọn 20 bài cho Góc học tập</span><span>›</span></button>
@@ -1465,101 +237,65 @@
     (function () {
       const STORAGE_KEY = 'NET_DEP_TIENG_VIET_V1_STATE';
       const BACKUP_KEY = 'NET_DEP_TIENG_VIET_V1_AUTO_BACKUP';
+      const PROFILE_KEY = 'NET_DEP_TIENG_VIET_V1_PROFILE';
       const PAGE_SIZE = 20;
       const REVIEW_WINDOW_DAYS = 10;
       const REVIEW_TARGET_COUNT = 3;
       const DAY_MS = 24 * 60 * 60 * 1000;
-
-      const TOPICS = [
-        'Gia đình', 'Bạn bè', 'Trường lớp', 'Thiên nhiên',
-        'Đất nước', 'Lao động & Cần cù', 'Đạo lý & Làm người', 'Kinh nghiệm dân gian'
-      ];
-
-      const TOPIC_PASTEL_MAP = {
-        'Gia đình': '#ffe8ef', 'Bạn bè': '#e2f4ff', 'Trường lớp': '#fff3d6',
-        'Thiên nhiên': '#e2f7ea', 'Đất nước': '#ece8ff', 'Lao động & Cần cù': '#ffedd9',
-        'Đạo lý & Làm người': '#e3f8f5', 'Kinh nghiệm dân gian': '#f5e9ff'
-      };
-
-      const VIET_ALPHABET = [
-        'A', 'Ă', 'Â', 'B', 'C', 'D', 'Đ', 'E', 'Ê', 'G', 'H', 'I',
-        'K', 'L', 'M', 'N', 'O', 'Ô', 'Ơ', 'P', 'Q', 'R', 'S', 'T',
-        'U', 'Ư', 'V', 'X', 'Y'
-      ];
+      const TOPICS = ['Gia đình','Bạn bè','Trường lớp','Thiên nhiên','Đất nước','Lao động & Cần cù','Đạo lý & Làm người','Kinh nghiệm dân gian'];
+      const TOPIC_PASTEL_MAP = {'Gia đình':'#ffe8ef','Bạn bè':'#e2f4ff','Trường lớp':'#fff3d6','Thiên nhiên':'#e2f7ea','Đất nước':'#ece8ff','Lao động & Cần cù':'#ffedd9','Đạo lý & Làm người':'#e3f8f5','Kinh nghiệm dân gian':'#f5e9ff'};
+      const VIET_ALPHABET = ['A','Ă','Â','B','C','D','Đ','E','Ê','G','H','I','K','L','M','N','O','Ô','Ơ','P','Q','R','S','T','U','Ư','V','X','Y'];
 
       const BASE_376_ITEMS = [
-        { id: 1, kind: 'Ca dao', text: 'Công cha như núi Thái Sơn,\nNghĩa mẹ như nước trong nguồn chảy ra.', meaning: 'Công lao của cha mẹ vô cùng to lớn, sâu nặng và bền bỉ như núi cao, sông nguồn.' },
-        { id: 2, kind: 'Ca dao', text: 'Một lòng thờ mẹ kính cha,\nCho tròn chữ hiếu mới là đạo con.', meaning: 'Biết yêu thương, kính trọng và hiếu thảo với cha mẹ là bổn phận đẹp nhất của người con.' },
-        { id: 3, kind: 'Tục ngữ', text: 'Uống nước nhớ nguồn.', meaning: 'Khi hưởng thành quả tốt đẹp phải nhớ ơn những người đã tạo dựng nên.' },
-        { id: 4, kind: 'Tục ngữ', text: 'Ăn quả nhớ kẻ trồng cây.', meaning: 'Trân trọng và biết ơn người đã vất vả gieo trồng, chăm sóc để có trái ngọt.' },
-        { id: 5, kind: 'Ca dao', text: 'Anh em như thể tay chân,\nRách lành đùm bọc, dở hay đỡ đần.', meaning: 'Anh chị em trong nhà phải yêu thương, che chở và giúp đỡ nhau lúc khó khăn.' },
-        { id: 6, kind: 'Tục ngữ', text: 'Chị ngã em nâng.', meaning: 'Người thân yêu thương, nương tựa và nâng đỡ nhau khi gặp hoạn nạn.' },
-        { id: 7, kind: 'Tục ngữ', text: 'Một cây làm chẳng nên non,\nBa cây chụm lại nên hòn núi cao.', meaning: 'Đoàn kết và hợp sức nhiều người sẽ tạo nên sức mạnh lớn lao.' },
-        { id: 8, kind: 'Thành ngữ', text: 'Lá lành đùm lá rách.', meaning: 'Người có điều kiện khá giả chia sẻ, giúp đỡ người đang gặp khó khăn, thiếu thốn.' },
-        { id: 9, kind: 'Tục ngữ', text: 'Thương người như thể thương thân.', meaning: 'Biết đồng cảm, yêu thương người khác như chính bản thân mình.' },
-        { id: 10, kind: 'Thành ngữ', text: 'Bán anh em xa mua láng giềng gần.', meaning: 'Hàng xóm láng giềng sống gần gũi sẽ giúp đỡ nhau kịp thời khi tối lửa tắt đèn.' },
-        { id: 11, kind: 'Ca dao', text: 'Bầu ơi thương lấy bí cùng,\nTuy rằng khác giống nhưng chung một giàn.', meaning: 'Dù khác biệt nhưng cùng chung cộng đồng, đất nước thì cần yêu thương, đùm bọc nhau.' },
-        { id: 12, kind: 'Tục ngữ', text: 'Có công mài sắt, có ngày nên kim.', meaning: 'Kiên trì, nhẫn nại rèn luyện thì việc khó đến đâu cũng sẽ thành công.' },
-        { id: 13, kind: 'Thành ngữ', text: 'Non sông gấm vóc.', meaning: 'Đất nước ta tươi đẹp, giàu truyền thống và trù phú.' },
-        { id: 14, kind: 'Ca dao', text: 'Đứng bên ni đồng, ngó bên tê đồng, mênh mông bát ngát;\nĐứng bên tê đồng, ngó bên ni đồng, bát ngát mênh mông.', meaning: 'Ca ngợi vẻ đẹp rộng lớn, trù phú và thanh bình của đồng quê Việt Nam.' },
-        { id: 15, kind: 'Ca dao', text: 'Cày đồng đang buổi ban trưa,\nMồ hôi thánh thót như mưa ruộng cày.', meaning: 'Thấu hiểu nỗi vất vả, nhọc nhằn của người nông dân làm ruộng giữa nắng trưa.' },
-        { id: 16, kind: 'Tục ngữ', text: 'Tấc đất tấc vàng.', meaning: 'Đất đai canh tác vô cùng quý giá, cần được giữ gìn và sử dụng hiệu quả.' },
-        { id: 17, kind: 'Tục ngữ', text: 'Đi một ngày đàng, học một sàng khôn.', meaning: 'Đi nhiều nơi, trải nghiệm thực tế sẽ mở mang hiểu biết và sự khôn ngoan.' },
-        { id: 18, kind: 'Tục ngữ', text: 'Học thầy không tày học bạn.', meaning: 'Bên cạnh học từ thầy cô, trao đổi và học hỏi từ bạn bè cũng rất bổ ích.' },
-        { id: 19, kind: 'Tục ngữ', text: 'Muốn sang thì bắc cầu kiều,\nMuốn con hay chữ thì yêu lấy thầy.', meaning: 'Muốn con học giỏi, nên người thì phải kính trọng và tin yêu thầy cô giáo.' },
-        { id: 20, kind: 'Thành ngữ', text: 'Tôn sư trọng đạo.', meaning: 'Kính trọng thầy cô giáo và coi trọng đạo lý học tập, làm người.' }
+        { id:1, kind:'Ca dao', text:'Công cha như núi Thái Sơn,\nNghĩa mẹ như nước trong nguồn chảy ra.', meaning:'Công lao của cha mẹ vô cùng to lớn, sâu nặng và bền bỉ như núi cao, sông nguồn.' },
+        { id:2, kind:'Ca dao', text:'Một lòng thờ mẹ kính cha,\nCho tròn chữ hiếu mới là đạo con.', meaning:'Biết yêu thương, kính trọng và hiếu thảo với cha mẹ là bổn phận đẹp nhất của người con.' },
+        { id:3, kind:'Tục ngữ', text:'Uống nước nhớ nguồn.', meaning:'Khi hưởng thành quả tốt đẹp phải nhớ ơn những người đã tạo dựng nên.' },
+        { id:4, kind:'Tục ngữ', text:'Ăn quả nhớ kẻ trồng cây.', meaning:'Trân trọng và biết ơn người đã vất vả gieo trồng, chăm sóc để có trái ngọt.' },
+        { id:5, kind:'Ca dao', text:'Anh em như thể tay chân,\nRách lành đùm bọc, dở hay đỡ đần.', meaning:'Anh chị em trong nhà phải yêu thương, che chở và giúp đỡ nhau lúc khó khăn.' }
       ];
 
       (function populateBase376() {
         const templates = [
-          { kind: 'Tục ngữ', topic: 'Kinh nghiệm dân gian', q: 'Đêm tháng năm chưa nằm đã sáng,\nNgày tháng mười chưa cười đã tối.', m: 'Nhận xét sự thay đổi độ dài ngày và đêm theo mùa trong năm.' },
-          { kind: 'Tục ngữ', topic: 'Kinh nghiệm dân gian', q: 'Chuồn chuồn bay thấp thì mưa,\nBay cao thì nắng, bay vừa thì râm.', m: 'Kinh nghiệm quan sát thiên nhiên để dự đoán thời tiết của ông cha.' },
-          { kind: 'Tục ngữ', topic: 'Lao động & Cần cù', q: 'Tay làm hàm nhai,\nTay quai miệng trễ.', m: 'Chăm chỉ lao động thì có cơm ăn áo mặc, lười biếng thì thiếu thốn.' },
-          { kind: 'Thành ngữ', topic: 'Đạo lý & Làm người', q: 'Trung thực thật thà.', m: 'Sống ngay thẳng, không dối trá, giữ chữ tín với mọi người.' },
-          { kind: 'Ca dao', topic: 'Trường lớp', q: 'Ngọc kia chuốt mãi cũng trong,\nNgười kia học mãi cũng thông mọi điều.', m: 'Chăm chỉ học tập và rèn luyện thì ai cũng có thể tiến bộ và thông tuệ.' },
-          { kind: 'Thành ngữ', topic: 'Bạn bè', q: 'Tình bạn keo sơn.', m: 'Tình bạn gắn bó chặt chẽ, bền vững, thủy chung trước sau.' },
-          { kind: 'Ca dao', topic: 'Thiên nhiên', q: 'Gió đưa cành trúc la đà,\nTiếng chuông Trấn Vũ, canh gà Thọ Xương.', m: 'Bức tranh thiên nhiên và nhịp sống yên bình, cổ kính của đất kinh kỳ.' },
-          { kind: 'Tục ngữ', topic: 'Đất nước', q: 'Rừng vàng biển bạc.', m: 'Đất nước có nhiều tài nguyên rừng núi và biển cả phong phú, cần biết bảo vệ.' }
+          { kind:'Tục ngữ', topic:'Kinh nghiệm dân gian', q:'Đêm tháng năm chưa nằm đã sáng,\nNgày tháng mười chưa cười đã tối.', m:'Nhận xét sự thay đổi độ dài ngày và đêm theo mùa trong năm.' },
+          { kind:'Tục ngữ', topic:'Kinh nghiệm dân gian', q:'Chuồn chuồn bay thấp thì mưa,\nBay cao thì nắng, bay vừa thì râm.', m:'Kinh nghiệm quan sát thiên nhiên để dự đoán thời tiết của ông cha.' },
+          { kind:'Tục ngữ', topic:'Lao động & Cần cù', q:'Tay làm hàm nhai,\nTay quai miệng trễ.', m:'Chăm chỉ lao động thì có cơm ăn áo mặc, lười biếng thì thiếu thốn.' },
+          { kind:'Thành ngữ', topic:'Đạo lý & Làm người', q:'Trung thực thật thà.', m:'Sống ngay thẳng, không dối trá, giữ chữ tín với mọi người.' },
+          { kind:'Ca dao', topic:'Trường lớp', q:'Ngọc kia chuốt mãi cũng trong,\nNgười kia học mãi cũng thông mọi điều.', m:'Chăm chỉ học tập và rèn luyện thì ai cũng có thể tiến bộ và thông tuệ.' },
+          { kind:'Thành ngữ', topic:'Bạn bè', q:'Tình bạn keo sơn.', m:'Tình bạn gắn bó chặt chẽ, bền vững, thủy chung trước sau.' },
+          { kind:'Ca dao', topic:'Thiên nhiên', q:'Gió đưa cành trúc la đà,\nTiếng chuông Trấn Vũ, canh gà Thọ Xương.', m:'Bức tranh thiên nhiên và nhịp sống yên bình, cổ kính của đất kinh kỳ.' },
+          { kind:'Tục ngữ', topic:'Đất nước', q:'Rừng vàng biển bạc.', m:'Đất nước có nhiều tài nguyên rừng núi và biển cả phong phú, cần biết bảo vệ.' }
         ];
-        let nextId = BASE_376_ITEMS.length + 1;
-        let tIdx = 0;
+        let nextId = BASE_376_ITEMS.length + 1, tIdx = 0;
         while (BASE_376_ITEMS.length < 376) {
           const base = templates[tIdx % templates.length];
           const round = Math.floor(tIdx / templates.length) + 1;
-          const isSpecial = round % 9 === 0;
-          BASE_376_ITEMS.push({
-            id: nextId++,
-            kind: base.kind,
-            text: isSpecial ? `${base.q}\nGiữ gìn nét đẹp quê hương.` : base.q,
-            meaning: base.m,
-            _presetTopic: base.topic
-          });
+          BASE_376_ITEMS.push({ id: nextId++, kind: base.kind, text: round % 9 === 0 ? `${base.q}\nGiữ gìn nét đẹp quê hương.` : base.q, meaning: base.m, _presetTopic: base.topic });
           tIdx++;
         }
       })();
 
       const EXTRA_31_40_ITEMS = [
-        { id: 377, kind: 'Ca dao', text: 'Quê hương là chùm khế ngọt,\nCho con trèo hái mỗi ngày.', meaning: 'Quê hương gắn với kỷ niệm tuổi thơ ngọt ngào, bình dị và yêu thương.' },
-        { id: 378, kind: 'Tục ngữ', text: 'Gần mực thì đen, gần đèn thì rạng.', meaning: 'Môi trường sống và người tiếp xúc ảnh hưởng lớn đến tính cách của mỗi người.' },
-        { id: 379, kind: 'Thành ngữ', text: 'Một nắng hai sương.', meaning: 'Sự vất vả, chịu thương chịu khó làm việc ngoài trời nắng mưa.' },
-        { id: 380, kind: 'Ca dao', text: 'Dù ai đi ngược về xuôi,\nNhớ ngày giỗ Tổ mùng mười tháng ba.', meaning: 'Nhắc nhở con cháu nhớ cội nguồn dân tộc và ngày Giỗ Tổ Hùng Vương.' },
-        { id: 381, kind: 'Tục ngữ', text: 'Học ăn, học nói, học gói, học mở.', meaning: 'Học cách ứng xử lễ phép, khéo léo và tinh tế trong cuộc sống hằng ngày.' },
-        { id: 382, kind: 'Ca dao', text: 'Trong đầm gì đẹp bằng sen,\nLá xanh bông trắng lại chen nhị vàng.', meaning: 'Vẻ đẹp thanh cao, thuần khiết của hoa sen và phẩm chất đáng quý của con người.' },
-        { id: 383, kind: 'Tục ngữ', text: 'Kiến tha lâu cũng đầy tổ.', meaning: 'Làm việc đều đặn, tích lũy từng chút một sẽ đạt được kết quả lớn.' },
-        { id: 384, kind: 'Thành ngữ', text: 'Uống nước nhớ nguồn, ăn quả nhớ kẻ trồng cây.', meaning: 'Đề cao lòng biết ơn đối với thế hệ đi trước và người giúp đỡ mình.' },
-        { id: 385, kind: 'Ca dao', text: 'Mẹ già như chuối ba hương,\nNhư xôi nếp một, như đường mía lau.', meaning: 'Sự dịu hiền, ngọt ngào và đáng trân quý của người mẹ lớn tuổi.' },
-        { id: 386, kind: 'Tục ngữ', text: 'Có chí thì nên.', meaning: 'Có ý chí, quyết tâm và nghị lực thì sẽ vượt qua thử thách để thành công.' }
+        { id:377, kind:'Ca dao', text:'Quê hương là chùm khế ngọt,\nCho con trèo hái mỗi ngày.', meaning:'Quê hương gắn với kỷ niệm tuổi thơ ngọt ngào, bình dị và yêu thương.' },
+        { id:378, kind:'Tục ngữ', text:'Gần mực thì đen, gần đèn thì rạng.', meaning:'Môi trường sống và người tiếp xúc ảnh hưởng lớn đến tính cách của mỗi người.' },
+        { id:379, kind:'Thành ngữ', text:'Một nắng hai sương.', meaning:'Sự vất vả, chịu thương chịu khó làm việc ngoài trời nắng mưa.' },
+        { id:380, kind:'Ca dao', text:'Dù ai đi ngược về xuôi,\nNhớ ngày giỗ Tổ mùng mười tháng ba.', meaning:'Nhắc nhở con cháu nhớ cội nguồn dân tộc và ngày Giỗ Tổ Hùng Vương.' },
+        { id:381, kind:'Tục ngữ', text:'Học ăn, học nói, học gói, học mở.', meaning:'Học cách ứng xử lễ phép, khéo léo và tinh tế trong cuộc sống hằng ngày.' },
+        { id:382, kind:'Ca dao', text:'Trong đầm gì đẹp bằng sen,\nLá xanh bông trắng lại chen nhị vàng.', meaning:'Vẻ đẹp thanh cao, thuần khiết của hoa sen và phẩm chất đáng quý của con người.' },
+        { id:383, kind:'Tục ngữ', text:'Kiến tha lâu cũng đầy tổ.', meaning:'Làm việc đều đặn, tích lũy từng chút một sẽ đạt được kết quả lớn.' },
+        { id:384, kind:'Thành ngữ', text:'Uống nước nhớ nguồn, ăn quả nhớ kẻ trồng cây.', meaning:'Đề cao lòng biết ơn đối với thế hệ đi trước và người giúp đỡ mình.' },
+        { id:385, kind:'Ca dao', text:'Mẹ già như chuối ba hương,\nNhư xôi nếp một, như đường mía lau.', meaning:'Sự dịu hiền, ngọt ngào và đáng trân quý của người mẹ lớn tuổi.' },
+        { id:386, kind:'Tục ngữ', text:'Có chí thì nên.', meaning:'Có ý chí, quyết tâm và nghị lực thì sẽ vượt qua thử thách để thành công.' }
       ];
 
       function inferTopic(item) {
         if (item._presetTopic && TOPICS.includes(item._presetTopic)) return item._presetTopic;
         const s = `${item.text} ${item.meaning}`.toLowerCase();
-        if (s.includes('cha') || s.includes('mẹ') || s.includes('hiếu') || s.includes('anh em') || s.includes('chị ngã') || s.includes('gia đình')) return 'Gia đình';
-        if (s.includes('bạn') || s.includes('bè') || s.includes('đùm bọc') || s.includes('thương người')) return 'Bạn bè';
-        if (s.includes('học') || s.includes('thầy') || s.includes('chữ') || s.includes('trường') || s.includes('khôn')) return 'Trường lớp';
-        if (s.includes('đồng') || s.includes('sen') || s.includes('gió') || s.includes('mưa') || s.includes('nắng') || s.includes('núi') || s.includes('sông')) return 'Thiên nhiên';
-        if (s.includes('nước') || s.includes('quê hương') || s.includes('tổ') || s.includes('non sông') || s.includes('đất')) return 'Đất nước';
-        if (s.includes('cày') || s.includes('làm') || s.includes('mồ hôi') || s.includes('sương') || s.includes('trồng cây')) return 'Lao động & Cần cù';
+        if (s.includes('cha') || s.includes('mẹ') || s.includes('hiếu') || s.includes('anh em')) return 'Gia đình';
+        if (s.includes('bạn') || s.includes('đùm bọc') || s.includes('thương người')) return 'Bạn bè';
+        if (s.includes('học') || s.includes('thầy') || s.includes('chữ')) return 'Trường lớp';
+        if (s.includes('đồng') || s.includes('sen') || s.includes('gió') || s.includes('mưa') || s.includes('nắng')) return 'Thiên nhiên';
+        if (s.includes('nước') || s.includes('quê hương') || s.includes('tổ')) return 'Đất nước';
+        if (s.includes('cày') || s.includes('làm') || s.includes('mồ hôi') || s.includes('sương')) return 'Lao động & Cần cù';
         if (s.includes('tháng năm') || s.includes('tháng mười') || s.includes('chuồn chuồn')) return 'Kinh nghiệm dân gian';
         return 'Đạo lý & Làm người';
       }
@@ -1568,29 +304,25 @@
         const allItems = [...BASE_376_ITEMS, ...EXTRA_31_40_ITEMS].map((it) => ({
           id: it.id, kind: it.kind || 'Tục ngữ', text: it.text.trim(), meaning: it.meaning.trim(), topic: inferTopic(it)
         }));
-        return {
-          items: allItems, studyIds: allItems.slice(0, 20).map((x) => x.id), masteredMap: {},
-          activeTab: 'all', page: 1, search: '', filterMode: 'topic', filterTopic: '', filterLetter: '', sortOrder: 'default'
-        };
+        return { items: allItems, studyIds: allItems.slice(0, 20).map((x) => x.id), masteredMap: {}, activeTab: 'all', page: 1, search: '', filterMode: 'topic', filterTopic: '', filterLetter: '', sortOrder: 'default' };
       }
 
       function sanitizeState(raw) {
-        const fallback = buildInitialState();
-        if (!raw || typeof raw !== 'object') return fallback;
-        const items = Array.isArray(raw.items) && raw.items.length > 0
-          ? raw.items.filter((x) => x && typeof x.text === 'string' && x.text.trim()).map((x, idx) => ({
-              id: Number(x.id) || idx + 1, kind: x.kind || 'Tục ngữ', text: x.text.trim(),
-              meaning: (x.meaning || 'Ý nghĩa dân gian giàu giá trị giáo dục.').trim(),
-              topic: TOPICS.includes(x.topic) ? x.topic : inferTopic(x)
+        const fb = buildInitialState();
+        if (!raw || typeof raw !== 'object') return fb;
+        const items = Array.isArray(raw.items) && raw.items.length
+          ? raw.items.filter((x) => x && typeof x.text === 'string' && x.text.trim()).map((x, i) => ({
+              id: Number(x.id) || i + 1, kind: x.kind || 'Tục ngữ', text: x.text.trim(),
+              meaning: (x.meaning || 'Ý nghĩa dân gian.').trim(), topic: TOPICS.includes(x.topic) ? x.topic : inferTopic(x)
             }))
-          : fallback.items;
+          : fb.items;
         const validIds = new Set(items.map((i) => i.id));
         const masteredMap = {};
         if (raw.masteredMap && typeof raw.masteredMap === 'object') {
           Object.keys(raw.masteredMap).forEach((k) => {
-            const numId = Number(k);
-            if (validIds.has(numId) && raw.masteredMap[k]) {
-              masteredMap[numId] = {
+            const id = Number(k);
+            if (validIds.has(id) && raw.masteredMap[k]) {
+              masteredMap[id] = {
                 masteredAt: Number(raw.masteredMap[k].masteredAt) || Date.now(),
                 cycleStart: Number(raw.masteredMap[k].cycleStart) || Date.now(),
                 reviewMissesInCycle: Number(raw.masteredMap[k].reviewMissesInCycle) || 0,
@@ -1600,230 +332,172 @@
           });
         }
         let studyIds = Array.isArray(raw.studyIds) ? raw.studyIds.map(Number).filter((id) => validIds.has(id)) : [];
-        if (studyIds.length === 0) studyIds = items.slice(0, Math.min(20, items.length)).map((i) => i.id);
+        if (!studyIds.length) studyIds = items.slice(0, Math.min(20, items.length)).map((i) => i.id);
         return {
           items, studyIds, masteredMap,
-          activeTab: ['all', 'study', 'games', 'mastered'].includes(raw.activeTab) ? raw.activeTab : 'all',
+          activeTab: ['all','study','games','mastered'].includes(raw.activeTab) ? raw.activeTab : 'all',
           page: Math.max(1, Number(raw.page) || 1),
           search: typeof raw.search === 'string' ? raw.search : '',
           filterMode: raw.filterMode === 'letter' ? 'letter' : 'topic',
           filterTopic: typeof raw.filterTopic === 'string' ? raw.filterTopic : '',
           filterLetter: typeof raw.filterLetter === 'string' ? raw.filterLetter : '',
-          sortOrder: ['default', 'asc', 'desc'].includes(raw.sortOrder) ? raw.sortOrder : 'default'
+          sortOrder: ['default','asc','desc'].includes(raw.sortOrder) ? raw.sortOrder : 'default'
         };
+      }
+
+      function persistState(st, writeBak = true) {
+        try {
+          const s = JSON.stringify(st);
+          localStorage.setItem(STORAGE_KEY, s);
+          if (writeBak) localStorage.setItem(BACKUP_KEY, s);
+        } catch (e) {}
       }
 
       function loadState() {
         try {
-          const rawStr = localStorage.getItem(STORAGE_KEY);
-          if (rawStr) return sanitizeState(JSON.parse(rawStr));
-        } catch (e) {}
-        try {
-          const bakStr = localStorage.getItem(BACKUP_KEY);
-          if (bakStr) {
-            const rec = sanitizeState(JSON.parse(bakStr));
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(rec));
-            return rec;
-          }
+          const r = localStorage.getItem(STORAGE_KEY);
+          if (r) return sanitizeState(JSON.parse(r));
         } catch (e) {}
         const init = buildInitialState();
         persistState(init, true);
         return init;
       }
 
-      function persistState(st, writeAutoBackup = true) {
-        try {
-          const s = JSON.stringify(st);
-          localStorage.setItem(STORAGE_KEY, s);
-          if (writeAutoBackup) localStorage.setItem(BACKUP_KEY, s);
-        } catch (e) {}
+      function loadProfile() {
+        try { const p = JSON.parse(localStorage.getItem(PROFILE_KEY) || 'null'); if (p && p.name) return { name: String(p.name) }; } catch (e) {}
+        return { name: 'Bé học Tiếng Việt' };
+      }
+
+      function saveProfile(name) {
+        const clean = (name || '').trim() || 'Bé học Tiếng Việt';
+        try { localStorage.setItem(PROFILE_KEY, JSON.stringify({ name: clean })); } catch (e) {}
+        return { name: clean };
       }
 
       let state = loadState();
+      let profile = loadProfile();
       let activeGameSession = null;
       let activeSettingKey = 'study20';
       let editTargetId = null;
 
       function showToast(msg) {
         const el = document.getElementById('toast');
-        if (!el) return;
-        el.textContent = msg;
-        el.classList.add('show');
+        el.textContent = msg; el.classList.add('show');
         clearTimeout(showToast._t);
-        showToast._t = setTimeout(() => el.classList.remove('show'), 2600);
+        showToast._t = setTimeout(() => el.classList.remove('show'), 2500);
       }
 
-      function escapeHtml(str) {
-        return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      function esc(str) {
+        return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
       }
 
-      function getFirstLetterVi(text) {
-        const cleaned = (text || '').trim().toUpperCase();
-        const prefixes = ['Đ', 'CH', 'GH', 'GI', 'KH', 'NG', 'NGH', 'NH', 'PH', 'QU', 'TH', 'TR'];
-        for (const p of prefixes) {
-          if (cleaned.startsWith(p)) return p === 'Đ' ? 'Đ' : p[0];
-        }
-        const first = cleaned[0] || '';
-        return VIET_ALPHABET.includes(first) ? first : (first ? first.normalize('NFD')[0].toUpperCase() : '');
+      function getFirstLetter(text) {
+        const c = (text || '').trim().toUpperCase();
+        const prefixes = ['Đ','CH','GH','GI','KH','NG','NGH','NH','PH','QU','TH','TR'];
+        for (const p of prefixes) if (c.startsWith(p)) return p === 'Đ' ? 'Đ' : p[0];
+        const f = c[0] || '';
+        return VIET_ALPHABET.includes(f) ? f : (f ? f.normalize('NFD')[0].toUpperCase() : '');
       }
 
-      function evaluateSpacedReviewCycles(now = Date.now()) {
-        let changed = false;
-        const cycleMs = REVIEW_WINDOW_DAYS * DAY_MS;
-        Object.keys(state.masteredMap).forEach((key) => {
-          const id = Number(key);
-          const rec = state.masteredMap[id];
+      function checkReviewCycles(now = Date.now()) {
+        let ch = false;
+        Object.keys(state.masteredMap).forEach((k) => {
+          const id = Number(k), rec = state.masteredMap[id];
           if (!rec) return;
           if (!rec.cycleStart) rec.cycleStart = rec.masteredAt || now;
           if (rec.reviewMissesInCycle >= REVIEW_TARGET_COUNT) {
             delete state.masteredMap[id];
             if (!state.studyIds.includes(id)) state.studyIds.push(id);
-            changed = true;
-            return;
+            ch = true; return;
           }
-          if (now - rec.cycleStart >= cycleMs) {
-            rec.cycleStart = now;
-            rec.reviewMissesInCycle = 0;
-            rec.reviewAttemptsInCycle = 0;
-            changed = true;
+          if (now - rec.cycleStart >= REVIEW_WINDOW_DAYS * DAY_MS) {
+            rec.cycleStart = now; rec.reviewMissesInCycle = 0; rec.reviewAttemptsInCycle = 0; ch = true;
           }
         });
-        if (changed) persistState(state);
+        if (ch) persistState(state);
       }
 
-      function isDueFor10DayReview(itemId, now = Date.now()) {
-        const rec = state.masteredMap[itemId];
+      function isDueReview(id, now = Date.now()) {
+        const rec = state.masteredMap[id];
         if (!rec) return false;
-        const elapsed = now - (rec.cycleStart || rec.masteredAt || now);
-        return elapsed >= 0 && elapsed <= REVIEW_WINDOW_DAYS * DAY_MS && (rec.reviewAttemptsInCycle || 0) < REVIEW_TARGET_COUNT;
+        const el = now - (rec.cycleStart || rec.masteredAt || now);
+        return el >= 0 && el <= REVIEW_WINDOW_DAYS * DAY_MS && (rec.reviewAttemptsInCycle || 0) < REVIEW_TARGET_COUNT;
       }
 
-      function toggleStarMastered(itemId) {
-        const id = Number(itemId);
-        if (state.masteredMap[id]) {
-          delete state.masteredMap[id];
-          showToast('Đã bỏ dấu sao (chưa thuộc từ)');
-        } else {
-          const now = Date.now();
-          state.masteredMap[id] = { masteredAt: now, cycleStart: now, reviewMissesInCycle: 0, reviewAttemptsInCycle: 0 };
-          showToast('⭐ Đã thuộc từ!');
-        }
-        persistState(state);
-        renderAll();
+      function toggleStar(id) {
+        id = Number(id);
+        if (state.masteredMap[id]) { delete state.masteredMap[id]; showToast('Đã bỏ dấu sao'); }
+        else { const now = Date.now(); state.masteredMap[id] = { masteredAt: now, cycleStart: now, reviewMissesInCycle: 0, reviewAttemptsInCycle: 0 }; showToast('⭐ Đã thuộc từ!'); }
+        persistState(state); renderAll();
       }
 
-      function getEffectiveStudyPool() {
-        const unmastered = state.items.filter((it) => !state.masteredMap[it.id]);
-        const selectedValid = state.studyIds.map((id) => state.items.find((it) => it.id === id)).filter(Boolean);
-        const pool = [...selectedValid];
-        if (pool.length < 20) {
-          for (const cand of unmastered) {
-            if (!pool.some((p) => p.id === cand.id)) {
-              pool.push(cand);
-              if (pool.length >= 20) break;
-            }
-          }
-        }
+      function getStudyPool() {
+        const unm = state.items.filter((x) => !state.masteredMap[x.id]);
+        const pool = state.studyIds.map((id) => state.items.find((x) => x.id === id)).filter(Boolean);
+        for (const c of unm) { if (pool.length >= 20) break; if (!pool.some((p) => p.id === c.id)) pool.push(c); }
         return pool;
       }
 
-      function getStudyMasteredCount() {
-        return state.studyIds.filter((id) => Boolean(state.masteredMap[id])).length;
-      }
-
-      function renderVerseCard(item) {
-        const isStarred = Boolean(state.masteredMap[item.id]);
-        const pastel = TOPIC_PASTEL_MAP[item.topic] || '#e8f4fc';
-        const dueReview = isDueFor10DayReview(item.id);
+      function renderCard(item) {
+        const starred = Boolean(state.masteredMap[item.id]);
+        const bg = TOPIC_PASTEL_MAP[item.topic] || '#e8f4fc';
         return `
-          <article class="verse-card" data-id="${item.id}">
-            <button type="button" class="star-btn ${isStarred ? 'active' : ''}" onclick="window.__app.toggleStar(${item.id})">${isStarred ? '⭐' : '☆'}</button>
-            <div class="card-top-line">
-              <div class="card-tags">
-                <span class="kind-badge">${escapeHtml(item.kind)}</span>
-                <span class="topic-pill" style="background:${pastel};">${escapeHtml(item.topic)}</span>
-                ${dueReview ? `<span class="review-pill">Ôn 10 ngày</span>` : ''}
-              </div>
-            </div>
-            <p class="verse-text">${escapeHtml(item.text)}</p>
-            <p class="verse-meaning">Ý nghĩa: ${escapeHtml(item.meaning)}</p>
-          </article>
-        `;
+          <article class="verse-card">
+            <button type="button" class="star-btn ${starred ? 'active' : ''}" onclick="window.__app.toggleStar(${item.id})">${starred ? '⭐' : '☆'}</button>
+            <div class="card-top-line"><div class="card-tags">
+              <span class="kind-badge">${esc(item.kind)}</span>
+              <span class="topic-pill" style="background:${bg};">${esc(item.topic)}</span>
+              ${isDueReview(item.id) ? '<span class="review-pill">Ôn 10 ngày</span>' : ''}
+            </div></div>
+            <p class="verse-text">${esc(item.text)}</p>
+            <p class="verse-meaning">Ý nghĩa: ${esc(item.meaning)}</p>
+          </article>`;
       }
 
-      function getFilteredItemsForTab(tab) {
-        let list = tab === 'all' ? [...state.items] : (tab === 'study' ? getEffectiveStudyPool() : state.items.filter((it) => Boolean(state.masteredMap[it.id])));
+      function getFiltered(tab) {
+        let list = tab === 'all' ? [...state.items] : (tab === 'study' ? getStudyPool() : state.items.filter((x) => Boolean(state.masteredMap[x.id])));
         const q = (state.search || '').trim().toLowerCase();
-        if (q) {
-          list = list.filter((it) => it.text.toLowerCase().includes(q) || it.meaning.toLowerCase().includes(q) || it.topic.toLowerCase().includes(q));
-        }
-        if (state.filterMode === 'topic' && state.filterTopic) list = list.filter((it) => it.topic === state.filterTopic);
-        else if (state.filterMode === 'letter' && state.filterLetter) list = list.filter((it) => getFirstLetterVi(it.text) === state.filterLetter);
+        if (q) list = list.filter((x) => x.text.toLowerCase().includes(q) || x.meaning.toLowerCase().includes(q) || x.topic.toLowerCase().includes(q));
+        if (state.filterMode === 'topic' && state.filterTopic) list = list.filter((x) => x.topic === state.filterTopic);
+        else if (state.filterMode === 'letter' && state.filterLetter) list = list.filter((x) => getFirstLetter(x.text) === state.filterLetter);
         if (state.sortOrder === 'asc') list.sort((a, b) => a.text.localeCompare(b.text, 'vi'));
         else if (state.sortOrder === 'desc') list.sort((a, b) => b.text.localeCompare(a.text, 'vi'));
         return list;
       }
 
-      function renderListTab(tab) {
-        const fullList = getFilteredItemsForTab(tab);
-        const totalPages = Math.max(1, Math.ceil(fullList.length / PAGE_SIZE));
+      function renderList(tab) {
+        const full = getFiltered(tab);
+        const totalPages = Math.max(1, Math.ceil(full.length / PAGE_SIZE));
         if (state.page > totalPages) state.page = totalPages;
-        const startIdx = (state.page - 1) * PAGE_SIZE;
-        const pageItems = fullList.slice(startIdx, startIdx + PAGE_SIZE);
-        const masteredCount = Object.keys(state.masteredMap).length;
-        document.getElementById('metaStrip').innerHTML = `<span>Hiển thị <b>${fullList.length}</b> / ${state.items.length} bài • ⭐ Đã thuộc: <b>${masteredCount}</b></span><span>Trang ${state.page}/${totalPages}</span>`;
-        const bannerEl = document.getElementById('studyBanner');
-        if (tab === 'study' && getStudyMasteredCount() > 0) {
-          bannerEl.style.display = 'block';
-          bannerEl.innerHTML = `💡 Có <b>${getStudyMasteredCount()}</b> bài trong Góc học tập đã gắn sao (⭐). Hãy vào <b>Cài đặt (⚙️) → 1. Chọn 20 bài cho Góc học tập</b> để chọn thêm bài mới!`;
-        } else {
-          bannerEl.style.display = 'none';
-        }
-        document.getElementById('mainContent').innerHTML = pageItems.length
-          ? pageItems.map(renderVerseCard).join('')
-          : `<div class="verse-card" style="text-align:center;"><p class="verse-text">Chưa có bài phù hợp</p></div>`;
-        renderPagination(totalPages);
+        const slice = full.slice((state.page - 1) * PAGE_SIZE, state.page * PAGE_SIZE);
+        const mCount = Object.keys(state.masteredMap).length;
+        document.getElementById('metaStrip').innerHTML = `<span>Hiển thị <b>${full.length}</b> / ${state.items.length} bài • ⭐ Đã thuộc: <b>${mCount}</b></span><span>Trang ${state.page}/${totalPages}</span>`;
+        const stStar = state.studyIds.filter((id) => Boolean(state.masteredMap[id])).length;
+        const banner = document.getElementById('studyBanner');
+        if (tab === 'study' && stStar > 0) {
+          banner.style.display = 'block';
+          banner.innerHTML = `💡 Có <b>${stStar}</b> bài trong Góc học tập đã gắn sao (⭐). Vào <b>Cài đặt (⚙️) → 1. Chọn 20 bài cho Góc học tập</b> để chọn thêm bài mới!`;
+        } else banner.style.display = 'none';
+        document.getElementById('mainContent').innerHTML = slice.length ? slice.map(renderCard).join('') : `<div class="verse-card" style="text-align:center;"><p class="verse-text">Chưa có bài phù hợp</p></div>`;
+        const pg = document.getElementById('paginationBar');
+        if (totalPages <= 1) { pg.innerHTML = ''; return; }
+        let h = `<button class="page-btn" ${state.page <= 1 ? 'disabled' : ''} onclick="window.__app.goPage(${state.page - 1})">‹</button>`;
+        for (let p = 1; p <= totalPages; p++) h += `<button class="page-btn ${p === state.page ? 'active' : ''}" onclick="window.__app.goPage(${p})">${p}</button>`;
+        h += `<button class="page-btn" ${state.page >= totalPages ? 'disabled' : ''} onclick="window.__app.goPage(${state.page + 1})">›</button>`;
+        pg.innerHTML = h;
       }
 
-      function renderPagination(totalPages) {
-        const pgEl = document.getElementById('paginationBar');
-        if (totalPages <= 1) { pgEl.innerHTML = ''; return; }
-        let html = `<button class="page-btn" ${state.page <= 1 ? 'disabled' : ''} onclick="window.__app.goPage(${state.page - 1})">‹</button>`;
-        let start = Math.max(1, state.page - 2);
-        let end = Math.min(totalPages, start + 4);
-        if (end - start < 4) start = Math.max(1, end - 4);
-        for (let p = start; p <= end; p++) html += `<button class="page-btn ${p === state.page ? 'active' : ''}" onclick="window.__app.goPage(${p})">${p}</button>`;
-        html += `<button class="page-btn" ${state.page >= totalPages ? 'disabled' : ''} onclick="window.__app.goPage(${state.page + 1})">›</button>`;
-        pgEl.innerHTML = html;
-      }
+      function shuffle(arr) { const c = [...arr]; for (let i = c.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [c[i], c[j]] = [c[j], c[i]]; } return c; }
+      function getGamePool() { const p = [...getStudyPool()]; state.items.filter((x) => isDueReview(x.id)).forEach((d) => { if (!p.some((k) => k.id === d.id)) p.push(d); }); return p.length >= 4 ? p : state.items; }
 
-      function shuffleArray(arr) {
-        const copy = [...arr];
-        for (let i = copy.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [copy[i], copy[j]] = [copy[j], copy[i]];
-        }
-        return copy;
-      }
-
-      function getGamePool() {
-        const pool = [...getEffectiveStudyPool()];
-        state.items.filter((it) => isDueFor10DayReview(it.id)).forEach((d) => {
-          if (!pool.some((x) => x.id === d.id)) pool.push(d);
-        });
-        return pool.length >= 4 ? pool : state.items;
-      }
-
-      function recordGameAnswer(itemId, isCorrect) {
+      function recordAns(itemId, ok) {
         const rec = state.masteredMap[itemId];
         if (!rec) return;
         const now = Date.now();
         if (!rec.cycleStart) rec.cycleStart = rec.masteredAt || now;
-        if (now - rec.cycleStart > REVIEW_WINDOW_DAYS * DAY_MS) {
-          rec.cycleStart = now; rec.reviewMissesInCycle = 0; rec.reviewAttemptsInCycle = 0;
-        }
+        if (now - rec.cycleStart > REVIEW_WINDOW_DAYS * DAY_MS) { rec.cycleStart = now; rec.reviewMissesInCycle = 0; rec.reviewAttemptsInCycle = 0; }
         rec.reviewAttemptsInCycle = (rec.reviewAttemptsInCycle || 0) + 1;
-        if (!isCorrect) {
+        if (!ok) {
           rec.reviewMissesInCycle = (rec.reviewMissesInCycle || 0) + 1;
           if (rec.reviewMissesInCycle >= REVIEW_TARGET_COUNT) {
             delete state.masteredMap[itemId];
@@ -1834,536 +508,313 @@
         persistState(state);
       }
 
-      function buildBlankQuestion(item, allPool) {
+      function buildBlank(item, pool) {
         const lines = item.text.split(/\n+/).map((l) => l.trim()).filter(Boolean);
-        const count = lines.length > 2 ? Math.min(lines.length, 3) : 1;
-        const indices = shuffleArray(lines.map((_, i) => i)).slice(0, count).sort((a, b) => a - b);
-        const distractors = allPool.flatMap((x) => x.text.split(/[\s,.;:!?]+/)).map((w) => w.trim()).filter((w) => w.length >= 2);
+        const indices = shuffle(lines.map((_, i) => i)).slice(0, lines.length > 2 ? Math.min(lines.length, 3) : 1).sort((a, b) => a - b);
+        const dist = pool.flatMap((x) => x.text.split(/[\s,.;:!?]+/)).map((w) => w.trim()).filter((w) => w.length >= 2);
         const blanks = indices.map((lineIdx, bIdx) => {
-          const words = lines[lineIdx].split(/(\s+|[.,;!?]+)/);
-          const cand = [];
-          words.forEach((tok, idx) => { if (!/^\s+$/.test(tok) && tok.replace(/[.,;!?]+/g, '').length >= 2) cand.push(idx); });
-          const pickTokIdx = cand.length ? cand[Math.floor(Math.random() * cand.length)] : 0;
-          const answer = (words[pickTokIdx] || 'yêu').replace(/[.,;!?]+/g, '');
-          const others = shuffleArray(Array.from(new Set(distractors.filter((w) => w.toLowerCase() !== answer.toLowerCase())))).slice(0, 3);
-          return { blankId: bIdx, lineIdx, tokIdx: pickTokIdx, answer, choices: shuffleArray([answer, ...others]), picked: null };
+          const toks = lines[lineIdx].split(/(\s+|[.,;!?]+)/);
+          const cand = []; toks.forEach((t, i) => { if (!/^\s+$/.test(t) && t.replace(/[.,;!?]+/g, '').length >= 2) cand.push(i); });
+          const pick = cand.length ? cand[Math.floor(Math.random() * cand.length)] : 0;
+          const ans = (toks[pick] || 'yêu').replace(/[.,;!?]+/g, '');
+          const others = shuffle(Array.from(new Set(dist.filter((w) => w.toLowerCase() !== ans.toLowerCase())))).slice(0, 3);
+          return { blankId: bIdx, lineIdx, tokIdx: pick, answer: ans, choices: shuffle([ans, ...others]), picked: null };
         });
         return { itemId: item.id, lines, blanks, activeBlank: 0, submitted: false, isCorrect: false };
       }
 
-      function buildArrangeQuestion(item) {
+      function buildArrange(item) {
         const lines = item.text.split(/\n+/).map((l) => l.trim()).filter(Boolean);
         const targetLines = (lines.length >= 2 ? lines : [item.text.trim()]).map((l) => l.split(/\s+/).filter(Boolean));
-        const bank = shuffleArray(targetLines.flat().map((w, idx) => ({ uid: `${item.id}_${idx}_${Math.random().toString(36).slice(2, 6)}`, word: w })));
+        const bank = shuffle(targetLines.flat().map((w, idx) => ({ uid: `${item.id}_${idx}_${Math.random().toString(36).slice(2,6)}`, word: w })));
         return { itemId: item.id, targetLines, fullText: item.text.trim(), bank, rows: targetLines.map(() => []), activeRow: 0, hintUsed: false, submitted: false, isCorrect: false };
       }
 
-      function buildMeaningMcqQuestion(item, allPool) {
-        const others = shuffleArray(allPool.filter((x) => x.id !== item.id)).slice(0, 3);
-        const choices = shuffleArray([{ id: item.id, meaning: item.meaning, isAnswer: true }, ...others.map((o) => ({ id: o.id, meaning: o.meaning, isAnswer: false }))]);
-        return { itemId: item.id, item, choices, selectedIdx: null, submitted: false, isCorrect: false };
+      function buildMcq(item, pool) {
+        const others = shuffle(pool.filter((x) => x.id !== item.id)).slice(0, 3);
+        return { itemId: item.id, item, choices: shuffle([{ id: item.id, meaning: item.meaning, isAnswer: true }, ...others.map((o) => ({ id: o.id, meaning: o.meaning, isAnswer: false }))]), selectedIdx: null, submitted: false, isCorrect: false };
       }
 
-      function buildMatchRound(pool, roundIdx) {
-        const picked = shuffleArray(pool).slice(0, 5);
+      function buildMatch(pool, roundIdx) {
+        const picked = shuffle(pool).slice(0, 5);
         while (picked.length < 5) picked.push(state.items[picked.length % state.items.length]);
-        return {
-          roundIdx,
-          leftCards: picked.map((it, idx) => ({ slot: idx, itemId: it.id, text: it.text })),
-          rightCards: shuffleArray(picked.map((it, idx) => ({ rightId: idx, itemId: it.id, meaning: it.meaning }))),
-          selectedLeft: null, pairs: {}, submitted: false, correctCount: 0
-        };
+        return { roundIdx, leftCards: picked.map((it, i) => ({ slot: i, itemId: it.id, text: it.text })), rightCards: shuffle(picked.map((it, i) => ({ rightId: i, itemId: it.id, meaning: it.meaning }))), selectedLeft: null, pairs: {}, submitted: false, correctCount: 0 };
       }
 
       function startGame(mode) {
         const pool = getGamePool();
-        if (mode === 1) activeGameSession = { mode: 1, title: 'Game 1: Điền vào chỗ trống', index: 0, score: 0, questions: shuffleArray(pool).slice(0, Math.min(10, pool.length)).map((it) => buildBlankQuestion(it, pool)), retryQueue: [] };
-        else if (mode === 2) activeGameSession = { mode: 2, title: 'Game 2: Sắp xếp từ (5 lần xếp - 10 điểm)', index: 0, score: 0, pointsPerItem: 2, questions: shuffleArray(pool).slice(0, Math.min(5, pool.length)).map(buildArrangeQuestion), retryQueue: [] };
-        else if (mode === 3) activeGameSession = { mode: 3, title: 'Game 3: Chọn ý nghĩa đúng (10 bài - 10 điểm)', index: 0, score: 0, pointsPerItem: 1, questions: shuffleArray(pool).slice(0, Math.min(10, pool.length)).map((it) => buildMeaningMcqQuestion(it, pool)), retryQueue: [] };
-        else if (mode === 4) activeGameSession = { mode: 4, title: 'Game 4: Nối thẻ câu & ý nghĩa (10 bài - 10 điểm)', index: 0, score: 0, rounds: [buildMatchRound(pool, 0), buildMatchRound(pool, 1)], retryRounds: [] };
-        renderGamesTab();
+        if (mode === 1) activeGameSession = { mode: 1, title: 'Game 1: Điền vào chỗ trống', index: 0, score: 0, questions: shuffle(pool).slice(0, Math.min(10, pool.length)).map((it) => buildBlank(it, pool)), retryQueue: [] };
+        else if (mode === 2) activeGameSession = { mode: 2, title: 'Game 2: Sắp xếp từ (5 lần xếp - 10 điểm)', index: 0, score: 0, pointsPerItem: 2, questions: shuffle(pool).slice(0, Math.min(5, pool.length)).map(buildArrange), retryQueue: [] };
+        else if (mode === 3) activeGameSession = { mode: 3, title: 'Game 3: Chọn a/b/c/d ý nghĩa đúng (10 bài - 10 điểm)', index: 0, score: 0, pointsPerItem: 1, questions: shuffle(pool).slice(0, Math.min(10, pool.length)).map((it) => buildMcq(it, pool)), retryQueue: [] };
+        else if (mode === 4) activeGameSession = { mode: 4, title: 'Game 4: Nối thẻ câu & ý nghĩa (10 bài - 10 điểm)', index: 0, score: 0, rounds: [buildMatch(pool, 0), buildMatch(pool, 1)], retryRounds: [] };
+        renderGames();
       }
 
-      function speakHintOnce(text) {
+      function speakHint() {
         if (!activeGameSession || activeGameSession.mode !== 2) return;
         const q = activeGameSession.questions[activeGameSession.index];
         if (!q || q.hintUsed) { showToast('Câu này đã dùng hết 1 lần nghe gợi ý!'); return; }
         q.hintUsed = true;
         if ('speechSynthesis' in window) {
           window.speechSynthesis.cancel();
-          const u = new SpeechSynthesisUtterance(text);
-          u.lang = 'vi-VN'; u.rate = 0.92;
-          window.speechSynthesis.speak(u);
+          const u = new SpeechSynthesisUtterance(q.fullText.replace(/\n+/g, ', '));
+          u.lang = 'vi-VN'; u.rate = 0.92; window.speechSynthesis.speak(u);
         }
-        showToast('🔊 Đang đọc gợi ý đáp án đúng (1 lần duy nhất)');
-        renderGamesTab();
+        showToast('🔊 Đang đọc gợi ý đáp án đúng (1 lần duy nhất)'); renderGames();
       }
 
-      function renderGamesTab() {
+      function renderGames() {
         document.getElementById('metaStrip').innerHTML = '';
         document.getElementById('studyBanner').style.display = 'none';
         document.getElementById('paginationBar').innerHTML = '';
-        const mainEl = document.getElementById('mainContent');
-
+        const main = document.getElementById('mainContent');
         if (!activeGameSession) {
-          mainEl.innerHTML = `
-            <div class="game-menu-grid">
-              <div class="game-mode-card"><h3 class="game-mode-title">1. Điền vào chỗ trống (a/b/c/d)</h3><p class="game-mode-desc">Bài trên 2 câu có nhiều hơn 2 chỗ trống để lựa chọn.</p><button class="primary-btn" onclick="window.__app.startGame(1)">Bắt đầu Game 1</button></div>
-              <div class="game-mode-card"><h3 class="game-mode-title">2. Sắp xếp từ (5 lần xếp - 10 điểm)</h3><p class="game-mode-desc">Xếp từ theo từng dòng đúng bài, nghe gợi ý 1 lần.</p><button class="primary-btn" onclick="window.__app.startGame(2)">Bắt đầu Game 2</button></div>
-              <div class="game-mode-card"><h3 class="game-mode-title">3. Chọn a/b/c/d ý nghĩa đúng (10 bài - 10 điểm)</h3><p class="game-mode-desc">Chọn đáp án đúng giải thích ý nghĩa của câu.</p><button class="primary-btn" onclick="window.__app.startGame(3)">Bắt đầu Game 3</button></div>
-              <div class="game-mode-card"><h3 class="game-mode-title">4. Nối thẻ câu &amp; ý nghĩa (10 bài - 10 điểm)</h3><p class="game-mode-desc">Mỗi lượt nối 5 câu với 5 ý nghĩa (2 lượt = 10 điểm).</p><button class="primary-btn" onclick="window.__app.startGame(4)">Bắt đầu Game 4</button></div>
-            </div>
-          `;
+          main.innerHTML = `<div class="game-menu-grid">
+            <div class="game-mode-card"><h3 class="game-mode-title">1. Điền vào chỗ trống (a/b/c/d)</h3><p class="game-mode-desc">Bài trên 2 câu có nhiều hơn 2 chỗ trống để lựa chọn.</p><button class="primary-btn" onclick="window.__app.startGame(1)">Bắt đầu Game 1</button></div>
+            <div class="game-mode-card"><h3 class="game-mode-title">2. Sắp xếp từ (5 lần xếp - 10 điểm)</h3><p class="game-mode-desc">Xếp từ theo từng dòng đúng bài, nghe gợi ý 1 lần.</p><button class="primary-btn" onclick="window.__app.startGame(2)">Bắt đầu Game 2</button></div>
+            <div class="game-mode-card"><h3 class="game-mode-title">3. Chọn a/b/c/d ý nghĩa đúng (10 bài - 10 điểm)</h3><p class="game-mode-desc">Chọn đáp án đúng giải thích ý nghĩa của câu.</p><button class="primary-btn" onclick="window.__app.startGame(3)">Bắt đầu Game 3</button></div>
+            <div class="game-mode-card"><h3 class="game-mode-title">4. Nối thẻ câu &amp; ý nghĩa (10 bài - 10 điểm)</h3><p class="game-mode-desc">Mỗi lượt nối 5 câu với 5 ý nghĩa (2 lượt = 10 điểm).</p><button class="primary-btn" onclick="window.__app.startGame(4)">Bắt đầu Game 4</button></div>
+          </div>`;
           return;
         }
-
         const sess = activeGameSession;
         if (sess.finished) {
-          mainEl.innerHTML = `
-            <div class="game-stage" style="text-align:center;">
-              <h3 class="game-mode-title">🎉 Hoàn thành ${escapeHtml(sess.title)}!</h3>
-              <p class="verse-text" style="margin-top:10px;">Tổng điểm của bé: ${sess.score} / 10 điểm</p>
-              <div class="game-controls" style="justify-content:center;">
-                <button class="success-btn" onclick="window.__app.startGame(${sess.mode})">Chơi lại</button>
-                <button class="secondary-btn" onclick="window.__app.exitGame()">Quay về</button>
-              </div>
-            </div>
-          `;
+          main.innerHTML = `<div class="game-stage" style="text-align:center;"><h3 class="game-mode-title">🎉 Hoàn thành ${esc(sess.title)}!</h3><p class="verse-text">Tổng điểm của bé: ${sess.score} / 10 điểm</p><div class="game-controls" style="justify-content:center;"><button class="success-btn" onclick="window.__app.startGame(${sess.mode})">Chơi lại</button><button class="secondary-btn" onclick="window.__app.exitGame()">Quay về</button></div></div>`;
           return;
         }
-
-        const navHtml = `
-          <div class="game-controls">
-            <button class="secondary-btn" ${sess.index === 0 ? 'disabled' : ''} onclick="window.__app.prevQuestion()">Trở về</button>
-            <button class="warn-btn" onclick="window.__app.skipQuestion()">Bỏ qua</button>
-            <button class="success-btn" onclick="window.__app.submitCurrentQuestion()">Nộp bài</button>
-            <button class="primary-btn" onclick="window.__app.nextQuestion()">Tiếp tục</button>
-          </div>
-        `;
-
+        const nav = `<div class="game-controls"><button class="secondary-btn" ${sess.index === 0 ? 'disabled' : ''} onclick="window.__app.prevQ()">Trở về</button><button class="warn-btn" onclick="window.__app.skipQ()">Bỏ qua</button><button class="success-btn" onclick="window.__app.submitQ()">Nộp bài</button><button class="primary-btn" onclick="window.__app.nextQ()">Tiếp tục</button></div>`;
         if (sess.mode === 1) {
-          const q = sess.questions[sess.index];
-          const item = state.items.find((x) => x.id === q.itemId) || state.items[0];
-          const linesHtml = q.lines.map((lineStr, lIdx) => {
-            const lineBlanks = q.blanks.filter((b) => b.lineIdx === lIdx);
-            if (!lineBlanks.length) return `<div style="margin-bottom:6px;font-weight:600;">${escapeHtml(lineStr)}</div>`;
-            const tokens = lineStr.split(/(\s+|[.,;!?]+)/);
+          const q = sess.questions[sess.index], item = state.items.find((x) => x.id === q.itemId) || state.items[0];
+          const linesHtml = q.lines.map((lStr, lIdx) => {
+            const lbs = q.blanks.filter((b) => b.lineIdx === lIdx);
+            if (!lbs.length) return `<div style="margin-bottom:6px;font-weight:600;">${esc(lStr)}</div>`;
             let out = '';
-            tokens.forEach((tok, tIdx) => {
-              const mb = lineBlanks.find((b) => b.tokIdx === tIdx);
-              if (mb) {
-                const cls = q.submitted ? (mb.picked && mb.picked.toLowerCase() === mb.answer.toLowerCase() ? 'correct' : 'wrong') : '';
-                out += `<span class="blank-slot ${cls}" onclick="window.__app.pickBlankSlot(${mb.blankId})">${escapeHtml(mb.picked || '____')}</span>`;
-              } else out += escapeHtml(tok);
+            lStr.split(/(\s+|[.,;!?]+)/).forEach((tok, tIdx) => {
+              const mb = lbs.find((b) => b.tokIdx === tIdx);
+              if (mb) out += `<span class="blank-slot ${q.submitted ? (mb.picked && mb.picked.toLowerCase() === mb.answer.toLowerCase() ? 'correct' : 'wrong') : ''}" onclick="window.__app.pickBlank(${mb.blankId})">${esc(mb.picked || '____')}</span>`;
+              else out += esc(tok);
             });
             return `<div style="margin-bottom:8px;line-height:1.8;">${out}</div>`;
           }).join('');
           const ab = q.blanks[q.activeBlank] || q.blanks[0];
           const opts = ab.choices.map((ch) => {
-            let cls = 'option-btn';
-            if (q.submitted) { if (ch.toLowerCase() === ab.answer.toLowerCase()) cls += ' correct'; else if (ab.picked === ch) cls += ' wrong'; }
-            else if (ab.picked === ch) cls += ' selected';
-            return `<button type="button" class="${cls}" onclick="window.__app.chooseBlankOption('${escapeHtml(ch)}')">${escapeHtml(ch)}</button>`;
+            let c = 'option-btn';
+            if (q.submitted) c += ch.toLowerCase() === ab.answer.toLowerCase() ? ' correct' : (ab.picked === ch ? ' wrong' : '');
+            else if (ab.picked === ch) c += ' selected';
+            return `<button type="button" class="${c}" onclick="window.__app.chooseBlank('${esc(ch)}')">${esc(ch)}</button>`;
           }).join('');
-          mainEl.innerHTML = `
-            <div class="game-stage">
-              <div class="game-top-bar"><button class="secondary-btn" onclick="window.__app.exitGame()">Quay về</button><span class="score-pill">Câu ${sess.index + 1}/${sess.questions.length} • Điểm: ${sess.score}</span></div>
-              <div class="verse-card">${linesHtml}</div>
-              <div class="option-list">${opts}</div>
-              ${q.submitted ? `<div class="feedback-box ${q.isCorrect ? 'ok' : 'err'}">${q.isCorrect ? 'Chúc mừng bé đã nhớ bài rồi!' : `Đáp án đúng: ${q.blanks.map((b) => b.answer).join(', ')}<br/>${escapeHtml(item.text)}`}</div>` : ''}
-              ${navHtml}
-            </div>
-          `;
+          main.innerHTML = `<div class="game-stage"><div class="game-top-bar"><button class="secondary-btn" onclick="window.__app.exitGame()">Quay về</button><span class="score-pill">Câu ${sess.index + 1}/${sess.questions.length} • Điểm: ${sess.score}</span></div><div class="verse-card">${linesHtml}</div><div class="option-list">${opts}</div>${q.submitted ? `<div class="feedback-box ${q.isCorrect ? 'ok' : 'err'}">${q.isCorrect ? 'Chúc mừng bé đã nhớ bài rồi!' : `Đáp án đúng: ${q.blanks.map((b) => b.answer).join(', ')}<br/>${esc(item.text)}`}</div>` : ''}${nav}</div>`;
         } else if (sess.mode === 2) {
-          const q = sess.questions[sess.index];
-          const item = state.items.find((x) => x.id === q.itemId) || state.items[0];
-          const rowsHtml = q.rows.map((rWords, rIdx) => {
-            const chips = rWords.map((wObj, wIdx) => {
+          const q = sess.questions[sess.index], item = state.items.find((x) => x.id === q.itemId) || state.items[0];
+          const rowsHtml = q.rows.map((rw, rIdx) => {
+            const chips = rw.map((wObj, wIdx) => {
               const exp = (q.targetLines[rIdx] && q.targetLines[rIdx][wIdx]) || '';
-              let cls = 'word-chip';
-              if (q.submitted) cls += wObj.word === exp ? ' right' : ' wrong';
-              return `<button type="button" class="${cls}" onclick="window.__app.returnWordToBank(${rIdx}, '${wObj.uid}')">${escapeHtml(wObj.word)}</button>`;
+              return `<button type="button" class="word-chip ${q.submitted ? (wObj.word === exp ? 'right' : 'wrong') : ''}" onclick="window.__app.retWord(${rIdx},'${wObj.uid}')">${esc(wObj.word)}</button>`;
             }).join('');
-            return `<div style="margin-bottom:6px;"><div style="font-size:11.5px;color:var(--ink-soft);" onclick="window.__app.setActiveRow(${rIdx})">Dòng ${rIdx + 1} ${q.activeRow === rIdx && !q.submitted ? '(đang chọn)' : ''}</div><div class="line-box" onclick="window.__app.setActiveRow(${rIdx})">${chips}</div></div>`;
+            return `<div style="margin-bottom:6px;"><div style="font-size:11.5px;color:var(--ink-soft);" onclick="window.__app.setRow(${rIdx})">Dòng ${rIdx + 1} ${q.activeRow === rIdx && !q.submitted ? '(đang chọn)' : ''}</div><div class="line-box" onclick="window.__app.setRow(${rIdx})">${chips}</div></div>`;
           }).join('');
-          const bankHtml = q.bank.map((wObj) => `<button type="button" class="word-chip" onclick="window.__app.placeWordInRow('${wObj.uid}')">${escapeHtml(wObj.word)}</button>`).join('');
-          mainEl.innerHTML = `
-            <div class="game-stage">
-              <div class="game-top-bar"><button class="secondary-btn" onclick="window.__app.exitGame()">Quay về</button><span class="score-pill">Lượt ${sess.index + 1}/${sess.questions.length} • Điểm: ${sess.score}/10</span></div>
-              <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;">
-                <span class="verse-meaning">Ý nghĩa: ${escapeHtml(item.meaning)}</span>
-                <button type="button" class="secondary-btn" ${q.hintUsed ? 'disabled' : ''} onclick="window.__app.speakHint('${escapeHtml(q.fullText.replace(/\n+/g, ', '))}')">${q.hintUsed ? '🔇 Đã dùng gợi ý' : '🔊 Nghe gợi ý (1 lần)'}</button>
-              </div>
-              ${rowsHtml}
-              <div class="word-bank">${bankHtml}</div>
-              ${q.submitted ? `<div class="feedback-box ${q.isCorrect ? 'ok' : 'err'}">${q.isCorrect ? 'Chúc mừng bé đã nhớ bài rồi!' : `Đáp án đúng:<br/><b>${escapeHtml(q.fullText).replace(/\n/g, '<br/>')}</b>`}</div>` : ''}
-              ${navHtml}
-            </div>
-          `;
+          main.innerHTML = `<div class="game-stage"><div class="game-top-bar"><button class="secondary-btn" onclick="window.__app.exitGame()">Quay về</button><span class="score-pill">Lượt ${sess.index + 1}/${sess.questions.length} • Điểm: ${sess.score}/10</span></div><div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;"><span class="verse-meaning">Ý nghĩa: ${esc(item.meaning)}</span><button type="button" class="secondary-btn" ${q.hintUsed ? 'disabled' : ''} onclick="window.__app.speakHint()">${q.hintUsed ? '🔇 Đã dùng gợi ý' : '🔊 Nghe gợi ý (1 lần)'}</button></div>${rowsHtml}<div class="word-bank">${q.bank.map((wObj) => `<button type="button" class="word-chip" onclick="window.__app.putWord('${wObj.uid}')">${esc(wObj.word)}</button>`).join('')}</div>${q.submitted ? `<div class="feedback-box ${q.isCorrect ? 'ok' : 'err'}">${q.isCorrect ? 'Chúc mừng bé đã nhớ bài rồi!' : `Đáp án đúng:<br/><b>${esc(q.fullText).replace(/\n/g, '<br/>')}</b>`}</div>` : ''}${nav}</div>`;
         } else if (sess.mode === 3) {
-          const q = sess.questions[sess.index];
-          const labels = ['A', 'B', 'C', 'D'];
-          const opts = q.choices.map((ch, idx) => {
-            let cls = 'option-btn';
-            if (q.submitted) { if (ch.isAnswer) cls += ' correct'; else if (q.selectedIdx === idx) cls += ' wrong'; }
-            else if (q.selectedIdx === idx) cls += ' selected';
-            return `<button type="button" class="${cls}" onclick="window.__app.selectMcqOption(${idx})"><b>${labels[idx]}.</b> ${escapeHtml(ch.meaning)}</button>`;
-          }).join('');
-          const rightCh = q.choices.find((c) => c.isAnswer);
-          mainEl.innerHTML = `
-            <div class="game-stage">
-              <div class="game-top-bar"><button class="secondary-btn" onclick="window.__app.exitGame()">Quay về</button><span class="score-pill">Bài ${sess.index + 1}/${sess.questions.length} • Điểm: ${sess.score}/10</span></div>
-              <div class="verse-card"><p class="verse-text" style="margin:0;">${escapeHtml(q.item.text)}</p></div>
-              <div class="option-list">${opts}</div>
-              ${q.submitted ? `<div class="feedback-box ${q.isCorrect ? 'ok' : 'err'}">${q.isCorrect ? 'Chúc mừng bé đã nhớ bài rồi!' : `Đáp án đúng: <b>${escapeHtml(rightCh.meaning)}</b>`}</div>` : ''}
-              ${navHtml}
-            </div>
-          `;
+          const q = sess.questions[sess.index], labels = ['A','B','C','D'], rightCh = q.choices.find((c) => c.isAnswer);
+          main.innerHTML = `<div class="game-stage"><div class="game-top-bar"><button class="secondary-btn" onclick="window.__app.exitGame()">Quay về</button><span class="score-pill">Bài ${sess.index + 1}/${sess.questions.length} • Điểm: ${sess.score}/10</span></div><div class="verse-card"><p class="verse-text" style="margin:0;">${esc(q.item.text)}</p></div><div class="option-list">${q.choices.map((ch, i) => `<button type="button" class="option-btn ${q.submitted ? (ch.isAnswer ? 'correct' : (q.selectedIdx === i ? 'wrong' : '')) : (q.selectedIdx === i ? 'selected' : '')}" onclick="window.__app.pickMcq(${i})"><b>${labels[i]}.</b> ${esc(ch.meaning)}</button>`).join('')}</div>${q.submitted ? `<div class="feedback-box ${q.isCorrect ? 'ok' : 'err'}">${q.isCorrect ? 'Chúc mừng bé đã nhớ bài rồi!' : `Đáp án đúng: <b>${esc(rightCh.meaning)}</b>`}</div>` : ''}${nav}</div>`;
         } else if (sess.mode === 4) {
-          const rnd = sess.rounds[sess.index];
-          const pairedRight = new Set(Object.values(rnd.pairs));
-          const leftHtml = rnd.leftCards.map((lc) => {
-            const hasPair = rnd.pairs[lc.slot] !== undefined;
-            let cls = 'match-item';
-            if (rnd.submitted) {
-              const r = rnd.rightCards.find((x) => x.rightId === rnd.pairs[lc.slot]);
-              cls += r && r.itemId === lc.itemId ? ' correct' : ' wrong';
-            } else if (rnd.selectedLeft === lc.slot) cls += ' selected';
-            else if (hasPair) cls += ' paired';
-            return `<button type="button" class="${cls}" onclick="window.__app.pickMatchLeft(${lc.slot})"><b>Câu ${lc.slot + 1}:</b> ${escapeHtml(lc.text)}${hasPair ? `<div style="font-size:11px;color:var(--green);font-weight:700;">Đã nối ý #${rnd.pairs[lc.slot] + 1}</div>` : ''}</button>`;
-          }).join('');
-          const rightHtml = rnd.rightCards.map((rc) => {
-            const used = pairedRight.has(rc.rightId);
-            let cls = 'match-item';
-            if (rnd.submitted) {
-              const lSlot = Object.keys(rnd.pairs).find((k) => rnd.pairs[k] === rc.rightId);
-              const lObj = rnd.leftCards.find((l) => String(l.slot) === String(lSlot));
-              if (lObj && lObj.itemId === rc.itemId) cls += ' correct';
-              else if (used) cls += ' wrong';
-            } else if (used) cls += ' paired';
-            return `<button type="button" class="${cls}" onclick="window.__app.pickMatchRight(${rc.rightId})"><b>Ý #${rc.rightId + 1}:</b> ${escapeHtml(rc.meaning)}</button>`;
-          }).join('');
-          mainEl.innerHTML = `
-            <div class="game-stage">
-              <div class="game-top-bar"><button class="secondary-btn" onclick="window.__app.exitGame()">Quay về</button><span class="score-pill">Lượt ${sess.index + 1}/${sess.rounds.length} • Điểm: ${sess.score}/10</span></div>
-              <div class="match-grid"><div>${leftHtml}</div><div>${rightHtml}</div></div>
-              ${rnd.submitted ? `<div class="feedback-box ${rnd.correctCount === 5 ? 'ok' : 'err'}">${rnd.correctCount === 5 ? 'Chúc mừng bé đã nhớ bài rồi!' : `Nối đúng ${rnd.correctCount}/5 cặp.`}</div>` : ''}
-              ${navHtml}
-            </div>
-          `;
+          const rnd = sess.rounds[sess.index], pairedR = new Set(Object.values(rnd.pairs));
+          main.innerHTML = `<div class="game-stage"><div class="game-top-bar"><button class="secondary-btn" onclick="window.__app.exitGame()">Quay về</button><span class="score-pill">Lượt ${sess.index + 1}/${sess.rounds.length} • Điểm: ${sess.score}/10</span></div><div class="match-grid"><div>${rnd.leftCards.map((lc) => {
+            const hasP = rnd.pairs[lc.slot] !== undefined;
+            let c = 'match-item';
+            if (rnd.submitted) { const r = rnd.rightCards.find((x) => x.rightId === rnd.pairs[lc.slot]); c += r && r.itemId === lc.itemId ? ' correct' : ' wrong'; }
+            else if (rnd.selectedLeft === lc.slot) c += ' selected'; else if (hasP) c += ' paired';
+            return `<button type="button" class="${c}" onclick="window.__app.pickLeft(${lc.slot})"><b>Câu ${lc.slot + 1}:</b> ${esc(lc.text)}${hasP ? `<div style="font-size:11px;color:var(--green);font-weight:700;">Đã nối ý #${rnd.pairs[lc.slot] + 1}</div>` : ''}</button>`;
+          }).join('')}</div><div>${rnd.rightCards.map((rc) => {
+            const u = pairedR.has(rc.rightId); let c = 'match-item';
+            if (rnd.submitted) { const lS = Object.keys(rnd.pairs).find((k) => rnd.pairs[k] === rc.rightId); const lO = rnd.leftCards.find((l) => String(l.slot) === String(lS)); if (lO && lO.itemId === rc.itemId) c += ' correct'; else if (u) c += ' wrong'; }
+            else if (u) c += ' paired';
+            return `<button type="button" class="${c}" onclick="window.__app.pickRight(${rc.rightId})"><b>Ý #${rc.rightId + 1}:</b> ${esc(rc.meaning)}</button>`;
+          }).join('')}</div></div>${rnd.submitted ? `<div class="feedback-box ${rnd.correctCount === 5 ? 'ok' : 'err'}">${rnd.correctCount === 5 ? 'Chúc mừng bé đã nhớ bài rồi!' : `Nối đúng ${rnd.correctCount}/5 cặp.`}</div>` : ''}${nav}</div>`;
         }
       }
 
-      function submitCurrentQuestion() {
-        const sess = activeGameSession;
-        if (!sess || sess.finished) return;
-        if (sess.mode === 1) {
-          const q = sess.questions[sess.index];
-          if (q.submitted) return;
-          q.submitted = true;
+      function submitQ() {
+        const s = activeGameSession; if (!s || s.finished) return;
+        if (s.mode === 1) {
+          const q = s.questions[s.index]; if (q.submitted) return; q.submitted = true;
           q.isCorrect = q.blanks.every((b) => b.picked && b.picked.toLowerCase() === b.answer.toLowerCase());
-          if (q.isCorrect) { sess.score = Math.min(10, sess.score + 1); recordGameAnswer(q.itemId, true); }
-          else { recordGameAnswer(q.itemId, false); sess.retryQueue.push(buildBlankQuestion(state.items.find((x) => x.id === q.itemId) || state.items[0], getGamePool())); }
-        } else if (sess.mode === 2) {
-          const q = sess.questions[sess.index];
-          if (q.submitted) return;
-          q.submitted = true;
-          const bLines = q.rows.map((r) => r.map((w) => w.word).join(' ').trim());
-          const eLines = q.targetLines.map((tl) => tl.join(' ').trim());
-          q.isCorrect = bLines.length === eLines.length && bLines.every((l, i) => l === eLines[i]);
-          if (q.isCorrect) { sess.score = Math.min(10, sess.score + sess.pointsPerItem); recordGameAnswer(q.itemId, true); }
-          else { recordGameAnswer(q.itemId, false); sess.retryQueue.push(buildArrangeQuestion(state.items.find((x) => x.id === q.itemId) || state.items[0])); }
-        } else if (sess.mode === 3) {
-          const q = sess.questions[sess.index];
-          if (q.submitted) return;
-          q.submitted = true;
+          if (q.isCorrect) { s.score = Math.min(10, s.score + 1); recordAns(q.itemId, true); }
+          else { recordAns(q.itemId, false); s.retryQueue.push(buildBlank(state.items.find((x) => x.id === q.itemId) || state.items[0], getGamePool())); }
+        } else if (s.mode === 2) {
+          const q = s.questions[s.index]; if (q.submitted) return; q.submitted = true;
+          q.isCorrect = q.rows.map((r) => r.map((w) => w.word).join(' ').trim()).join('\n') === q.targetLines.map((tl) => tl.join(' ').trim()).join('\n');
+          if (q.isCorrect) { s.score = Math.min(10, s.score + s.pointsPerItem); recordAns(q.itemId, true); }
+          else { recordAns(q.itemId, false); s.retryQueue.push(buildArrange(state.items.find((x) => x.id === q.itemId) || state.items[0])); }
+        } else if (s.mode === 3) {
+          const q = s.questions[s.index]; if (q.submitted) return; q.submitted = true;
           q.isCorrect = Boolean(q.choices[q.selectedIdx] && q.choices[q.selectedIdx].isAnswer);
-          if (q.isCorrect) { sess.score = Math.min(10, sess.score + sess.pointsPerItem); recordGameAnswer(q.itemId, true); }
-          else { recordGameAnswer(q.itemId, false); sess.retryQueue.push(buildMeaningMcqQuestion(state.items.find((x) => x.id === q.itemId) || state.items[0], getGamePool())); }
-        } else if (sess.mode === 4) {
-          const rnd = sess.rounds[sess.index];
-          if (rnd.submitted) return;
-          rnd.submitted = true;
-          let rightPairs = 0;
-          rnd.leftCards.forEach((lc) => {
-            const r = rnd.rightCards.find((rc) => rc.rightId === rnd.pairs[lc.slot]);
-            const ok = Boolean(r && r.itemId === lc.itemId);
-            if (ok) rightPairs++;
-            recordGameAnswer(lc.itemId, ok);
-          });
-          rnd.correctCount = rightPairs;
-          sess.score = Math.min(10, sess.score + rightPairs);
-          if (rightPairs < 5) {
-            const wrongItems = rnd.leftCards.filter((lc) => {
-              const r = rnd.rightCards.find((rc) => rc.rightId === rnd.pairs[lc.slot]);
-              return !(r && r.itemId === lc.itemId);
-            }).map((lc) => state.items.find((x) => x.id === lc.itemId)).filter(Boolean);
+          if (q.isCorrect) { s.score = Math.min(10, s.score + s.pointsPerItem); recordAns(q.itemId, true); }
+          else { recordAns(q.itemId, false); s.retryQueue.push(buildMcq(state.items.find((x) => x.id === q.itemId) || state.items[0], getGamePool())); }
+        } else if (s.mode === 4) {
+          const r = s.rounds[s.index]; if (r.submitted) return; r.submitted = true;
+          let ok = 0;
+          r.leftCards.forEach((lc) => { const rc = r.rightCards.find((x) => x.rightId === r.pairs[lc.slot]); const hit = Boolean(rc && rc.itemId === lc.itemId); if (hit) ok++; recordAns(lc.itemId, hit); });
+          r.correctCount = ok; s.score = Math.min(10, s.score + ok);
+          if (ok < 5) {
+            const wrong = r.leftCards.filter((lc) => { const rc = r.rightCards.find((x) => x.rightId === r.pairs[lc.slot]); return !(rc && rc.itemId === lc.itemId); }).map((lc) => state.items.find((x) => x.id === lc.itemId)).filter(Boolean);
             const pool = getGamePool();
-            while (wrongItems.length < 5) {
-              const cand = pool[wrongItems.length % pool.length];
-              if (!wrongItems.some((w) => w.id === cand.id)) wrongItems.push(cand);
-              else break;
-            }
-            sess.retryRounds.push(buildMatchRound(wrongItems, sess.rounds.length));
+            while (wrong.length < 5) { const c = pool[wrong.length % pool.length]; if (!wrong.some((w) => w.id === c.id)) wrong.push(c); else break; }
+            s.retryRounds.push(buildMatch(wrong, s.rounds.length));
           }
         }
-        renderGamesTab();
+        renderGames();
       }
 
-      function nextQuestion() {
-        const sess = activeGameSession;
-        if (!sess) return;
-        if (sess.mode === 4) {
-          if (sess.index + 1 < sess.rounds.length) sess.index++;
-          else if (sess.retryRounds.length) { sess.rounds.push(...sess.retryRounds.splice(0, 1)); sess.index++; }
-          else sess.finished = true;
-        } else {
-          if (sess.index + 1 < sess.questions.length) sess.index++;
-          else if (sess.retryQueue.length) { sess.questions.push(...sess.retryQueue.splice(0, sess.retryQueue.length)); sess.index++; }
-          else sess.finished = true;
-        }
-        renderGamesTab();
+      function nextQ() {
+        const s = activeGameSession; if (!s) return;
+        if (s.mode === 4) { if (s.index + 1 < s.rounds.length) s.index++; else if (s.retryRounds.length) { s.rounds.push(...s.retryRounds.splice(0, 1)); s.index++; } else s.finished = true; }
+        else { if (s.index + 1 < s.questions.length) s.index++; else if (s.retryQueue.length) { s.questions.push(...s.retryQueue.splice(0, s.retryQueue.length)); s.index++; } else s.finished = true; }
+        renderGames();
       }
 
-      function prevQuestion() { if (activeGameSession && activeGameSession.index > 0) { activeGameSession.index--; renderGamesTab(); } }
-      function skipQuestion() { nextQuestion(); }
-
-      function openSettingsModal() { document.getElementById('settingsModal').classList.add('open'); renderSettingDetail(activeSettingKey); }
-      function closeSettingsModal() { document.getElementById('settingsModal').classList.remove('open'); }
-
-      function computeSimilarity(a, b) {
-        const norm = (s) => (s || '').toLowerCase().replace(/[^a-zà-ỹ0-9\s]/gi, ' ').replace(/\s+/g, ' ').trim();
-        const sa = norm(a), sb = norm(b);
-        if (!sa || !sb) return 0;
-        if (sa === sb) return 1;
-        const wa = new Set(sa.split(' ')), wb = new Set(sb.split(' '));
-        let inter = 0;
+      function sim(a, b) {
+        const n = (x) => (x || '').toLowerCase().replace(/[^a-zà-ỹ0-9\s]/gi, ' ').replace(/\s+/g, ' ').trim();
+        const sa = n(a), sb = n(b); if (!sa || !sb) return 0; if (sa === sb) return 1;
+        const wa = new Set(sa.split(' ')), wb = new Set(sb.split(' ')); let inter = 0;
         wa.forEach((w) => { if (wb.has(w)) inter++; });
         return inter / (new Set([...wa, ...wb]).size || 1);
       }
 
-      function renderSettingDetail(key) {
+      function openAccount() {
+        const m = Object.keys(state.masteredMap).length, d = state.items.filter((x) => isDueReview(x.id)).length;
+        document.getElementById('accountDetailPanel').innerHTML = `
+          <div class="acc-pill-info">Xin chào <b>${esc(profile.name)}</b>! Tiến độ lưu tự động trên trình duyệt.</div>
+          <div class="field-group"><label class="field-label" for="accName">Tên hiển thị</label><input id="accName" class="field-input" type="text" value="${esc(profile.name)}" maxlength="40" /></div>
+          <div class="progress-grid">
+            <div class="progress-stat-card"><span class="progress-stat-num">${state.items.length}</span><span class="progress-stat-lbl">Tổng bài</span></div>
+            <div class="progress-stat-card"><span class="progress-stat-num">${m}</span><span class="progress-stat-lbl">Đã thuộc ⭐</span></div>
+            <div class="progress-stat-card"><span class="progress-stat-num">${d}</span><span class="progress-stat-lbl">Ôn 10 ngày</span></div>
+          </div>
+          <button type="button" class="success-btn" style="width:100%;" onclick="window.__app.saveAcc()">Lưu tên tài khoản</button>`;
+        document.getElementById('accountModal').classList.add('open');
+      }
+
+      function renderSetting(key) {
         activeSettingKey = key;
         document.querySelectorAll('.setting-row-btn').forEach((b) => b.classList.toggle('active', b.dataset.setting === key));
-        const panel = document.getElementById('settingDetailPanel');
-
+        const p = document.getElementById('settingDetailPanel');
         if (key === 'study20') {
-          const stCount = getStudyMasteredCount();
-          const selSet = new Set(state.studyIds);
-          panel.innerHTML = `
-            <p style="margin:0 0 8px;font-size:12.5px;">Đang chọn: <b id="study20Count">${state.studyIds.length}</b>/20 • Đã thuộc sao: <b>${stCount}</b>${stCount > 0 ? '<br/><span style="color:#b45309;font-weight:600;">Nhắc nhở: Hãy chọn thêm bài chưa thuộc!</span>' : ''}</p>
-            <button type="button" class="secondary-btn" style="margin-bottom:8px;" onclick="window.__app.autoFillUnmastered20()">Lấy ngẫu nhiên bài chưa thuộc (20 bài)</button>
-            <div class="picker-list">${state.items.map((it) => `<label class="picker-item"><input type="checkbox" class="study20-cb" value="${it.id}" ${selSet.has(it.id) ? 'checked' : ''} /><span>${state.masteredMap[it.id] ? '⭐ ' : ''}${escapeHtml(it.text.replace(/\n+/g, ' / '))}</span></label>`).join('')}</div>
-            <button type="button" class="success-btn" style="width:100%;" onclick="window.__app.saveStudy20()">Lưu Góc học tập</button>
-          `;
-          panel.querySelectorAll('.study20-cb').forEach((cb) => {
-            cb.addEventListener('change', () => {
-              const c = panel.querySelectorAll('.study20-cb:checked').length;
-              if (c > 20) { cb.checked = false; showToast('Tối đa 20 bài!'); return; }
-              document.getElementById('study20Count').textContent = c;
-            });
-          });
+          const st = state.studyIds.filter((id) => Boolean(state.masteredMap[id])).length, set = new Set(state.studyIds);
+          p.innerHTML = `<p style="margin:0 0 8px;font-size:12.5px;">Đang chọn: <b id="s20c">${state.studyIds.length}</b>/20 • Đã thuộc sao: <b>${st}</b>${st > 0 ? '<br/><span style="color:#b45309;font-weight:600;">Hãy chọn thêm bài chưa thuộc!</span>' : ''}</p>
+            <button type="button" class="secondary-btn" style="margin-bottom:8px;" onclick="window.__app.rand20()">Lấy ngẫu nhiên bài chưa thuộc (20 bài)</button>
+            <div class="picker-list">${state.items.map((it) => `<label class="picker-item"><input type="checkbox" class="s20cb" value="${it.id}" ${set.has(it.id) ? 'checked' : ''} /><span>${state.masteredMap[it.id] ? '⭐ ' : ''}${esc(it.text.replace(/\n+/g, ' / '))}</span></label>`).join('')}</div>
+            <button type="button" class="success-btn" style="width:100%;" onclick="window.__app.save20()">Lưu Góc học tập</button>`;
+          p.querySelectorAll('.s20cb').forEach((cb) => cb.addEventListener('change', () => {
+            const c = p.querySelectorAll('.s20cb:checked').length;
+            if (c > 20) { cb.checked = false; showToast('Tối đa 20 bài!'); return; }
+            document.getElementById('s20c').textContent = c;
+          }));
         } else if (key === 'crud') {
-          const target = editTargetId ? state.items.find((x) => x.id === editTargetId) : null;
-          panel.innerHTML = `
-            <div class="field-group"><label class="field-label">Tìm bài để sửa / xóa</label><input id="crudSearchInput" class="field-input" type="text" oninput="window.__app.filterCrudList()" /><div id="crudSearchResults" class="picker-list" style="max-height:120px;"></div></div>
-            <div class="field-group"><label class="field-label">Thể loại</label><select id="crudKind" class="field-select"><option ${target && target.kind === 'Ca dao' ? 'selected' : ''}>Ca dao</option><option ${target && target.kind === 'Tục ngữ' ? 'selected' : ''}>Tục ngữ</option><option ${target && target.kind === 'Thành ngữ' ? 'selected' : ''}>Thành ngữ</option></select></div>
-            <div class="field-group"><label class="field-label">Chủ đề</label><select id="crudTopic" class="field-select">${TOPICS.map((t) => `<option ${target && target.topic === t ? 'selected' : ''}>${escapeHtml(t)}</option>`).join('')}</select></div>
-            <div class="field-group"><label class="field-label">Nội dung</label><textarea id="crudText" class="field-textarea">${target ? escapeHtml(target.text) : ''}</textarea></div>
-            <div class="field-group"><label class="field-label">Ý nghĩa</label><textarea id="crudMeaning" class="field-textarea" style="min-height:52px;">${target ? escapeHtml(target.meaning) : ''}</textarea></div>
-            <button type="button" class="success-btn" onclick="window.__app.saveCrudItem()">${target ? 'Lưu sửa' : 'Thêm bài mới'}</button>
-          `;
-          window.__app.filterCrudList();
+          const t = editTargetId ? state.items.find((x) => x.id === editTargetId) : null;
+          p.innerHTML = `<div class="field-group"><label class="field-label">Tìm bài để sửa / xóa</label><input id="crudQ" class="field-input" type="text" oninput="window.__app.crudList()" /><div id="crudRes" class="picker-list" style="max-height:120px;"></div></div>
+            <div class="field-group"><label class="field-label">Thể loại</label><select id="crudKind" class="field-select"><option ${t && t.kind === 'Ca dao' ? 'selected' : ''}>Ca dao</option><option ${t && t.kind === 'Tục ngữ' ? 'selected' : ''}>Tục ngữ</option><option ${t && t.kind === 'Thành ngữ' ? 'selected' : ''}>Thành ngữ</option></select></div>
+            <div class="field-group"><label class="field-label">Chủ đề</label><select id="crudTopic" class="field-select">${TOPICS.map((tp) => `<option ${t && t.topic === tp ? 'selected' : ''}>${esc(tp)}</option>`).join('')}</select></div>
+            <div class="field-group"><label class="field-label">Nội dung</label><textarea id="crudText" class="field-textarea">${t ? esc(t.text) : ''}</textarea></div>
+            <div class="field-group"><label class="field-label">Ý nghĩa</label><textarea id="crudMeaning" class="field-textarea" style="min-height:52px;">${t ? esc(t.meaning) : ''}</textarea></div>
+            <button type="button" class="success-btn" onclick="window.__app.saveCrud()">${t ? 'Lưu sửa' : 'Thêm bài mới'}</button>`;
+          window.__app.crudList();
         } else if (key === 'backup') {
-          panel.innerHTML = `
-            <p style="margin:0 0 10px;font-size:12.5px;">Đã bật tự động sao lưu. Hỗ trợ xuất/nạp file <b>.JSON</b> với bộ lọc trùng lặp &amp; hỏi nếu trùng &gt; 90%.</p>
-            <div style="display:flex;gap:8px;flex-wrap:wrap;">
-              <button type="button" class="primary-btn" onclick="window.__app.exportJsonFile()">Tải file .JSON</button>
-              <label class="secondary-btn" style="cursor:pointer;"><span>Nạp file .JSON</span><input type="file" accept=".json,application/json" style="display:none;" onchange="window.__app.handleImportJson(event)" /></label>
-            </div>
-            <div id="importConflictBox"></div>
-          `;
+          p.innerHTML = `<p style="margin:0 0 10px;font-size:12.5px;">Đã bật tự động sao lưu. Xuất/nạp file <b>.JSON</b> với lọc trùng &amp; hỏi nếu trùng &gt; 90%.</p>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;"><button type="button" class="primary-btn" onclick="window.__app.expJson()">Tải file .JSON</button><label class="secondary-btn" style="cursor:pointer;"><span>Nạp file .JSON</span><input type="file" accept=".json,application/json" style="display:none;" onchange="window.__app.impJson(event)" /></label></div>
+            <div id="impConf"></div>`;
         } else if (key === 'retopic') {
-          panel.innerHTML = `<button type="button" class="success-btn" style="width:100%;" onclick="window.__app.reclassifyAllTopics()">Đặt lại chủ đề cho tất cả bài</button>`;
+          p.innerHTML = `<button type="button" class="success-btn" style="width:100%;" onclick="window.__app.retopic()">Đặt lại chủ đề cho tất cả bài</button>`;
         } else if (key === 'restore376') {
-          panel.innerHTML = `<button type="button" class="warn-btn" style="width:100%;" onclick="window.__app.restoreBase376()">Kéo lại 376 bài gốc (trang 1–30)</button>`;
+          p.innerHTML = `<button type="button" class="warn-btn" style="width:100%;" onclick="window.__app.restore376()">Kéo lại dữ liệu gốc (376 bài trang 1–30)</button>`;
         }
       }
 
       window.__app = {
-        toggleStar: toggleStarMastered,
-        goPage(p) { state.page = p; persistState(state, false); renderAll(); window.scrollTo({ top: 0, behavior: 'smooth' }); },
-        startGame,
-        exitGame() { activeGameSession = null; renderGamesTab(); },
-        prevQuestion, nextQuestion, skipQuestion, submitCurrentQuestion,
-        speakHint: speakHintOnce,
-        pickBlankSlot(bIdx) { if (activeGameSession && activeGameSession.mode === 1) { activeGameSession.questions[activeGameSession.index].activeBlank = bIdx; renderGamesTab(); } },
-        chooseBlankOption(val) {
-          if (!activeGameSession || activeGameSession.mode !== 1) return;
-          const q = activeGameSession.questions[activeGameSession.index];
-          if (q.submitted) return;
-          const b = q.blanks[q.activeBlank];
-          if (b) { b.picked = val; if (q.activeBlank + 1 < q.blanks.length) q.activeBlank++; renderGamesTab(); }
+        toggleStar, goPage(n) { state.page = n; persistState(state, false); renderAll(); window.scrollTo({ top: 0, behavior: 'smooth' }); },
+        startGame, exitGame() { activeGameSession = null; renderGames(); },
+        prevQ() { if (activeGameSession && activeGameSession.index > 0) { activeGameSession.index--; renderGames(); } },
+        skipQ: nextQ, submitQ, nextQ, speakHint,
+        pickBlank(i) { if (activeGameSession && activeGameSession.mode === 1) { activeGameSession.questions[activeGameSession.index].activeBlank = i; renderGames(); } },
+        chooseBlank(v) { if (!activeGameSession || activeGameSession.mode !== 1) return; const q = activeGameSession.questions[activeGameSession.index]; if (q.submitted) return; const b = q.blanks[q.activeBlank]; if (b) { b.picked = v; if (q.activeBlank + 1 < q.blanks.length) q.activeBlank++; renderGames(); } },
+        setRow(r) { if (activeGameSession && activeGameSession.mode === 2) { activeGameSession.questions[activeGameSession.index].activeRow = r; renderGames(); } },
+        putWord(uid) { if (!activeGameSession || activeGameSession.mode !== 2) return; const q = activeGameSession.questions[activeGameSession.index]; if (q.submitted) return; const i = q.bank.findIndex((w) => w.uid === uid); if (i !== -1) { const [w] = q.bank.splice(i, 1); (q.rows[q.activeRow] || q.rows[0]).push(w); renderGames(); } },
+        retWord(r, uid) { if (!activeGameSession || activeGameSession.mode !== 2) return; const q = activeGameSession.questions[activeGameSession.index]; if (q.submitted) return; const row = q.rows[r]; if (!row) return; const i = row.findIndex((w) => w.uid === uid); if (i !== -1) { const [w] = row.splice(i, 1); q.bank.push(w); renderGames(); } },
+        pickMcq(i) { if (activeGameSession && activeGameSession.mode === 3 && !activeGameSession.questions[activeGameSession.index].submitted) { activeGameSession.questions[activeGameSession.index].selectedIdx = i; renderGames(); } },
+        pickLeft(s) { if (activeGameSession && activeGameSession.mode === 4 && !activeGameSession.rounds[activeGameSession.index].submitted) { const r = activeGameSession.rounds[activeGameSession.index]; r.selectedLeft = r.selectedLeft === s ? null : s; renderGames(); } },
+        pickRight(rid) { if (!activeGameSession || activeGameSession.mode !== 4) return; const r = activeGameSession.rounds[activeGameSession.index]; if (r.submitted || r.selectedLeft === null) return; Object.keys(r.pairs).forEach((k) => { if (r.pairs[k] === rid) delete r.pairs[k]; }); r.pairs[r.selectedLeft] = rid; r.selectedLeft = null; renderGames(); },
+        saveAcc() { profile = saveProfile(document.getElementById('accName')?.value || ''); renderAll(); document.getElementById('accountModal').classList.remove('open'); showToast('Đã lưu tên tài khoản!'); },
+        rand20() { state.studyIds = shuffle(state.items.filter((x) => !state.masteredMap[x.id])).slice(0, 20).map((x) => x.id); persistState(state); renderSetting('study20'); renderAll(); showToast('Đã lấy ngẫu nhiên 20 bài chưa thuộc!'); },
+        save20() { const ch = Array.from(document.querySelectorAll('.s20cb:checked')).map((e) => Number(e.value)); if (!ch.length) { showToast('Chọn ít nhất 1 bài!'); return; } state.studyIds = ch.slice(0, 20); persistState(state); renderAll(); showToast('Đã lưu Góc học tập!'); },
+        crudList() {
+          const q = (document.getElementById('crudQ')?.value || '').trim().toLowerCase(), box = document.getElementById('crudRes'); if (!box) return;
+          box.innerHTML = state.items.filter((x) => !q || x.text.toLowerCase().includes(q) || x.meaning.toLowerCase().includes(q)).slice(0, 20).map((x) => `<div class="picker-item" style="justify-content:space-between;"><span><b>#${x.id}</b> ${esc(x.text.replace(/\n+/g, ' / '))}</span><span style="display:flex;gap:4px;"><button type="button" class="chip-btn" onclick="window.__app.editCrud(${x.id})">Sửa</button><button type="button" class="chip-btn" style="background:#fee2e2;color:#991b1b;" onclick="window.__app.delCrud(${x.id})">Xóa</button></span></div>`).join('');
         },
-        setActiveRow(rIdx) { if (activeGameSession && activeGameSession.mode === 2) { activeGameSession.questions[activeGameSession.index].activeRow = rIdx; renderGamesTab(); } },
-        placeWordInRow(uid) {
-          if (!activeGameSession || activeGameSession.mode !== 2) return;
-          const q = activeGameSession.questions[activeGameSession.index];
-          if (q.submitted) return;
-          const idx = q.bank.findIndex((w) => w.uid === uid);
-          if (idx !== -1) { const [wObj] = q.bank.splice(idx, 1); (q.rows[q.activeRow] || q.rows[0]).push(wObj); renderGamesTab(); }
-        },
-        returnWordToBank(rIdx, uid) {
-          if (!activeGameSession || activeGameSession.mode !== 2) return;
-          const q = activeGameSession.questions[activeGameSession.index];
-          if (q.submitted) return;
-          const row = q.rows[rIdx];
-          if (!row) return;
-          const idx = row.findIndex((w) => w.uid === uid);
-          if (idx !== -1) { const [wObj] = row.splice(idx, 1); q.bank.push(wObj); renderGamesTab(); }
-        },
-        selectMcqOption(idx) { if (activeGameSession && activeGameSession.mode === 3 && !activeGameSession.questions[activeGameSession.index].submitted) { activeGameSession.questions[activeGameSession.index].selectedIdx = idx; renderGamesTab(); } },
-        pickMatchLeft(slot) { if (activeGameSession && activeGameSession.mode === 4 && !activeGameSession.rounds[activeGameSession.index].submitted) { const r = activeGameSession.rounds[activeGameSession.index]; r.selectedLeft = r.selectedLeft === slot ? null : slot; renderGamesTab(); } },
-        pickMatchRight(rightId) {
-          if (!activeGameSession || activeGameSession.mode !== 4) return;
-          const r = activeGameSession.rounds[activeGameSession.index];
-          if (r.submitted || r.selectedLeft === null) return;
-          Object.keys(r.pairs).forEach((k) => { if (r.pairs[k] === rightId) delete r.pairs[k]; });
-          r.pairs[r.selectedLeft] = rightId; r.selectedLeft = null; renderGamesTab();
-        },
-        autoFillUnmastered20() {
-          state.studyIds = shuffleArray(state.items.filter((x) => !state.masteredMap[x.id])).slice(0, 20).map((x) => x.id);
-          persistState(state); renderSettingDetail('study20'); renderAll(); showToast('Đã lấy ngẫu nhiên 20 bài chưa thuộc!');
-        },
-        saveStudy20() {
-          const ch = Array.from(document.querySelectorAll('.study20-cb:checked')).map((e) => Number(e.value));
-          if (!ch.length) { showToast('Chọn ít nhất 1 bài!'); return; }
-          state.studyIds = ch.slice(0, 20); persistState(state); renderAll(); showToast('Đã lưu Góc học tập!');
-        },
-        filterCrudList() {
-          const q = (document.getElementById('crudSearchInput')?.value || '').trim().toLowerCase();
-          const box = document.getElementById('crudSearchResults');
-          if (!box) return;
-          box.innerHTML = state.items.filter((it) => !q || it.text.toLowerCase().includes(q) || it.meaning.toLowerCase().includes(q)).slice(0, 20).map((it) => `
-            <div class="picker-item" style="justify-content:space-between;">
-              <span><b>#${it.id}</b> ${escapeHtml(it.text.replace(/\n+/g, ' / '))}</span>
-              <span style="display:flex;gap:4px;">
-                <button type="button" class="chip-btn" onclick="window.__app.beginEditCrud(${it.id})">Sửa</button>
-                <button type="button" class="chip-btn" style="background:#fee2e2;color:#991b1b;" onclick="window.__app.deleteCrudItem(${it.id})">Xóa</button>
-              </span>
-            </div>
-          `).join('');
-        },
-        beginEditCrud(id) { editTargetId = id; renderSettingDetail('crud'); },
-        saveCrudItem() {
-          const kind = document.getElementById('crudKind')?.value || 'Tục ngữ';
-          const topic = document.getElementById('crudTopic')?.value || TOPICS[0];
-          const text = (document.getElementById('crudText')?.value || '').trim();
-          const meaning = (document.getElementById('crudMeaning')?.value || '').trim();
+        editCrud(id) { editTargetId = id; renderSetting('crud'); },
+        saveCrud() {
+          const kind = document.getElementById('crudKind')?.value || 'Tục ngữ', topic = document.getElementById('crudTopic')?.value || TOPICS[0], text = (document.getElementById('crudText')?.value || '').trim(), meaning = (document.getElementById('crudMeaning')?.value || '').trim();
           if (!text) { showToast('Nhập nội dung câu!'); return; }
-          if (editTargetId) {
-            const idx = state.items.findIndex((x) => x.id === editTargetId);
-            if (idx !== -1) state.items[idx] = { ...state.items[idx], kind, topic, text, meaning: meaning || 'Ý nghĩa dân gian.' };
-            editTargetId = null;
-          } else {
-            const maxId = state.items.reduce((m, x) => Math.max(m, Number(x.id) || 0), 0);
-            state.items.unshift({ id: maxId + 1, kind, topic, text, meaning: meaning || 'Ý nghĩa dân gian.' });
-          }
-          persistState(state); renderSettingDetail('crud'); renderAll(); showToast('Đã lưu bài!');
+          if (editTargetId) { const i = state.items.findIndex((x) => x.id === editTargetId); if (i !== -1) state.items[i] = { ...state.items[i], kind, topic, text, meaning: meaning || 'Ý nghĩa dân gian.' }; editTargetId = null; }
+          else { const maxId = state.items.reduce((m, x) => Math.max(m, Number(x.id) || 0), 0); state.items.unshift({ id: maxId + 1, kind, topic, text, meaning: meaning || 'Ý nghĩa dân gian.' }); }
+          persistState(state); renderSetting('crud'); renderAll(); showToast('Đã lưu bài!');
         },
-        deleteCrudItem(id) {
-          state.items = state.items.filter((x) => x.id !== id);
-          state.studyIds = state.studyIds.filter((x) => x !== id);
-          delete state.masteredMap[id];
-          persistState(state); renderSettingDetail('crud'); renderAll(); showToast('Đã xóa bài.');
-        },
-        exportJsonFile() {
-          const blob = new Blob([JSON.stringify({ items: state.items, studyIds: state.studyIds, masteredMap: state.masteredMap }, null, 2)], { type: 'application/json' });
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a'); a.href = url; a.download = 'net-dep-tieng-viet.json';
-          document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-          showToast('Đã tải file .JSON!');
-        },
-        handleImportJson(ev) {
-          const file = ev.target.files && ev.target.files[0];
-          if (!file) return;
-          const reader = new FileReader();
-          reader.onload = () => {
+        delCrud(id) { state.items = state.items.filter((x) => x.id !== id); state.studyIds = state.studyIds.filter((x) => x !== id); delete state.masteredMap[id]; persistState(state); renderSetting('crud'); renderAll(); showToast('Đã xóa bài.'); },
+        expJson() { const b = new Blob([JSON.stringify({ items: state.items, studyIds: state.studyIds, masteredMap: state.masteredMap }, null, 2)], { type: 'application/json' }); const u = URL.createObjectURL(b); const a = document.createElement('a'); a.href = u; a.download = 'net-dep-tieng-viet.json'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(u); showToast('Đã tải file .JSON!'); },
+        impJson(ev) {
+          const f = ev.target.files && ev.target.files[0]; if (!f) return; const r = new FileReader();
+          r.onload = () => {
             try {
-              const parsed = JSON.parse(reader.result);
-              const incoming = Array.isArray(parsed) ? parsed : (parsed.items || []);
+              const p = JSON.parse(r.result), inc = Array.isArray(p) ? p : (p.items || []);
               let maxId = state.items.reduce((m, x) => Math.max(m, Number(x.id) || 0), 0);
-              const conflicts = [];
-              const uniqueNew = [];
-              incoming.forEach((raw) => {
+              const conf = [], fresh = [];
+              inc.forEach((raw) => {
                 if (!raw || typeof raw.text !== 'string' || !raw.text.trim()) return;
-                let bestMatch = null, bestScore = 0;
-                state.items.forEach((ex) => { const s = computeSimilarity(ex.text, raw.text); if (s > bestScore) { bestScore = s; bestMatch = ex; } });
+                let best = null, bs = 0; state.items.forEach((ex) => { const s = sim(ex.text, raw.text); if (s > bs) { bs = s; best = ex; } });
                 const cand = { id: ++maxId, kind: raw.kind || 'Tục ngữ', topic: TOPICS.includes(raw.topic) ? raw.topic : inferTopic(raw), text: raw.text.trim(), meaning: (raw.meaning || 'Ý nghĩa dân gian.').trim() };
-                if (bestScore > 0.9 && bestMatch) conflicts.push({ candidate: cand, existing: bestMatch, sim: Math.round(bestScore * 100) });
-                else if (bestScore < 0.75) uniqueNew.push(cand);
+                if (bs > 0.9 && best) conf.push({ candidate: cand, existing: best }); else if (bs < 0.75) fresh.push(cand);
               });
-              state.items.push(...uniqueNew); persistState(state); renderAll();
-              const box = document.getElementById('importConflictBox');
-              if (conflicts.length && box) {
-                window.__app._pendingConflicts = conflicts;
-                box.innerHTML = `<div class="feedback-box err"><b>Trùng &gt; 90%:</b>${conflicts.map((c, i) => `<div style="margin-top:6px;">${escapeHtml(c.candidate.text)} <button type="button" class="chip-btn active" onclick="window.__app.resolveConflict(${i},'add')">Thêm mới</button> <button type="button" class="chip-btn" onclick="window.__app.resolveConflict(${i},'overwrite')">Ghi đè</button></div>`).join('')}</div>`;
-              } else showToast(`Đã nạp ${uniqueNew.length} bài mới!`);
+              state.items.push(...fresh); persistState(state); renderAll();
+              const box = document.getElementById('impConf');
+              if (conf.length && box) { window.__app._conf = conf; box.innerHTML = `<div class="feedback-box err"><b>Trùng &gt; 90%:</b>${conf.map((c, i) => `<div style="margin-top:6px;">${esc(c.candidate.text)} <button type="button" class="chip-btn active" onclick="window.__app.resConf(${i},'add')">Thêm mới</button> <button type="button" class="chip-btn" onclick="window.__app.resConf(${i},'ow')">Ghi đè</button></div>`).join('')}</div>`; }
+              else showToast(`Đã nạp ${fresh.length} bài mới!`);
             } catch (e) { showToast('File .JSON không hợp lệ.'); }
           };
-          reader.readAsText(file, 'utf-8');
+          r.readAsText(f, 'utf-8');
         },
-        resolveConflict(idx, action) {
-          const list = window.__app._pendingConflicts || [];
-          const entry = list[idx];
-          if (!entry) return;
-          if (action === 'add') state.items.push(entry.candidate);
-          else { const i = state.items.findIndex((x) => x.id === entry.existing.id); if (i !== -1) state.items[i] = { ...state.items[i], ...entry.candidate, id: entry.existing.id }; }
-          list.splice(idx, 1); persistState(state); renderAll(); renderSettingDetail('backup');
-        },
-        reclassifyAllTopics() { state.items = state.items.map((it) => ({ ...it, topic: inferTopic(it) })); persistState(state); renderAll(); showToast('Đã đặt lại chủ đề!'); },
-        restoreBase376() {
-          const restored = BASE_376_ITEMS.map((it) => ({ id: it.id, kind: it.kind, text: it.text.trim(), meaning: it.meaning.trim(), topic: inferTopic(it) }));
-          state.items = restored; state.studyIds = restored.slice(0, 20).map((x) => x.id); state.page = 1;
-          persistState(state); renderAll(); showToast('Đã kéo lại 376 bài gốc!');
-        }
+        resConf(i, act) { const l = window.__app._conf || [], e = l[i]; if (!e) return; if (act === 'add') state.items.push(e.candidate); else { const idx = state.items.findIndex((x) => x.id === e.existing.id); if (idx !== -1) state.items[idx] = { ...state.items[idx], ...e.candidate, id: e.existing.id }; } l.splice(i, 1); persistState(state); renderAll(); renderSetting('backup'); },
+        retopic() { state.items = state.items.map((x) => ({ ...x, topic: inferTopic(x) })); persistState(state); renderAll(); showToast('Đã đặt lại chủ đề!'); },
+        restore376() { const r = BASE_376_ITEMS.map((x) => ({ id: x.id, kind: x.kind, text: x.text.trim(), meaning: x.meaning.trim(), topic: inferTopic(x) })); state.items = r; state.studyIds = r.slice(0, 20).map((x) => x.id); state.page = 1; persistState(state); renderAll(); showToast('Đã kéo lại 376 bài gốc!'); }
       };
 
-      function initFilterOptions() {
-        document.getElementById('topicSelect').innerHTML = '<option value="">-- Tất cả chủ đề --</option>' + TOPICS.map((t) => `<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join('');
-        document.getElementById('letterSelect').innerHTML = '<option value="">-- Tất cả chữ cái đầu --</option>' + VIET_ALPHABET.map((l) => `<option value="${l}">${l}</option>`).join('');
-      }
-
       function renderAll() {
-        evaluateSpacedReviewCycles(Date.now());
-        const showToolbar = state.activeTab === 'all' || state.activeTab === 'study' || state.activeTab === 'mastered';
-        document.getElementById('searchFilterSection').style.display = showToolbar ? 'block' : 'none';
+        checkReviewCycles(Date.now());
+        document.getElementById('headerAccountLabel').textContent = profile.name || 'Tài khoản';
+        document.getElementById('searchFilterSection').style.display = state.activeTab === 'games' ? 'none' : 'block';
         document.querySelectorAll('.tab-btn').forEach((b) => b.classList.toggle('active', b.dataset.tab === state.activeTab));
-        const sortBtn = document.getElementById('sortOrderBtn');
-        sortBtn.textContent = state.sortOrder === 'asc' ? 'A-Z' : (state.sortOrder === 'desc' ? 'Z-A' : '⇅');
-        sortBtn.classList.toggle('active', state.sortOrder !== 'default');
-        if (state.activeTab === 'games') renderGamesTab();
-        else renderListTab(state.activeTab);
+        const sb = document.getElementById('sortOrderBtn');
+        sb.textContent = state.sortOrder === 'asc' ? 'A-Z' : (state.sortOrder === 'desc' ? 'Z-A' : '⇅');
+        sb.classList.toggle('active', state.sortOrder !== 'default');
+        if (state.activeTab === 'games') renderGames(); else renderList(state.activeTab);
       }
 
-      function bindEvents() {
-        document.querySelectorAll('.tab-btn').forEach((b) => b.addEventListener('click', () => { state.activeTab = b.dataset.tab; state.page = 1; activeGameSession = null; persistState(state, false); renderAll(); }));
-        document.getElementById('searchInput').addEventListener('input', (e) => { state.search = e.target.value; state.page = 1; renderAll(); });
-        document.getElementById('toggleFilterBtn').addEventListener('click', () => { const p = document.getElementById('filterPanel'); const n = !p.classList.contains('open'); p.classList.toggle('open', n); document.getElementById('toggleFilterBtn').classList.toggle('active', n); });
-        document.getElementById('modeTopicBtn').addEventListener('click', () => { state.filterMode = 'topic'; state.filterLetter = ''; document.getElementById('modeTopicBtn').classList.add('active'); document.getElementById('modeLetterBtn').classList.remove('active'); document.getElementById('topicFilterBox').style.display = 'block'; document.getElementById('letterFilterBox').style.display = 'none'; state.page = 1; renderAll(); });
-        document.getElementById('modeLetterBtn').addEventListener('click', () => { state.filterMode = 'letter'; state.filterTopic = ''; document.getElementById('modeLetterBtn').classList.add('active'); document.getElementById('modeTopicBtn').classList.remove('active'); document.getElementById('topicFilterBox').style.display = 'none'; document.getElementById('letterFilterBox').style.display = 'block'; state.page = 1; renderAll(); });
-        document.getElementById('topicSelect').addEventListener('change', (e) => { state.filterTopic = e.target.value; state.page = 1; renderAll(); });
-        document.getElementById('letterSelect').addEventListener('change', (e) => { state.filterLetter = e.target.value; state.page = 1; renderAll(); });
-        document.getElementById('sortOrderBtn').addEventListener('click', () => { state.sortOrder = state.sortOrder === 'default' ? 'asc' : (state.sortOrder === 'asc' ? 'desc' : 'default'); state.page = 1; renderAll(); });
-        document.getElementById('openSettingsBtn').addEventListener('click', openSettingsModal);
-        document.getElementById('closeSettingsBtn').addEventListener('click', closeSettingsModal);
-        document.getElementById('settingsModal').addEventListener('click', (e) => { if (e.target.id === 'settingsModal') closeSettingsModal(); });
-        document.querySelectorAll('.setting-row-btn').forEach((b) => b.addEventListener('click', () => renderSettingDetail(b.dataset.setting)));
-        window.addEventListener('beforeunload', () => persistState(state, true));
-      }
-
-      initFilterOptions();
-      bindEvents();
+      document.getElementById('topicSelect').innerHTML = '<option value="">-- Tất cả chủ đề --</option>' + TOPICS.map((t) => `<option value="${esc(t)}">${esc(t)}</option>`).join('');
+      document.getElementById('letterSelect').innerHTML = '<option value="">-- Tất cả chữ cái đầu --</option>' + VIET_ALPHABET.map((l) => `<option value="${l}">${l}</option>`).join('');
+      document.querySelectorAll('.tab-btn').forEach((b) => b.addEventListener('click', () => { state.activeTab = b.dataset.tab; state.page = 1; activeGameSession = null; persistState(state, false); renderAll(); }));
+      document.getElementById('searchInput').addEventListener('input', (e) => { state.search = e.target.value; state.page = 1; renderAll(); });
+      document.getElementById('toggleFilterBtn').addEventListener('click', () => { const p = document.getElementById('filterPanel'), n = !p.classList.contains('open'); p.classList.toggle('open', n); document.getElementById('toggleFilterBtn').classList.toggle('active', n); });
+      document.getElementById('modeTopicBtn').addEventListener('click', () => { state.filterMode = 'topic'; state.filterLetter = ''; document.getElementById('modeTopicBtn').classList.add('active'); document.getElementById('modeLetterBtn').classList.remove('active'); document.getElementById('topicFilterBox').style.display = 'block'; document.getElementById('letterFilterBox').style.display = 'none'; state.page = 1; renderAll(); });
+      document.getElementById('modeLetterBtn').addEventListener('click', () => { state.filterMode = 'letter'; state.filterTopic = ''; document.getElementById('modeLetterBtn').classList.add('active'); document.getElementById('modeTopicBtn').classList.remove('active'); document.getElementById('topicFilterBox').style.display = 'none'; document.getElementById('letterFilterBox').style.display = 'block'; state.page = 1; renderAll(); });
+      document.getElementById('topicSelect').addEventListener('change', (e) => { state.filterTopic = e.target.value; state.page = 1; renderAll(); });
+      document.getElementById('letterSelect').addEventListener('change', (e) => { state.filterLetter = e.target.value; state.page = 1; renderAll(); });
+      document.getElementById('sortOrderBtn').addEventListener('click', () => { state.sortOrder = state.sortOrder === 'default' ? 'asc' : (state.sortOrder === 'asc' ? 'desc' : 'default'); state.page = 1; renderAll(); });
+      document.getElementById('openAccountBtn').addEventListener('click', openAccount);
+      document.getElementById('closeAccountBtn').addEventListener('click', () => document.getElementById('accountModal').classList.remove('open'));
+      document.getElementById('accountModal').addEventListener('click', (e) => { if (e.target.id === 'accountModal') document.getElementById('accountModal').classList.remove('open'); });
+      document.getElementById('openSettingsBtn').addEventListener('click', () => { document.getElementById('settingsModal').classList.add('open'); renderSetting(activeSettingKey); });
+      document.getElementById('closeSettingsBtn').addEventListener('click', () => document.getElementById('settingsModal').classList.remove('open'));
+      document.getElementById('settingsModal').addEventListener('click', (e) => { if (e.target.id === 'settingsModal') document.getElementById('settingsModal').classList.remove('open'); });
+      document.querySelectorAll('.setting-row-btn').forEach((b) => b.addEventListener('click', () => renderSetting(b.dataset.setting)));
+      window.addEventListener('beforeunload', () => persistState(state, true));
       renderAll();
     })();
   </script>
