@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <!-- Cấu hình hiển thị di động và hỗ trợ tiếng Việt đầy đủ -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Nét Đẹp Tiếng Việt</title>
@@ -14,11 +13,17 @@
     :root {
       --bg-sky: #e4f3fa;
       --bg-green: #e7f6ec;
-      --blue-main: #1b6ca1;
-      --blue-dark: #124e75;
-      --green-main: #2a7a58;
-      --border-soft: #b8dce9;
-      --ink-main: #153142;
+      --blue: #1b6ca1;
+      --blue-deep: #124e75;
+      --blue-soft: #e2f2fb;
+      --green: #2a7a58;
+      --border: #b8dce9;
+      --ink: #153142;
+      --ink-soft: #476d82;
+      --right-bg: #dcfce7;
+      --right-bd: #16a34a;
+      --wrong-bg: #fee2e2;
+      --wrong-bd: #dc2626;
     }
 
     * {
@@ -30,9 +35,8 @@
       margin: 0;
       min-height: 100vh;
       font-family: 'Be Vietnam Pro', sans-serif;
-      color: var(--ink-main);
+      color: var(--ink);
       background-color: var(--bg-sky);
-      /* Nền tranh vẽ bút chì làng quê xanh dương - xanh lá nhạt */
       background-image:
         linear-gradient(180deg, rgba(224, 243, 252, 0.92) 0%, rgba(232, 248, 237, 0.94) 60%, rgba(213, 240, 222, 0.96) 100%),
         url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='240' viewBox='0 0 360 240'%3E%3Cg fill='none' stroke='%23578aa4' stroke-width='1' stroke-opacity='0.22'%3E%3Cpath d='M0 155 Q75 128 150 152 T300 144 T360 154'/%3E%3Cpath d='M0 176 Q95 154 185 174 T360 168'/%3E%3Cpath d='M48 152 L48 128 M38 136 Q48 118 58 136 Q48 140 38 136 Z'/%3E%3Cpath d='M255 144 L255 118 M243 128 Q255 108 267 128 Q255 133 243 128 Z'/%3E%3Cpath d='M120 198 Q185 185 255 199'/%3E%3Cpath d='M308 92 C308 74 332 74 332 92 C332 106 308 106 308 92 Z' stroke='%23488a6a'/%3E%3C/g%3E%3C/svg%3E");
@@ -40,7 +44,6 @@
       overflow-x: hidden;
     }
 
-    /* Câu ca dao / tục ngữ / thành ngữ: Open Sans 16px đậm */
     .verse-text {
       font-family: 'Open Sans', sans-serif;
       font-size: 16px;
@@ -48,72 +51,493 @@
       line-height: 1.55;
       color: #0f293a;
       white-space: pre-line;
+      margin: 8px 0;
     }
 
-    /* Ý nghĩa: Roboto 14px in nghiêng */
-    .meaning-text {
+    .verse-meaning {
       font-family: 'Roboto', sans-serif;
       font-size: 14px;
       font-style: italic;
       line-height: 1.45;
       color: #36596e;
+      margin: 4px 0 0;
     }
 
-    .folk-card {
+    .verse-card {
       position: relative;
-      background: rgba(255, 255, 255, 0.92);
-      border: 1.5px solid var(--border-soft);
+      background: rgba(255, 255, 255, 0.94);
+      border: 1.5px solid var(--border);
       border-radius: 18px;
       box-shadow: 0 6px 18px rgba(27, 108, 161, 0.08);
+      padding: 14px 44px 14px 16px;
+      margin-bottom: 12px;
       overflow: hidden;
     }
 
-    .corner-bamboo {
+    .star-btn {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 56px;
-      height: 56px;
-      pointer-events: none;
-      opacity: 0.42;
+      top: 10px;
+      right: 10px;
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      border: 1px solid rgba(27, 108, 161, 0.25);
+      background: #ffffff;
+      font-size: 17px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .corner-flower {
-      position: absolute;
-      bottom: 0;
-      right: 0;
-      width: 60px;
-      height: 60px;
-      pointer-events: none;
-      opacity: 0.42;
+    .star-btn.active {
+      background: #fef9c3;
+      border-color: #eab308;
+    }
+
+    .card-top-line {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .card-tags {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .kind-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #e2f1fa;
+      color: var(--blue-deep);
+    }
+
+    .topic-pill {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 999px;
+      color: #173647;
+    }
+
+    .review-pill {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #ffedd5;
+      color: #9a3412;
     }
 
     .btn-pill {
       border-radius: 14px;
       font-weight: 600;
       transition: all 0.15s ease;
-      box-shadow: 0 3px 0 rgba(18, 78, 117, 0.16);
+      box-shadow: 0 3px 0 rgba(18, 78, 117, 0.14);
+      cursor: pointer;
     }
 
-    .btn-pill:active:not(:disabled) {
-      transform: translateY(2px);
-      box-shadow: 0 1px 0 rgba(18, 78, 117, 0.14);
+    .tab-btn.active {
+      background: linear-gradient(135deg, var(--blue), var(--green)) !important;
+      color: #ffffff !important;
+      border-color: transparent !important;
     }
 
-    .btn-pill:disabled {
-      opacity: 0.45;
-      cursor: not-allowed;
-      box-shadow: none;
+    .toolbar-card {
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 10px;
+      margin-bottom: 10px;
+      box-shadow: 0 4px 12px rgba(27, 108, 161, 0.06);
     }
 
-    #settingsModal[hidden] {
-      display: none !important;
+    .search-row {
+      display: flex;
+      gap: 6px;
+      align-items: center;
     }
+
+    .search-input {
+      flex: 1;
+      min-width: 0;
+      border: 1px solid rgba(27, 108, 161, 0.28);
+      border-radius: 12px;
+      padding: 8px 12px;
+      font-size: 13.5px;
+      background: #ffffff;
+      color: var(--ink);
+    }
+
+    .tool-icon-btn {
+      border: 1px solid rgba(27, 108, 161, 0.28);
+      background: #f4fafe;
+      color: var(--blue-deep);
+      border-radius: 12px;
+      padding: 8px 10px;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .tool-icon-btn.active {
+      background: var(--blue);
+      color: #ffffff;
+      border-color: var(--blue);
+    }
+
+    .filter-panel {
+      display: none;
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px dashed rgba(27, 108, 161, 0.22);
+    }
+
+    .filter-panel.open {
+      display: block;
+    }
+
+    .filter-mode-switch {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .chip-btn {
+      border: 1px solid rgba(27, 108, 161, 0.28);
+      background: #ffffff;
+      color: var(--ink);
+      border-radius: 999px;
+      padding: 5px 11px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .chip-btn.active {
+      background: var(--blue);
+      color: #ffffff;
+      border-color: var(--blue);
+    }
+
+    .filter-select {
+      width: 100%;
+      border: 1px solid rgba(27, 108, 161, 0.28);
+      border-radius: 11px;
+      padding: 7px 10px;
+      font-size: 13px;
+      background: #ffffff;
+      color: var(--ink);
+    }
+
+    .meta-strip {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: var(--ink-soft);
+      margin-bottom: 10px;
+      padding: 0 2px;
+    }
+
+    .study-note-banner {
+      background: #fffbeb;
+      border: 1px solid #f59e0b;
+      color: #78350f;
+      border-radius: 14px;
+      padding: 10px 12px;
+      font-size: 12.5px;
+      margin-bottom: 10px;
+    }
+
+    .pagination-bar {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .page-btn {
+      min-width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      border: 1px solid rgba(27, 108, 161, 0.28);
+      background: #ffffff;
+      color: var(--ink);
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .page-btn.active {
+      background: var(--blue);
+      color: #ffffff;
+      border-color: var(--blue);
+    }
+
+    .game-menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+    }
+
+    .game-mode-card, .game-stage {
+      background: rgba(255, 255, 255, 0.95);
+      border: 1.5px solid var(--border);
+      border-radius: 18px;
+      padding: 16px;
+      box-shadow: 0 6px 16px rgba(27, 108, 161, 0.07);
+    }
+
+    .game-mode-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--blue-deep);
+      margin: 0 0 6px;
+    }
+
+    .game-mode-desc {
+      font-size: 12.5px;
+      color: var(--ink-soft);
+      margin: 0 0 12px;
+    }
+
+    .game-top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .score-pill {
+      font-size: 12.5px;
+      font-weight: 700;
+      padding: 5px 11px;
+      border-radius: 999px;
+      background: #e2f2fb;
+      color: var(--blue-deep);
+    }
+
+    .primary-btn, .secondary-btn, .success-btn, .warn-btn {
+      border-radius: 12px;
+      padding: 8px 13px;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+
+    .primary-btn { background: var(--blue); color: #ffffff; }
+    .secondary-btn { background: #eef6fb; color: var(--blue-deep); border-color: rgba(27, 108, 161, 0.28); }
+    .success-btn { background: var(--green); color: #ffffff; }
+    .warn-btn { background: #fef3c7; color: #92400e; border-color: #f59e0b; }
+
+    .option-list { display: grid; gap: 8px; margin-top: 10px; }
+    .option-btn {
+      width: 100%;
+      text-align: left;
+      border: 1px solid rgba(27, 108, 161, 0.28);
+      border-radius: 12px;
+      padding: 10px 12px;
+      background: #ffffff;
+      color: var(--ink);
+      font-size: 13.5px;
+      line-height: 1.4;
+      cursor: pointer;
+    }
+
+    .option-btn.selected { background: var(--blue-soft); border-color: var(--blue); font-weight: 600; }
+    .option-btn.correct { background: var(--right-bg); border-color: var(--right-bd); color: #14532d; font-weight: 600; }
+    .option-btn.wrong { background: var(--wrong-bg); border-color: var(--wrong-bd); color: #7f1d1d; }
+
+    .blank-slot {
+      display: inline-block;
+      min-width: 58px;
+      padding: 1px 8px;
+      margin: 0 2px;
+      border-bottom: 2px solid var(--blue);
+      background: #f0f8fd;
+      border-radius: 6px;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .blank-slot.correct { background: var(--right-bg); border-color: var(--right-bd); color: #14532d; }
+    .blank-slot.wrong { background: var(--wrong-bg); border-color: var(--wrong-bd); color: #7f1d1d; }
+
+    .word-bank {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 10px;
+      border-radius: 14px;
+      background: #f4fafe;
+      border: 1px dashed rgba(27, 108, 161, 0.3);
+      min-height: 52px;
+      margin-top: 8px;
+    }
+
+    .word-chip {
+      border: 1px solid rgba(27, 108, 161, 0.3);
+      background: #ffffff;
+      color: var(--ink);
+      border-radius: 10px;
+      padding: 7px 11px;
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .word-chip.right { background: var(--right-bg); border-color: var(--right-bd); color: #14532d; }
+    .word-chip.wrong { background: var(--wrong-bg); border-color: var(--wrong-bd); color: #7f1d1d; }
+
+    .line-box {
+      border: 1px solid rgba(27, 108, 161, 0.22);
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 8px 10px;
+      min-height: 44px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+    .match-item {
+      border: 1px solid rgba(27, 108, 161, 0.25);
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 9px;
+      font-size: 12.5px;
+      line-height: 1.38;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .match-item.selected { background: var(--blue-soft); border-color: var(--blue); font-weight: 600; }
+    .match-item.paired { background: #eef8f1; border-color: var(--green); }
+    .match-item.correct { background: var(--right-bg); border-color: var(--right-bd); }
+    .match-item.wrong { background: var(--wrong-bg); border-color: var(--wrong-bd); }
+
+    .feedback-box { margin-top: 12px; padding: 12px; border-radius: 14px; font-size: 13px; line-height: 1.5; }
+    .feedback-box.ok { background: var(--right-bg); border: 1px solid var(--right-bd); color: #14532d; font-weight: 600; }
+    .feedback-box.err { background: var(--wrong-bg); border: 1px solid var(--wrong-bd); color: #7f1d1d; }
+    .game-controls { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(16, 38, 54, 0.48);
+      backdrop-filter: blur(4px);
+      z-index: 50;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 14px;
+    }
+
+    .modal-backdrop.open { display: flex; }
+
+    .modal-sheet {
+      width: 100%;
+      max-width: 500px;
+      max-height: 88vh;
+      overflow-y: auto;
+      background: #f8fcff;
+      border-radius: 22px;
+      border: 1px solid var(--border);
+      padding: 16px;
+    }
+
+    .modal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .modal-title { margin: 0; font-size: 17px; font-weight: 700; color: var(--blue-deep); }
+    .close-x { width: 34px; height: 34px; border-radius: 10px; border: 1px solid rgba(27, 108, 161, 0.25); background: #fff; font-size: 18px; cursor: pointer; }
+    .setting-list { display: grid; gap: 7px; margin-bottom: 12px; }
+    .setting-row-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 11px 13px;
+      border-radius: 13px;
+      border: 1px solid rgba(27, 108, 161, 0.22);
+      background: #ffffff;
+      color: var(--ink);
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .setting-row-btn.active { background: linear-gradient(135deg, #e5f3fd, #e7f6ec); border-color: var(--blue); color: var(--blue-deep); }
+    .setting-detail-panel { background: #ffffff; border: 1px solid var(--border); border-radius: 15px; padding: 13px; }
+    .field-group { margin-bottom: 10px; }
+    .field-label { display: block; font-size: 12px; font-weight: 700; color: var(--ink-soft); margin-bottom: 4px; }
+    .field-input, .field-textarea, .field-select {
+      width: 100%;
+      border-radius: 11px;
+      border: 1px solid rgba(27, 108, 161, 0.28);
+      padding: 8px 10px;
+      font-size: 13px;
+      color: var(--ink);
+      background: #fff;
+    }
+
+    .field-textarea { min-height: 68px; resize: vertical; }
+    .picker-list {
+      max-height: 220px;
+      overflow-y: auto;
+      border: 1px solid rgba(27, 108, 161, 0.2);
+      border-radius: 12px;
+      padding: 6px;
+      background: #fbfdff;
+      margin: 8px 0;
+    }
+
+    .picker-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 7px 6px;
+      border-bottom: 1px dashed rgba(27, 108, 161, 0.14);
+      font-size: 12.5px;
+      line-height: 1.38;
+    }
+
+    .toast-msg {
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%) translateY(20px);
+      background: #143246;
+      color: #ffffff;
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 500;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.22s ease;
+      z-index: 90;
+      max-width: 92vw;
+      text-align: center;
+    }
+
+    .toast-msg.show { opacity: 1; transform: translateX(-50%) translateY(0); }
   </style>
 </head>
 
 <body class="pb-12">
-  <!-- Thanh đầu trang gồm tên ứng dụng, nút Cài đặt (⚙️) và 4 tab chính -->
   <header class="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-[#bfe0ec] shadow-sm">
     <div class="max-w-3xl mx-auto px-3 pt-2.5 pb-2">
       <div class="flex items-center justify-between gap-2 mb-2">
@@ -128,13 +552,13 @@
           </div>
           <div class="min-w-0">
             <h1 class="text-base sm:text-lg font-bold text-[#124e75] leading-tight truncate">Nét Đẹp Tiếng Việt</h1>
-            <p id="headerSummary" class="text-[11px] text-[#476d82] truncate">Đang tải kho ngữ liệu...</p>
+            <p id="headerSummary" class="text-[11px] text-[#476d82] truncate">Ca dao • Tục ngữ • Thành ngữ</p>
           </div>
         </div>
 
         <button
+          id="openSettingsBtn"
           type="button"
-          onclick="openSettingsModal()"
           aria-label="Mở Cài đặt"
           title="Cài đặt"
           class="btn-pill px-3 py-2 bg-[#e7f4fa] hover:bg-[#d5ebf5] text-[#124e75] border border-[#b3d9ea] flex items-center gap-1.5 text-xs sm:text-sm shrink-0"
@@ -144,289 +568,21 @@
         </button>
       </div>
 
-      <!-- 4 tab chính trên đầu -->
       <nav aria-label="Điều hướng chính" class="grid grid-cols-4 gap-1.5">
-        <button type="button" id="tab-all" onclick="switchTab('all')" class="btn-pill py-2 px-2 text-xs sm:text-sm border truncate">
-          Tất cả
-        </button>
-        <button type="button" id="tab-study" onclick="switchTab('study')" class="btn-pill py-2 px-2 text-xs sm:text-sm border truncate">
-          Góc học tập
-        </button>
-        <button type="button" id="tab-games" onclick="switchTab('games')" class="btn-pill py-2 px-2 text-xs sm:text-sm border truncate">
-          Trò chơi
-        </button>
-        <button type="button" id="tab-mastered" onclick="switchTab('mastered')" class="btn-pill py-2 px-2 text-xs sm:text-sm border truncate">
-          Đã thuộc
-        </button>
+        <button type="button" class="tab-btn active btn-pill py-2 px-2 text-xs sm:text-sm border truncate bg-white text-[#124e75] border-[#b8dce9]" data-tab="all">Tất cả</button>
+        <button type="button" class="tab-btn btn-pill py-2 px-2 text-xs sm:text-sm border truncate bg-white text-[#124e75] border-[#b8dce9]" data-tab="study">Góc học tập</button>
+        <button type="button" class="tab-btn btn-pill py-2 px-2 text-xs sm:text-sm border truncate bg-white text-[#124e75] border-[#b8dce9]" data-tab="games">Trò chơi</button>
+        <button type="button" class="tab-btn btn-pill py-2 px-2 text-xs sm:text-sm border truncate bg-white text-[#124e75] border-[#b8dce9]" data-tab="mastered">Đã thuộc</button>
       </nav>
     </div>
   </header>
 
-  <!-- Khung thông báo hệ thống thay thế alert() -->
-  <div id="toastBanner" class="max-w-3xl mx-auto px-3 pt-2.5 hidden">
-    <div id="toastInner" class="px-3.5 py-2.5 rounded-xl border text-xs sm:text-sm font-medium flex items-center justify-between gap-2 shadow-sm">
-      <span id="toastMessage"></span>
-      <button type="button" onclick="hideToast()" class="text-xs font-bold px-2 py-0.5 rounded-lg bg-white/70 hover:bg-white">Đóng</button>
-    </div>
-  </div>
-
-  <!-- Nội dung chính theo tab -->
-  <main id="mainContainer" class="max-w-3xl mx-auto px-3 pt-3"></main>
-
-  <!-- Hộp thoại Cài đặt (mặc định ẩn hoàn toàn, mở gọn từng mục theo danh sách) -->
-  <div id="settingsModal" hidden class="fixed inset-0 z-50 bg-[#0d2738]/50 backdrop-blur-[2px] flex items-center justify-center p-3">
-    <div class="bg-[#f4fbfe] border-2 border-[#a4d1e4] rounded-2xl max-w-2xl w-full max-h-[88vh] overflow-y-auto shadow-2xl p-4 sm:p-5">
-      <div class="flex items-center justify-between border-b border-[#cce6f1] pb-3 mb-3">
-        <div class="flex items-center gap-2">
-          <span class="text-xl">⚙️</span>
-          <h2 class="text-base sm:text-lg font-bold text-[#124e75]">Cài đặt & Quản lý Kho bài</h2>
-        </div>
-        <button type="button" onclick="closeSettingsModal()" class="btn-pill px-3 py-1.5 bg-white hover:bg-[#e5f3f9] text-[#124e75] border border-[#b6dceb] text-xs sm:text-sm">
-          Đóng
-        </button>
-      </div>
-
-      <!-- Danh sách mục cài đặt: chạm chọn mục nào mới mở chi tiết mục đó -->
-      <div class="space-y-2 mb-3 text-xs sm:text-sm">
-        <button type="button" onclick="selectSettingsSection('study20')" id="settings-nav-study20" class="w-full p-3 rounded-xl border text-left flex items-center justify-between transition bg-white hover:bg-[#eaf5fa] border-[#c5e0ec] text-[#124e75] font-bold">
-          <span>1. Chọn 20 bài Góc học tập</span>
-          <span id="settingsNavStudyBadge" class="text-xs px-2 py-0.5 rounded-lg bg-[#dff3e6] text-[#216648]">20 bài</span>
-        </button>
-
-        <button type="button" onclick="selectSettingsSection('editor')" id="settings-nav-editor" class="w-full p-3 rounded-xl border text-left flex items-center justify-between transition bg-white hover:bg-[#eaf5fa] border-[#c5e0ec] text-[#124e75] font-bold">
-          <span>2. Thêm / Sửa / Xóa bài (toàn quyền)</span>
-          <span class="text-xs text-[#4d7185]">Mở ▾</span>
-        </button>
-
-        <button type="button" onclick="selectSettingsSection('backup')" id="settings-nav-backup" class="w-full p-3 rounded-xl border text-left flex items-center justify-between transition bg-white hover:bg-[#eaf5fa] border-[#c5e0ec] text-[#124e75] font-bold">
-          <span>3. Sao lưu & Tải .JSON (&gt;90% trùng)</span>
-          <span class="text-xs text-[#4d7185]">Mở ▾</span>
-        </button>
-
-        <button type="button" onclick="selectSettingsSection('topics')" id="settings-nav-topics" class="w-full p-3 rounded-xl border text-left flex items-center justify-between transition bg-white hover:bg-[#eaf5fa] border-[#c5e0ec] text-[#124e75] font-bold">
-          <span>4. Chủ đề, Ôn 10 ngày & Khôi phục dữ liệu</span>
-          <span class="text-xs text-[#4d7185]">Mở ▾</span>
-        </button>
-      </div>
-
-      <div class="space-y-4 text-xs sm:text-sm">
-        <!-- 1. Chọn 20 bài Góc học tập -->
-        <section id="settings-panel-study20" hidden class="bg-white rounded-xl border border-[#cde7f2] p-3.5">
-          <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
-            <div>
-              <h3 class="font-bold text-[#124e75]">1. Chọn 20 bài cho Góc học tập</h3>
-              <p class="text-xs text-[#4d7185]">Các trò chơi xoay quanh 20 bài này. Nếu bài đã có sao (đã thuộc), hệ thống nhắc chọn thêm bài mới hoặc tự lấy ngẫu nhiên các bài chưa sao cho đủ 20 bài.</p>
-            </div>
-            <span id="selectedStudyCountBadge" class="px-2.5 py-1 rounded-lg bg-[#dff3e6] text-[#23694b] font-bold text-xs">20 / 20 bài</span>
-          </div>
-
-          <div class="flex flex-wrap gap-2 mb-2.5">
-            <input id="studyPickerSearch" type="text" oninput="renderStudyPickerList()" placeholder="Tìm câu hoặc ý nghĩa để chọn vào Góc học tập..." class="flex-1 min-w-[180px] px-3 py-2 rounded-xl border border-[#b9dceb] bg-[#f8fcfe] text-xs sm:text-sm focus:outline-none focus:border-[#1b6ca1]" />
-            <button type="button" onclick="autoFillStudyTo20()" class="btn-pill px-3 py-2 bg-[#e1f4e8] hover:bg-[#ccebd7] text-[#216648] border border-[#9fd4b3] text-xs font-semibold">
-              Tự đủ 20 bài (ưu tiên chưa sao)
-            </button>
-            <button type="button" onclick="saveStudySelection()" class="btn-pill px-3.5 py-2 bg-[#1b6ca1] hover:bg-[#124e75] text-white text-xs font-semibold">
-              Lưu 20 bài học
-            </button>
-          </div>
-
-          <div id="studyPickerList" class="max-h-48 overflow-y-auto divide-y divide-[#eaf4f9] border border-[#dceef6] rounded-xl p-2 bg-[#fbfdfe]"></div>
-        </section>
-
-        <!-- 2. Thêm mới, sửa toàn quyền & xóa bài học -->
-        <section id="settings-panel-editor" hidden class="bg-white rounded-xl border border-[#cde7f2] p-3.5">
-          <h3 class="font-bold text-[#124e75] mb-2">2. Thêm mới, Sửa toàn quyền & Xóa bài học</h3>
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-2">
-            <input id="editItemContent" type="text" placeholder="Nội dung câu ca dao / tục ngữ / thành ngữ..." class="sm:col-span-2 px-3 py-2 rounded-xl border border-[#b9dceb] text-xs sm:text-sm" />
-            <select id="editItemCategory" class="px-3 py-2 rounded-xl border border-[#b9dceb] text-xs sm:text-sm bg-white">
-              <option value="Ca dao">Ca dao</option>
-              <option value="Tục ngữ">Tục ngữ</option>
-              <option value="Thành ngữ">Thành ngữ</option>
-            </select>
-          </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-2">
-            <input id="editItemTopic" type="text" list="topicSuggestionsList" placeholder="Chủ đề (Gia đình, Bạn bè, Trường lớp, Thiên nhiên, Đất nước...)" class="px-3 py-2 rounded-xl border border-[#b9dceb] text-xs sm:text-sm" />
-            <input id="editItemMeaning" type="text" placeholder="Ý nghĩa giải thích dễ hiểu cho bé..." class="px-3 py-2 rounded-xl border border-[#b9dceb] text-xs sm:text-sm" />
-          </div>
-          <datalist id="topicSuggestionsList">
-            <option value="Gia đình"></option>
-            <option value="Bạn bè"></option>
-            <option value="Trường lớp"></option>
-            <option value="Thiên nhiên"></option>
-            <option value="Đất nước"></option>
-            <option value="Lao động & Cuộc sống"></option>
-            <option value="Đạo lý & Ứng xử"></option>
-            <option value="Tình yêu & Hôn nhân"></option>
-            <option value="Văn hóa & Lễ hội"></option>
-          </datalist>
-          <div class="flex flex-wrap gap-2">
-            <button type="button" onclick="addNewLessonItem()" class="btn-pill px-3.5 py-2 bg-[#2a7a58] hover:bg-[#205f44] text-white text-xs font-semibold">
-              + Thêm bài mới
-            </button>
-            <button type="button" onclick="saveExistingLessonEdit()" class="btn-pill px-3.5 py-2 bg-[#1b6ca1] hover:bg-[#124e75] text-white text-xs font-semibold">
-              Lưu sửa bài đang chọn
-            </button>
-            <button type="button" onclick="deleteSelectedLessonItem()" class="btn-pill px-3.5 py-2 bg-[#fdeaea] hover:bg-[#fad6d6] text-[#a62626] border border-[#ebb3b3] text-xs font-semibold">
-              Xóa bài đang chọn
-            </button>
-            <button type="button" onclick="clearLessonForm()" class="btn-pill px-3 py-2 bg-[#eef5f9] hover:bg-[#dfeef6] text-[#355a6f] border border-[#c5dfec] text-xs font-semibold">
-              Xóa trắng ô nhập
-            </button>
-          </div>
-
-          <div class="mt-3 pt-3 border-t border-[#e5f1f7]">
-            <label class="block text-xs font-semibold text-[#355a6f] mb-1.5">Tìm từ khóa để chọn bài cần sửa hoặc xóa:</label>
-            <input id="editSearchKeyword" type="text" oninput="renderEditableMatches()" placeholder="Nhập từ khóa bất kỳ (ví dụ: trâu, bầu, sen, công cha)..." class="w-full px-3 py-2 rounded-xl border border-[#b9dceb] bg-[#f8fcfe] text-xs sm:text-sm mb-2" />
-            <div id="editableMatchesList" class="max-h-36 overflow-y-auto space-y-1.5"></div>
-          </div>
-        </section>
-
-        <!-- 3. Sao lưu tự động, Backup / Tải .json & kiểm tra trùng lặp > 90% -->
-        <section id="settings-panel-backup" hidden class="bg-white rounded-xl border border-[#cde7f2] p-3.5">
-          <h3 class="font-bold text-[#124e75] mb-1.5">3. Sao lưu tự động & Backup / Tải tệp .JSON</h3>
-          <p class="text-xs text-[#4d7185] mb-2.5">Mọi thay đổi đều tự động sao lưu vào kho lưu trữ an toàn. Khi tải tệp .JSON lên, hệ thống tự loại bỏ trùng lặp và hỏi bạn nếu có bài giống trên 90% (thêm mới hay ghi đè).</p>
-          <div class="flex flex-wrap gap-2">
-            <button type="button" onclick="downloadBackupJson()" class="btn-pill px-3.5 py-2 bg-[#1b6ca1] hover:bg-[#124e75] text-white text-xs font-semibold">
-              Tải xuống Backup (.json)
-            </button>
-            <label class="btn-pill px-3.5 py-2 bg-[#e1f4e8] hover:bg-[#ccebd7] text-[#216648] border border-[#9fd4b3] text-xs font-semibold cursor-pointer">
-              Tải tệp .JSON lên
-              <input id="importJsonInput" type="file" accept=".json,application/json" onchange="handleImportJsonFile(event)" class="hidden" />
-            </label>
-          </div>
-
-          <div id="similarityPromptBox" class="hidden mt-3 p-3 rounded-xl bg-[#fff7e6] border border-[#f2c675] space-y-2">
-            <p id="similarityPromptText" class="text-xs font-semibold text-[#7a4b00]"></p>
-            <div class="flex flex-wrap gap-2">
-              <button type="button" onclick="resolveSimilarityChoice('add')" class="btn-pill px-3 py-1.5 bg-[#2a7a58] text-white text-xs font-semibold">
-                Thêm mới
-              </button>
-              <button type="button" onclick="resolveSimilarityChoice('overwrite')" class="btn-pill px-3 py-1.5 bg-[#1b6ca1] text-white text-xs font-semibold">
-                Ghi đè bài cũ
-              </button>
-              <button type="button" onclick="resolveSimilarityChoice('skip')" class="btn-pill px-3 py-1.5 bg-white text-[#576c78] border border-[#cbd9e0] text-xs font-semibold">
-                Bỏ qua bài này
-              </button>
-            </div>
-          </div>
-        </section>
-
-        <!-- 4. Chủ đề, Chu kỳ nhắc 10 ngày & Khôi phục dữ liệu -->
-        <section id="settings-panel-topics" hidden class="bg-white rounded-xl border border-[#cde7f2] p-3.5">
-          <h3 class="font-bold text-[#124e75] mb-2">4. Đặt lại chủ đề, Chu kỳ 10 ngày & Khôi phục dữ liệu</h3>
-          <p class="text-xs text-[#4d7185] mb-2.5">Bài đã thuộc (⭐) sau 10 ngày sẽ được nhắc ngẫu nhiên tối đa 3 lần trong chu kỳ 10 ngày tiếp theo. Sai cả 3 lần sẽ bỏ sao, rời Đã thuộc và cộng dồn vào Góc học tập (quên bài); đúng ít nhất 1 lần sẽ chuyển sang chu kỳ 10 ngày kế tiếp.</p>
-          <div class="mb-3 p-2.5 rounded-xl bg-[#f4fafe] border border-[#cde5f0] flex flex-wrap items-center justify-between gap-2">
-            <label class="text-xs font-semibold text-[#155780]" for="simDateInput">Ngày mô phỏng kiểm tra chu kỳ 10 ngày:</label>
-            <div class="flex items-center gap-1.5">
-              <input id="simDateInput" type="date" onchange="setSimulatedDate(this.value)" class="px-2.5 py-1 rounded-lg border border-[#b6d9e9] bg-white text-xs" />
-              <button type="button" onclick="setSimulatedDate('')" class="btn-pill px-2.5 py-1 bg-[#e5f3f9] text-[#124e75] border border-[#b4d9e8] text-xs font-semibold">
-                Ngày thực
-              </button>
-            </div>
-          </div>
-          <div class="flex flex-wrap gap-2">
-            <button type="button" onclick="reclassifyAllCategories()" class="btn-pill px-3.5 py-2 bg-[#e3f3fa] hover:bg-[#d1ebf7] text-[#124e75] border border-[#9ccbe0] text-xs font-semibold">
-              Đặt lại chủ đề cho tất cả các bài
-            </button>
-            <button type="button" onclick="verifyAndHealStorage()" class="btn-pill px-3.5 py-2 bg-[#e1f4e8] hover:bg-[#ccebd7] text-[#216648] border border-[#9fd4b3] text-xs font-semibold">
-              Kiểm tra & phục hồi kho dữ liệu
-            </button>
-            <button type="button" onclick="resetToDefaultCatalog()" class="btn-pill px-3.5 py-2 bg-[#fdeaea] hover:bg-[#fad6d6] text-[#a62626] border border-[#ebb3b3] text-xs font-semibold">
-              Khôi phục mặc định
-            </button>
-          </div>
-        </section>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    /* =========================================================================
-       KHO NGỮ LIỆU 376 BÀI (TRANG 1-30) + BỔ SUNG TRANG 31-40 KÈM Ý NGHĨA
-    ========================================================================= */
-    const BASE_376_ITEMS = [
-      ["Ai ai cũng tưởng bậu hiền\nCắn cơm không bể, cắn tiền bể hai", "Khuyên người đời đừng nhìn vẻ bề ngoài hiền lành mà vội tin, có khi bên trong lại khôn khéo tính toán hơn người."],
-      ["Ai đem con sáo sang sông\nĐể cho con sáo sổ lồng bay cao", "Khi buông lỏng hoặc không giữ gìn cẩn thận thì điều quý giá, người thương yêu dễ rời xa và khó tìm lại."],
-      ["Ai đi bờ đắp một mình\nPhất phơ chiếc áo giống hình phu quân", "Nỗi nhớ nhung da diết của người vợ khi đi một mình giữa đồng bãi vắng vẻ, ngỡ bóng dáng người chồng."],
-   cff; color: var(--ink); font-size: 13.5px; line-height: 1.4; cursor: pointer; }
-    .option-btn.selected { background: var(--blue-soft); border-color: var(--blue); font-weight: 600; }
-    .option-btn.correct { background: var(--right-bg); border-color: var(--right-bd); color: #14532d; font-weight: 600; }
-    .option-btn.wrong { background: var(--wrong-bg); border-color: var(--wrong-bd); color: #7f1d1d; }
-    .word-bank { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px; border-radius: 14px; background: #f4fafe; border: 1px dashed rgba(37, 117, 184, 0.3); min-height: 52px; margin-top: 8px; }
-    .word-chip { border: 1px solid rgba(37, 117, 184, 0.3); background: #ffffff; color: var(--ink); border-radius: 10px; padding: 7px 11px; font-size: 13.5px; font-weight: 600; cursor: pointer; }
-    .word-chip.right { background: var(--right-bg); border-color: var(--right-bd); color: #14532d; }
-    .word-chip.wrong { background: var(--wrong-bg); border-color: var(--wrong-bd); color: #7f1d1d; }
-    .line-box { border: 1px solid rgba(37, 117, 184, 0.22); background: #ffffff; border-radius: 12px; padding: 8px 10px; min-height: 44px; display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
-    .match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
-    .match-item { border: 1px solid rgba(37, 117, 184, 0.25); background: #ffffff; border-radius: 12px; padding: 9px; font-size: 12.5px; line-height: 1.38; text-align: left; cursor: pointer; }
-    .match-item.selected { background: var(--blue-soft); border-color: var(--blue); font-weight: 600; }
-    .match-item.paired { background: #eef8f1; border-color: var(--green); }
-    .match-item.correct { background: var(--right-bg); border-color: var(--right-bd); }
-    .match-item.wrong { background: var(--wrong-bg); border-color: var(--wrong-bd); }
-    .feedback-box { margin-top: 12px; padding: 12px; border-radius: 14px; font-size: 13px; line-height: 1.5; }
-    .feedback-box.ok { background: var(--right-bg); border: 1px solid var(--right-bd); color: #14532d; font-weight: 600; }
-    .feedback-box.err { background: var(--wrong-bg); border: 1px solid var(--wrong-bd); color: #7f1d1d; }
-    .game-controls { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
-    .modal-backdrop { position: fixed; inset: 0; background: rgba(16, 38, 54, 0.48); backdrop-filter: blur(4px); z-index: 50; display: none; align-items: center; justify-content: center; padding: 14px; }
-    .modal-backdrop.open { display: flex; }
-    .modal-sheet { width: 100%; max-width: 500px; max-height: 88vh; overflow-y: auto; background: #f8fcff; border-radius: 22px; border: 1px solid var(--border); padding: 16px; }
-    .modal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-    .modal-title { margin: 0; font-size: 17px; font-weight: 700; color: var(--blue-deep); }
-    .close-x { width: 34px; height: 34px; border-radius: 10px; border: 1px solid rgba(37, 117, 184, 0.25); background: #fff; font-size: 18px; cursor: pointer; }
-    .setting-list { display: grid; gap: 7px; margin-bottom: 12px; }
-    .setting-row-btn { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 11px 13px; border-radius: 13px; border: 1px solid rgba(37, 117, 184, 0.22); background: #ffffff; color: var(--ink); font-size: 13.5px; font-weight: 600; cursor: pointer; text-align: left; }
-    .setting-row-btn.active { background: linear-gradient(135deg, #e5f3fd, #e7f6ec); border-color: var(--blue); color: var(--blue-deep); }
-    .setting-detail-panel { background: #ffffff; border: 1px solid var(--border); border-radius: 15px; padding: 13px; }
-    .field-group { margin-bottom: 10px; }
-    .field-label { display: block; font-size: 12px; font-weight: 700; color: var(--ink-soft); margin-bottom: 4px; }
-    .field-input, .field-textarea, .field-select { width: 100%; border-radius: 11px; border: 1px solid rgba(37, 117, 184, 0.28); padding: 8px 10px; font-size: 13px; color: var(--ink); background: #fff; }
-    .field-textarea { min-height: 68px; resize: vertical; }
-    .picker-list { max-height: 220px; overflow-y: auto; border: 1px solid rgba(37, 117, 184, 0.2); border-radius: 12px; padding: 6px; background: #fbfdff; margin: 8px 0; }
-    .picker-item { display: flex; align-items: flex-start; gap: 8px; padding: 7px 6px; border-bottom: 1px dashed rgba(37, 117, 184, 0.14); font-size: 12.5px; line-height: 1.38; }
-    .toast-msg {
-      position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%) translateY(20px);
-      background: #143246; color: #ffffff; padding: 10px 16px; border-radius: 999px;
-      font-size: 13px; font-weight: 500; opacity: 0; pointer-events: none; transition: all 0.22s ease; z-index: 90; max-width: 92vw; text-align: center;
-    }
-    .toast-msg.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-  </style>
-</head>
-<body>
-  <svg class="countryside-backdrop" viewBox="0 0 800 1200" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-    <g stroke="#2a5a78" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M90 120 Q120 100 150 118 Q180 102 205 122" />
-      <path d="M560 95 Q585 82 610 96 Q632 84 655 98" />
-      <path d="M320 420 Q400 355 480 420" stroke-width="2.2" />
-      <path d="M295 432 Q400 375 505 432" />
-      <path d="M335 432 V495 M465 432 V495 M385 432 V495 M415 432 V495" />
-      <path d="M75 640 V260 M92 640 V230 M110 640 V285" stroke-width="2" />
-      <path d="M0 640 Q240 615 430 648 T800 635" stroke-width="2" />
-      <path d="M0 710 Q280 685 520 725 T800 710" />
-      <path d="M0 790 Q220 765 480 805 T800 790" />
-    </g>
-  </svg>
-
-  <div class="app-shell">
-    <header class="top-header">
-      <div>
-        <h1 class="brand-title">Nét Đẹp Tiếng Việt</h1>
-        <p class="brand-sub">Ca dao • Tục ngữ • Thành ngữ</p>
-      </div>
-      <button id="openSettingsBtn" class="icon-gear-btn" title="Cài đặt" aria-label="Cài đặt">⚙️</button>
-    </header>
-
-    <nav class="tabs-bar" aria-label="Điều hướng chính">
-      <button class="tab-btn active" data-tab="all">Tất cả</button>
-      <button class="tab-btn" data-tab="study">Góc học tập</button>
-      <button class="tab-btn" data-tab="games">Trò chơi</button>
-      <button class="tab-btn" data-tab="mastered">Đã thuộc</button>
-    </nav>
-
+  <div class="max-w-3xl mx-auto px-3 pt-3">
     <section id="searchFilterSection" class="toolbar-card">
       <div class="search-row">
         <input id="searchInput" class="search-input" type="search" placeholder="Tìm câu, ý nghĩa, chủ đề..." />
-        <button id="toggleFilterBtn" class="tool-icon-btn" title="Bộ lọc" aria-label="Bộ lọc">⏷</button>
-        <button id="sortOrderBtn" class="tool-icon-btn" title="Sắp xếp A-Z / Z-A" aria-label="Sắp xếp A-Z / Z-A">⇅</button>
+        <button id="toggleFilterBtn" class="tool-icon-btn" type="button" title="Bộ lọc" aria-label="Bộ lọc">⏷</button>
+        <button id="sortOrderBtn" class="tool-icon-btn" type="button" title="Sắp xếp A-Z / Z-A" aria-label="Sắp xếp A-Z / Z-A">⇅</button>
       </div>
       <div id="filterPanel" class="filter-panel">
         <div class="filter-mode-switch">
@@ -457,7 +613,7 @@
       <div class="setting-list">
         <button class="setting-row-btn active" data-setting="study20" type="button"><span>1. Chọn 20 bài cho Góc học tập</span><span>›</span></button>
         <button class="setting-row-btn" data-setting="crud" type="button"><span>2. Thêm / Sửa / Xóa bài học</span><span>›</span></button>
-        <button class="setting-row-btn" data-setting="backup" type="button"><span>3. Sao lưu tự động & Tải / Xuất .JSON</span><span>›</span></button>
+        <button class="setting-row-btn" data-setting="backup" type="button"><span>3. Sao lưu tự động &amp; Tải / Xuất .JSON</span><span>›</span></button>
         <button class="setting-row-btn" data-setting="retopic" type="button"><span>4. Đặt lại chủ đề cho tất cả bài</span><span>›</span></button>
         <button class="setting-row-btn" data-setting="restore376" type="button"><span>5. Kéo lại dữ liệu gốc (376 bài trang 1–30)</span><span>›</span></button>
       </div>
@@ -525,7 +681,7 @@
           { kind: 'Ca dao', topic: 'Trường lớp', q: 'Ngọc kia chuốt mãi cũng trong,\nNgười kia học mãi cũng thông mọi điều.', m: 'Chăm chỉ học tập và rèn luyện thì ai cũng có thể tiến bộ và thông tuệ.' },
           { kind: 'Thành ngữ', topic: 'Bạn bè', q: 'Tình bạn keo sơn.', m: 'Tình bạn gắn bó chặt chẽ, bền vững, thủy chung trước sau.' },
           { kind: 'Ca dao', topic: 'Thiên nhiên', q: 'Gió đưa cành trúc la đà,\nTiếng chuông Trấn Vũ, canh gà Thọ Xương.', m: 'Bức tranh thiên nhiên và nhịp sống yên bình, cổ kính của đất kinh kỳ.' },
-          { kind: 'Tục ngữ', topic: 'Đất nước', q: 'Rừng vàng biển bạc.', meaning: 'Đất nước có nhiều tài nguyên rừng núi và biển cả phong phú, cần biết bảo vệ.' }
+          { kind: 'Tục ngữ', topic: 'Đất nước', q: 'Rừng vàng biển bạc.', m: 'Đất nước có nhiều tài nguyên rừng núi và biển cả phong phú, cần biết bảo vệ.' }
         ];
         let nextId = BASE_376_ITEMS.length + 1;
         let tIdx = 0;
@@ -537,7 +693,7 @@
             id: nextId++,
             kind: base.kind,
             text: isSpecial ? `${base.q}\nGiữ gìn nét đẹp quê hương.` : base.q,
-            meaning: base.meaning || base.m,
+            meaning: base.m,
             _presetTopic: base.topic
           });
           tIdx++;
@@ -652,6 +808,7 @@
 
       function showToast(msg) {
         const el = document.getElementById('toast');
+        if (!el) return;
         el.textContent = msg;
         el.classList.add('show');
         clearTimeout(showToast._t);
@@ -736,29 +893,12 @@
         return state.studyIds.filter((id) => Boolean(state.masteredMap[id])).length;
       }
 
-      function renderCornerDecorations() {
-        return `
-          <svg class="corner-bamboo" viewBox="0 0 80 80" aria-hidden="true">
-            <g stroke="#2e8b57" stroke-width="2" fill="none" stroke-linecap="round">
-              <path d="M58 6 V54" /><path d="M54 22 H62 M54 38 H62" />
-              <path d="M58 18 Q42 12 34 22 Q45 25 58 18 Z" fill="#2e8b57" fill-opacity="0.25" />
-            </g>
-          </svg>
-          <svg class="corner-floral" viewBox="0 0 80 80" aria-hidden="true">
-            <g stroke="#2575b8" stroke-width="1.6" fill="#2575b8" fill-opacity="0.16">
-              <circle cx="22" cy="58" r="6" /><circle cx="22" cy="48" r="5" /><circle cx="31" cy="54" r="5" />
-            </g>
-          </svg>
-        `;
-      }
-
       function renderVerseCard(item) {
         const isStarred = Boolean(state.masteredMap[item.id]);
         const pastel = TOPIC_PASTEL_MAP[item.topic] || '#e8f4fc';
         const dueReview = isDueFor10DayReview(item.id);
         return `
           <article class="verse-card" data-id="${item.id}">
-            ${renderCornerDecorations()}
             <button type="button" class="star-btn ${isStarred ? 'active' : ''}" onclick="window.__app.toggleStar(${item.id})">${isStarred ? '⭐' : '☆'}</button>
             <div class="card-top-line">
               <div class="card-tags">
@@ -793,7 +933,7 @@
         const startIdx = (state.page - 1) * PAGE_SIZE;
         const pageItems = fullList.slice(startIdx, startIdx + PAGE_SIZE);
         const masteredCount = Object.keys(state.masteredMap).length;
-        document.getElementById('metaStrip').innerHTML = `<span>Hiển thị <b>${fullList.length}</b> bài • ⭐ Đã thuộc: <b>${masteredCount}</b></span><span>Trang ${state.page}/${totalPages}</span>`;
+        document.getElementById('metaStrip').innerHTML = `<span>Hiển thị <b>${fullList.length}</b> / ${state.items.length} bài • ⭐ Đã thuộc: <b>${masteredCount}</b></span><span>Trang ${state.page}/${totalPages}</span>`;
         const bannerEl = document.getElementById('studyBanner');
         if (tab === 'study' && getStudyMasteredCount() > 0) {
           bannerEl.style.display = 'block';
@@ -933,7 +1073,7 @@
               <div class="game-mode-card"><h3 class="game-mode-title">1. Điền vào chỗ trống (a/b/c/d)</h3><p class="game-mode-desc">Bài trên 2 câu có nhiều hơn 2 chỗ trống để lựa chọn.</p><button class="primary-btn" onclick="window.__app.startGame(1)">Bắt đầu Game 1</button></div>
               <div class="game-mode-card"><h3 class="game-mode-title">2. Sắp xếp từ (5 lần xếp - 10 điểm)</h3><p class="game-mode-desc">Xếp từ theo từng dòng đúng bài, nghe gợi ý 1 lần.</p><button class="primary-btn" onclick="window.__app.startGame(2)">Bắt đầu Game 2</button></div>
               <div class="game-mode-card"><h3 class="game-mode-title">3. Chọn a/b/c/d ý nghĩa đúng (10 bài - 10 điểm)</h3><p class="game-mode-desc">Chọn đáp án đúng giải thích ý nghĩa của câu.</p><button class="primary-btn" onclick="window.__app.startGame(3)">Bắt đầu Game 3</button></div>
-              <div class="game-mode-card"><h3 class="game-mode-title">4. Nối thẻ câu & ý nghĩa (10 bài - 10 điểm)</h3><p class="game-mode-desc">Mỗi lượt nối 5 câu với 5 ý nghĩa (2 lượt = 10 điểm).</p><button class="primary-btn" onclick="window.__app.startGame(4)">Bắt đầu Game 4</button></div>
+              <div class="game-mode-card"><h3 class="game-mode-title">4. Nối thẻ câu &amp; ý nghĩa (10 bài - 10 điểm)</h3><p class="game-mode-desc">Mỗi lượt nối 5 câu với 5 ý nghĩa (2 lượt = 10 điểm).</p><button class="primary-btn" onclick="window.__app.startGame(4)">Bắt đầu Game 4</button></div>
             </div>
           `;
           return;
@@ -1198,7 +1338,7 @@
           window.__app.filterCrudList();
         } else if (key === 'backup') {
           panel.innerHTML = `
-            <p style="margin:0 0 10px;font-size:12.5px;">Đã bật tự động sao lưu. Hỗ trợ xuất/nạp file <b>.JSON</b> với bộ lọc trùng lặp & hỏi nếu trùng &gt; 90%.</p>
+            <p style="margin:0 0 10px;font-size:12.5px;">Đã bật tự động sao lưu. Hỗ trợ xuất/nạp file <b>.JSON</b> với bộ lọc trùng lặp &amp; hỏi nếu trùng &gt; 90%.</p>
             <div style="display:flex;gap:8px;flex-wrap:wrap;">
               <button type="button" class="primary-btn" onclick="window.__app.exportJsonFile()">Tải file .JSON</button>
               <label class="secondary-btn" style="cursor:pointer;"><span>Nạp file .JSON</span><input type="file" accept=".json,application/json" style="display:none;" onchange="window.__app.handleImportJson(event)" /></label>
