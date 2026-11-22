@@ -822,6 +822,294 @@
     }
 
     .toast-msg.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    .acc-badge-btn {
+      border-radius: 14px;
+      font-weight: 600;
+      transition: all 0.15s ease;
+      box-shadow: 0 3px 0 rgba(18, 78, 117, 0.14);
+      cursor: pointer;
+    }
+    .acc-pill-info {
+      background: #e9f7ee;
+      border: 1px solid #8fd1a8;
+      color: #165436;
+      border-radius: 12px;
+      padding: 8px 10px;
+      font-size: 12.5px;
+      margin-bottom: 10px;
+    }
+    .auth-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+    .auth-tab-btn {
+      padding: 8px 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(27, 108, 161, 0.25);
+      background: #ffffff;
+      color: var(--blue-deep);
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .auth-tab-btn.active {
+      background: linear-gradient(135deg, var(--blue), var(--green));
+      color: #ffffff;
+      border-color: transparent;
+    }
+    .progress-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin: 10px 0 12px;
+    }
+    .progress-stat-card {
+      background: #f4fafe;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 8px;
+      text-align: center;
+    }
+    .progress-stat-num {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--blue-deep);
+      display: block;
+    }
+    .progress-stat-lbl {
+      font-size: 11px;
+      color: var(--ink-soft);
+    }
+    .history-list {
+      max-height: 150px;
+      overflow-y: auto;
+      border: 1px solid rgba(27, 108, 161, 0.2);
+      border-radius: 12px;
+      padding: 6px 8px;
+      background: #fbfdff;
+      font-size: 12px;
+    }
+    .history-row {
+      padding: 5px 0;
+      border-bottom: 1px dashed rgba(27, 108, 161, 0.14);
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .history-row:last-child {
+      border-bottom: none;
+    }
+  </style>
+</head>
+
+<body class="pb-12">
+  <header class="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-[#bfe0ec] shadow-sm">
+    <div class="max-w-3xl mx-auto px-3 pt-2.5 pb-2">
+      <div class="flex items-center justify-between gap-2 mb-2">
+        <div class="flex items-center gap-2 min-w-0">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-[#d5eef9] to-[#d5f2df] border border-[#9fd0e3] flex items-center justify-center shrink-0">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1b6ca1" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 20V10" />
+              <path d="M12 14c-3.5 0-6-2-6-5 3 0 5.5 1.5 6 5z" fill="#d7f0df" stroke="#2a7a58" />
+              <path d="M12 14c3.5 0 6-2 6-5-3 0-5.5 1.5-6 5z" fill="#d7f0df" stroke="#2a7a58" />
+              <path d="M12 10c-2-2.5-2-5.5 0-7 2 1.5 2 4.5 0 7z" fill="#dff2fc" />
+            </svg>
+          </div>
+          <div class="min-w-0">
+            <h1 class="text-base sm:text-lg font-bold text-[#124e75] leading-tight truncate">Nét Đẹp Tiếng Việt</h1>
+            <p id="headerSummary" class="text-[11px] text-[#476d82] truncate">Ca dao • Tục ngữ • Thành ngữ</p>
+          </div>
+        </div>
+
+        <button
+          id="openAccountBtn"
+          type="button"
+          aria-label="Tài khoản học tập"
+          title="Tài khoản học tập"
+          class="acc-badge-btn px-2.5 py-2 bg-[#e8f7ee] hover:bg-[#d5efe0] text-[#165436] border border-[#9fd4b5] flex items-center gap-1.5 text-xs sm:text-sm shrink-0"
+        >
+          <span>👤</span>
+          <span id="headerAccountLabel" class="max-w-[110px] truncate">Tài khoản</span>
+        </button>
+
+        <button
+          id="openSettingsBtn"
+          type="button"
+          aria-label="Mở Cài đặt"
+          title="Cài đặt"
+          class="btn-pill px-3 py-2 bg-[#e7f4fa] hover:bg-[#d5ebf5] text-[#124e75] border border-[#b3d9ea] flex items-center gap-1.5 text-xs sm:text-sm shrink-0"
+        >
+          <span>⚙️</span>
+          <span class="hidden sm:inline">Cài đặt</span>
+        </button>
+      </div>
+
+      <nav aria-label="Điều hướng chính" class="grid grid-cols-4 gap-1.5">
+        <button type="button" class="tab-btn active btn-pill py-2 px-2 text-xs sm:text-sm border truncate bg-white text-[#124e75] border-[#b8dce9]" data-tab="all">Tất cả</button>
+        <button type="button" class="tab-btn btn-pill py-2 px-2 text-xs sm:text-sm border truncate bg-white text-[#124e75] border-[#b8dce9]" data-tab="study">Góc học tập</button>
+        <button type="button" class="tab-btn btn-pill py-2 px-2 text-xs sm:text-sm border truncate bg-white text-[#124e75] border-[#b8dce9]" data-tab="games">Trò chơi</button>
+        <button type="button" class="tab-btn btn-pill py-2 px-2 text-xs sm:text-sm border truncate bg-white text-[#124e75] border-[#b8dce9]" data-tab="mastered">Đã thuộc</button>
+      </nav>
+    </div>
+  </header>
+
+  <div class="max-w-3xl mx-auto px-3 pt-3">
+    <section id="searchFilterSection" class="toolbar-card">
+      <div class="search-row">
+        <input id="searchInput" class="search-input" type="searc   margin-top: 8px;
+    }
+
+    .word-chip {
+      border: 1px solid rgba(27, 108, 161, 0.3);
+      background: #ffffff;
+      color: var(--ink);
+      border-radius: 10px;
+      padding: 7px 11px;
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .word-chip.right { background: var(--right-bg); border-color: var(--right-bd); color: #14532d; }
+    .word-chip.wrong { background: var(--wrong-bg); border-color: var(--wrong-bd); color: #7f1d1d; }
+
+    .line-box {
+      border: 1px solid rgba(27, 108, 161, 0.22);
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 8px 10px;
+      min-height: 44px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+    .match-item {
+      border: 1px solid rgba(27, 108, 161, 0.25);
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 9px;
+      font-size: 12.5px;
+      line-height: 1.38;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .match-item.selected { background: var(--blue-soft); border-color: var(--blue); font-weight: 600; }
+    .match-item.paired { background: #eef8f1; border-color: var(--green); }
+    .match-item.correct { background: var(--right-bg); border-color: var(--right-bd); }
+    .match-item.wrong { background: var(--wrong-bg); border-color: var(--wrong-bd); }
+
+    .feedback-box { margin-top: 12px; padding: 12px; border-radius: 14px; font-size: 13px; line-height: 1.5; }
+    .feedback-box.ok { background: var(--right-bg); border: 1px solid var(--right-bd); color: #14532d; font-weight: 600; }
+    .feedback-box.err { background: var(--wrong-bg); border: 1px solid var(--wrong-bd); color: #7f1d1d; }
+    .game-controls { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(16, 38, 54, 0.48);
+      backdrop-filter: blur(4px);
+      z-index: 50;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 14px;
+    }
+
+    .modal-backdrop.open { display: flex; }
+
+    .modal-sheet {
+      width: 100%;
+      max-width: 500px;
+      max-height: 88vh;
+      overflow-y: auto;
+      background: #f8fcff;
+      border-radius: 22px;
+      border: 1px solid var(--border);
+      padding: 16px;
+    }
+
+    .modal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .modal-title { margin: 0; font-size: 17px; font-weight: 700; color: var(--blue-deep); }
+    .close-x { width: 34px; height: 34px; border-radius: 10px; border: 1px solid rgba(27, 108, 161, 0.25); background: #fff; font-size: 18px; cursor: pointer; }
+    .setting-list { display: grid; gap: 7px; margin-bottom: 12px; }
+    .setting-row-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 11px 13px;
+      border-radius: 13px;
+      border: 1px solid rgba(27, 108, 161, 0.22);
+      background: #ffffff;
+      color: var(--ink);
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .setting-row-btn.active { background: linear-gradient(135deg, #e5f3fd, #e7f6ec); border-color: var(--blue); color: var(--blue-deep); }
+    .setting-detail-panel { background: #ffffff; border: 1px solid var(--border); border-radius: 15px; padding: 13px; }
+    .field-group { margin-bottom: 10px; }
+    .field-label { display: block; font-size: 12px; font-weight: 700; color: var(--ink-soft); margin-bottom: 4px; }
+    .field-input, .field-textarea, .field-select {
+      width: 100%;
+      border-radius: 11px;
+      border: 1px solid rgba(27, 108, 161, 0.28);
+      padding: 8px 10px;
+      font-size: 13px;
+      color: var(--ink);
+      background: #fff;
+    }
+
+    .field-textarea { min-height: 68px; resize: vertical; }
+    .picker-list {
+      max-height: 220px;
+      overflow-y: auto;
+      border: 1px solid rgba(27, 108, 161, 0.2);
+      border-radius: 12px;
+      padding: 6px;
+      background: #fbfdff;
+      margin: 8px 0;
+    }
+
+    .picker-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 7px 6px;
+      border-bottom: 1px dashed rgba(27, 108, 161, 0.14);
+      font-size: 12.5px;
+      line-height: 1.38;
+    }
+
+    .toast-msg {
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%) translateY(20px);
+      background: #143246;
+      color: #ffffff;
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 500;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.22s ease;
+      z-index: 90;
+      max-width: 92vw;
+      text-align: center;
+    }
+
+    .toast-msg.show { opacity: 1; transform: translateX(-50%) translateY(0); }
   </style>
 </head>
 
