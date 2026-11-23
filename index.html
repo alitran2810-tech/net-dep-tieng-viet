@@ -216,7 +216,7 @@
         </button>
 
         <button type="button" onclick="selectSettingsSection('topics')" id="settings-nav-topics" class="w-full p-3 rounded-xl border text-left flex items-center justify-between transition bg-white hover:bg-[#eaf5fa] border-[#c5e0ec] text-[#124e75] font-bold">
-          <span>4. Chủ đề, Ôn 10 ngày & Khôi phục dữ liệu</span>
+          <span id="settingsNavTopicsLabel">4. Chủ đề, Ôn 10 ngày & Khôi phục dữ liệu</span>
           <span class="text-xs text-[#4d7185]">Mở ▾</span>
         </button>
       </div>
@@ -234,15 +234,9 @@
 
           <div class="flex flex-wrap gap-2 mb-2.5">
             <input id="studyPickerSearch" type="text" oninput="renderStudyPickerList()" placeholder="Tìm câu hoặc ý nghĩa để chọn vào Góc học tập..." class="flex-1 min-w-[180px] px-3 py-2 rounded-xl border border-[#b9dceb] bg-[#f8fcfe] text-xs sm:text-sm focus:outline-none focus:border-[#1b6ca1]" />
-            <button type="button" onclick="randomPickStudy20()" class="btn-pill px-3 py-2 bg-[#fff3d6] hover:bg-[#ffe9b8] text-[#8a5900] border border-[#f0cf8a] text-xs font-semibold">
-              🎲 Chọn ngẫu nhiên 20 bài
-            </button>
-            <button type="button" onclick="autoFillStudyTo20()" class="btn-pill px-3 py-2 bg-[#e1f4e8] hover:bg-[#ccebd7] text-[#216648] border border-[#9fd4b3] text-xs font-semibold">
-              Tự đủ 20 bài (ưu tiên chưa sao)
-            </button>
-            <button type="button" onclick="saveStudySelection()" class="btn-pill px-3.5 py-2 bg-[#1b6ca1] hover:bg-[#124e75] text-white text-xs font-semibold">
-              Lưu 20 bài học
-            </button>
+            <button type="button" onclick="randomPickStudy20()" title="Chọn ngẫu nhiên 20 bài (ưu tiên bài chưa sao)" class="btn-pill px-2.5 py-1 text-[11px] font-semibold whitespace-nowrap bg-[#fff3d6] hover:bg-[#ffe9b8] text-[#8a5900] border border-[#f0cf8a]">🎲 Ngẫu nhiên</button>
+            <button type="button" onclick="autoFillStudyTo20()" title="Giữ bài đang chọn, bổ sung cho đủ 20 bài (ưu tiên chưa sao)" class="btn-pill px-2.5 py-1 text-[11px] font-semibold whitespace-nowrap bg-[#e1f4e8] hover:bg-[#ccebd7] text-[#216648] border border-[#9fd4b3]">⭐ Thứ tự ưu tiên</button>
+            <button type="button" onclick="saveStudySelection()" title="Lưu 20 bài học" class="btn-pill px-2.5 py-1 text-[11px] font-semibold whitespace-nowrap bg-[#1b6ca1] hover:bg-[#124e75] text-white">💾 Lưu</button>
           </div>
 
           <div id="studyPickerList" class="max-h-48 overflow-y-auto divide-y divide-[#eaf4f9] border border-[#dceef6] rounded-xl p-2 bg-[#fbfdfe]"></div>
@@ -274,19 +268,10 @@
             <option value="Tình yêu & Hôn nhân"></option>
             <option value="Văn hóa & Lễ hội"></option>
           </datalist>
-          <div class="flex flex-wrap gap-2">
-            <button type="button" onclick="addNewLessonItem()" class="btn-pill px-3.5 py-2 bg-[#2a7a58] hover:bg-[#205f44] text-white text-xs font-semibold">
-              + Thêm bài mới
-            </button>
-            <button type="button" onclick="saveExistingLessonEdit()" class="btn-pill px-3.5 py-2 bg-[#1b6ca1] hover:bg-[#124e75] text-white text-xs font-semibold">
-              Lưu sửa bài đang chọn
-            </button>
-            <button type="button" onclick="deleteSelectedLessonItem()" class="btn-pill px-3.5 py-2 bg-[#fdeaea] hover:bg-[#fad6d6] text-[#a62626] border border-[#ebb3b3] text-xs font-semibold">
-              Xóa bài đang chọn
-            </button>
-            <button type="button" onclick="clearLessonForm()" class="btn-pill px-3 py-2 bg-[#eef5f9] hover:bg-[#dfeef6] text-[#355a6f] border border-[#c5dfec] text-xs font-semibold">
-              Xóa trắng ô nhập
-            </button>
+          <div class="flex flex-wrap gap-1.5">
+            <button type="button" onclick="addNewLessonItem()" title="Thêm bài mới" class="btn-pill px-2.5 py-1 text-[11px] font-semibold whitespace-nowrap bg-[#2a7a58] hover:bg-[#205f44] text-white">＋ Thêm</button>
+            <button type="button" onclick="deleteSelectedLessonItem()" title="Xóa bài đang chọn (bấm 2 lần để xác nhận)" class="btn-pill px-2.5 py-1 text-[11px] font-semibold whitespace-nowrap bg-[#fdeaea] hover:bg-[#fad6d6] text-[#a62626] border border-[#ebb3b3]">🗑 Xóa</button>
+            <button type="button" onclick="saveExistingLessonEdit()" title="Lưu sửa bài đang chọn" class="btn-pill px-2.5 py-1 text-[11px] font-semibold whitespace-nowrap bg-[#1b6ca1] hover:bg-[#124e75] text-white">💾 Lưu</button>
           </div>
 
           <div class="mt-3 pt-3 border-t border-[#e5f1f7]">
@@ -328,7 +313,7 @@
 
         <!-- 4. Chủ đề, Chu kỳ nhắc 10 ngày & Khôi phục dữ liệu -->
         <section id="settings-panel-topics" hidden class="bg-white rounded-xl border border-[#cde7f2] p-3.5">
-          <h3 class="font-bold text-[#124e75] mb-2">4. Đặt lại chủ đề, Chu kỳ 10 ngày & Khôi phục dữ liệu</h3>
+          <h3 id="settingsTopicsTitle" class="font-bold text-[#124e75] mb-2">4. Đặt lại chủ đề, Chu kỳ 10 ngày & Khôi phục dữ liệu</h3>
           <p class="text-xs text-[#4d7185] mb-2.5">Bài đã thuộc (⭐) sau 10 ngày sẽ được nhắc ngẫu nhiên tối đa 3 lần trong chu kỳ 10 ngày tiếp theo. Sai cả 3 lần sẽ bỏ sao, rời Đã thuộc và cộng dồn vào Góc học tập (quên bài); đúng ít nhất 1 lần sẽ chuyển sang chu kỳ 10 ngày kế tiếp.</p>
           <div class="mb-3 p-2.5 rounded-xl bg-[#f4fafe] border border-[#cde5f0] flex flex-wrap items-center justify-between gap-2">
             <label class="text-xs font-semibold text-[#155780]" for="simDateInput">Ngày mô phỏng kiểm tra chu kỳ 10 ngày:</label>
@@ -339,7 +324,7 @@
               </button>
             </div>
           </div>
-          <div class="flex flex-wrap gap-2">
+          <div id="adminTopicTools" class="flex flex-wrap gap-2">
             <button type="button" onclick="reclassifyAllCategories()" class="btn-pill px-3.5 py-2 bg-[#e3f3fa] hover:bg-[#d1ebf7] text-[#124e75] border border-[#9ccbe0] text-xs font-semibold">
               Đặt lại chủ đề cho tất cả các bài
             </button>
@@ -1277,7 +1262,6 @@
     }
 
     function setSimulatedDate(val) {
-      if (!requireAdmin()) return;
       appState.simulatedToday = val ? toDateOnlyStr(val) : null;
       syncReviewWindowsWithToday();
       saveStateSafe(false);
@@ -1427,6 +1411,8 @@
       studyIds: [],
       forgottenReviewIds: [],
       retiredNorms: [],
+      favoriteIds: [],
+      gameTotals: { game1: 0, game2: 0, game3: 0, game4: 0 },
       accounts: [],
       currentAccount: null,
       history: [],
@@ -1622,6 +1608,8 @@
             forgottenReviewIds: appState.forgottenReviewIds,
             simulatedToday: appState.simulatedToday,
             history: appState.history,
+            favoriteIds: appState.favoriteIds,
+            gameTotals: appState.gameTotals,
             ui: {
               activeTab: appState.activeTab, pages: appState.pages, searchQuery: appState.searchQuery,
               categoryFilter: appState.categoryFilter, filterMode: appState.filterMode, topicFilter: appState.topicFilter,
@@ -1704,6 +1692,14 @@
       appState.studyIds = ensure20StudyItems(appState.items, data.studyIds || []);
       appState.forgottenReviewIds = Array.isArray(data.forgottenReviewIds) ? data.forgottenReviewIds : [];
       appState.history = Array.isArray(data.history) ? data.history : [];
+      appState.favoriteIds = Array.isArray(data.favoriteIds) ? data.favoriteIds.filter(x => typeof x === 'string') : [];
+      const gt = { game1: 0, game2: 0, game3: 0, game4: 0 };
+      if (data.gameTotals && typeof data.gameTotals === 'object') {
+        Object.keys(gt).forEach(k => { gt[k] = Number(data.gameTotals[k]) || 0; });
+      } else {
+        appState.history.filter(e => e.type === 'game').forEach(e => { if (gt[e.game] !== undefined) gt[e.game] += Number(e.score) || 0; });
+      }
+      appState.gameTotals = gt;
       appState.game = null;
       appState.editingItemId = null;
       syncReviewWindowsWithToday();
@@ -1862,7 +1858,11 @@
       `;
     }
 
-    function renderFolkCardHtml(item, indexLabel = '', extraBadge = '') {
+    function renderFolkCardHtml(item, indexLabel = '', extraBadge = '', opts = {}) {
+      const fav = appState.favoriteIds.includes(item.id);
+      const extras =
+        (opts.speak ? `<button type="button" data-speak-id="${item.id}" onclick="speakItem('${item.id}')" aria-label="Nghe đọc" title="Nghe đọc (ngắt nghỉ đúng nhịp)" class="btn-pill w-9 h-9 flex items-center justify-center border text-base shrink-0 bg-[#e8f4ff] hover:bg-[#d6ecff] border-[#b6d8f0] text-[#1b6ca1]">${speakingId === item.id ? '⏹' : '🔊'}</button>` : '') +
+        (opts.heart ? `<button type="button" onclick="toggleFavorite('${item.id}')" aria-label="${fav ? 'Bỏ yêu thích' : 'Thêm vào yêu thích'}" title="${fav ? 'Bỏ yêu thích' : 'Yêu thích'}" class="btn-pill w-9 h-9 flex items-center justify-center border text-base shrink-0 ${fav ? 'bg-[#ffe3ea] border-[#f2a3b8]' : 'bg-[#f3f9fc] hover:bg-[#ffeef2] border-[#c4dfec]'}">${fav ? '❤️' : '🤍'}</button>` : '');
       const starIcon = item.starred ? '⭐' : '☆';
       const starBtnClass = item.starred
         ? 'bg-[#fff3cd] border-[#ecc24c] text-[#8a5a00]'
@@ -1885,6 +1885,7 @@
               <p class="verse-text mb-1.5">${escapeHtml(item.text)}</p>
               <p class="meaning-text">Ý nghĩa: ${escapeHtml(item.meaning)}</p>
             </div>
+            <div class="flex flex-col items-center gap-1.5 shrink-0">
             <button
               type="button"
               onclick="toggleStarItem('${item.id}')"
@@ -1894,6 +1895,8 @@
             >
               ${starIcon}
             </button>
+            ${extras}
+            </div>
           </div>
         </article>
       `;
@@ -2014,7 +2017,7 @@
       let filtered = appState.items.filter(it => {
         const topicVal = it.topic || detectTopic(it.text, it.meaning);
         const letterVal = getFirstLetterKey(it.text);
-        const matchCat = cat === 'all' || it.category === cat;
+        const matchCat = cat === 'all' || (cat === 'fav' ? appState.favoriteIds.includes(it.id) : it.category === cat);
         const matchTopic = appState.topicFilter === 'all' || topicVal === appState.topicFilter;
         const matchLetter = appState.letterFilter === 'all' || letterVal === appState.letterFilter;
         const matchQuery = !q ||
@@ -2096,8 +2099,8 @@
           </div>
 
           <div class="flex gap-1.5 overflow-x-auto pb-0.5">
-            ${['all', 'Ca dao', 'Tục ngữ', 'Thành ngữ'].map(c => {
-              const label = c === 'all' ? 'Tất cả' : c;
+            ${['all', 'Ca dao', 'Tục ngữ', 'Thành ngữ', 'fav'].map(c => {
+              const label = c === 'all' ? 'Tất cả' : (c === 'fav' ? '❤️ Yêu thích' : c);
               const active = cat === c;
               return `<button type="button" onclick="appState.categoryFilter='${c}'; appState.pages.all=1; renderCurrentView();" class="btn-pill px-3 py-1.5 text-xs whitespace-nowrap border ${active ? 'bg-[#1b6ca1] text-white border-[#124e75]' : 'bg-[#eef7fb] text-[#195378] border-[#c4e1ed]'}">${label}</button>`;
             }).join('')}
@@ -2136,7 +2139,7 @@
 
         <div class="space-y-3">
           ${slice.length > 0
-            ? slice.map((item, idx) => renderFolkCardHtml(item, `#${(page - 1) * PAGE_SIZE + idx + 1}`)).join('')
+            ? slice.map((item, idx) => renderFolkCardHtml(item, `#${(page - 1) * PAGE_SIZE + idx + 1}`, '', { speak: true, heart: true })).join('')
             : `<div class="folk-card p-6 text-center text-sm text-[#4c7186]">Không tìm thấy bài phù hợp với bộ lọc hiện tại.</div>`
           }
         </div>
@@ -2194,7 +2197,7 @@
           ${slice.map((item, idx) => {
             const globalIdx = (page - 1) * PAGE_SIZE + idx;
             const badge = forgottenSet.has(item.id) ? 'Quên bài · Cần ôn lại' : '';
-            return renderFolkCardHtml(item, `Bài ${globalIdx + 1}`, badge);
+            return renderFolkCardHtml(item, `Bài ${globalIdx + 1}`, badge, { speak: true });
           }).join('')}
         </div>
 
@@ -2271,9 +2274,7 @@
     }
 
     function returnToGamesHome() {
-      if (window.speechSynthesis) {
-        try { window.speechSynthesis.cancel(); } catch (_) {}
-      }
+      stopSpeech();
       appState.game = null;
       renderCurrentView();
     }
@@ -2431,19 +2432,8 @@
       q.hintUsed = true;
       renderCurrentView();
 
-      const spokenText = q.fullText.replace(/\n/g, '. ');
-      if ('speechSynthesis' in window) {
-        try {
-          window.speechSynthesis.cancel();
-          const utter = new SpeechSynthesisUtterance(spokenText);
-          utter.lang = 'vi-VN';
-          utter.rate = 0.92;
-          window.speechSynthesis.speak(utter);
-          showToast('Đã phát gợi ý câu đúng 1 lượt duy nhất để bé nhắc bài.', 'info');
-          return;
-        } catch (_) {}
-      }
-      showToast(`Gợi ý đáp án (1 lượt): "${spokenText}"`, 'info');
+      playSpeech(q.fullText, null);
+      showToast('Đã phát gợi ý câu đúng 1 lượt duy nhất để bé nhắc bài.', 'info');
     }
 
     function buildGame3Questions(pool, count = 10) {
@@ -2514,16 +2504,16 @@
 
       if (type === 'game1') {
         queue = buildGame1Questions(pool, 10);
-        title = 'Trò chơi 1: Điền vào chỗ trống (10 bài)';
+        title = '✏️ Điền vào chỗ trống · 10 bài · 10 💎';
       } else if (type === 'game2') {
         queue = buildGame2Questions(pool, 5);
-        title = 'Trò chơi 2: Sắp xếp từ theo hàng (5 lượt · 10 điểm)';
+        title = '🧩 Sắp xếp từ theo hàng · 5 bài · 10 💎';
       } else if (type === 'game3') {
         queue = buildGame3Questions(pool, 10);
-        title = 'Trò chơi 3: Chọn ý nghĩa đúng A/B/C/D (10 bài · 10 điểm)';
+        title = '🎯 Chọn ý nghĩa đúng · 10 bài · 10 💎';
       } else if (type === 'game4') {
         queue = buildGame4Rounds(pool);
-        title = 'Trò chơi 4: Nối câu với ý nghĩa (2 lượt × 5 bài = 10 bài · 10 điểm)';
+        title = '🔗 Nối thẻ: Câu & Ý nghĩa · 5 bài × 2 lượt · 10 💎';
       }
 
       appState.game = {
@@ -2711,6 +2701,7 @@
       } else {
         g.completed = true;
         logHistory('game', { game: String(g.type || ''), score: g.score, max: g.maxPoints });
+        addGameScore(g.type, g.score);
         saveStateSafe(false);
       }
       renderCurrentView();
@@ -2772,54 +2763,55 @@
           <div class="bg-white/90 border border-[#c3e2ef] rounded-2xl p-4 mb-3 shadow-sm">
             <h2 class="text-base font-bold text-[#124e75] mb-1">Khu vực Trò chơi luyện nhớ</h2>
             <p class="text-xs sm:text-sm text-[#456b80]">Mỗi bài/lượt tách riêng, có đủ nút <b>Quay về</b>, <b>Trở về</b>, <b>Bỏ qua</b>, <b>Nộp bài</b>, <b>Tiếp tục</b>, chấm xanh/đỏ kèm đáp án đúng và tự lặp lại câu sai.</p>
+            ${renderGameScorePanel()}
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div class="folk-card p-4 flex flex-col justify-between">
+            <div class="folk-card p-4 flex flex-col justify-between" style="background:linear-gradient(135deg,#e2f2fa,#cfe9f7)">
               ${renderCardDecorations()}
               <div class="relative z-10">
-                <span class="inline-block text-xs font-bold px-2.5 py-0.5 rounded-lg bg-[#e2f2fa] text-[#155780] mb-2">Game 1 · 10 bài</span>
-                <h3 class="font-bold text-[#134c70] text-sm sm:text-base mb-1">Điền vào chỗ trống (A/B/C/D)</h3>
+                <span class="inline-block text-xs font-bold px-2.5 py-0.5 rounded-lg bg-white/80 text-[#155780] mb-2">10 bài · 10 💎</span>
+                <h3 class="font-bold text-[#134c70] text-sm sm:text-base mb-1">✏️ Điền vào chỗ trống (A/B/C/D)</h3>
                 <p class="text-xs text-[#476d82] mb-3">Chọn từ đúng nghĩa. Nếu bài có trên 2 câu sẽ thiết kế trên 2 chỗ trống (mỗi câu 1 từ).</p>
               </div>
               <button type="button" onclick="startGame('game1')" class="relative z-10 btn-pill w-full py-2.5 bg-[#1b6ca1] hover:bg-[#124e75] text-white text-xs sm:text-sm font-semibold">
-                Bắt đầu Game 1
+                ▶ Bắt đầu chơi
               </button>
             </div>
 
-            <div class="folk-card p-4 flex flex-col justify-between">
+            <div class="folk-card p-4 flex flex-col justify-between" style="background:linear-gradient(135deg,#e1f4e8,#cdeedb)">
               ${renderCardDecorations()}
               <div class="relative z-10">
-                <span class="inline-block text-xs font-bold px-2.5 py-0.5 rounded-lg bg-[#e1f4e8] text-[#226649] mb-2">Game 2 · 5 lượt · 10 điểm</span>
-                <h3 class="font-bold text-[#134c70] text-sm sm:text-base mb-1">Sắp xếp từ theo số hàng</h3>
+                <span class="inline-block text-xs font-bold px-2.5 py-0.5 rounded-lg bg-white/80 text-[#226649] mb-2">5 bài · 10 💎</span>
+                <h3 class="font-bold text-[#134c70] text-sm sm:text-base mb-1">🧩 Sắp xếp từ theo hàng</h3>
                 <p class="text-xs text-[#476d82] mb-3">Tách từng hàng trên dưới đúng mẫu nhiều dòng. Được bấm loa nghe gợi ý câu đúng 1 lần.</p>
               </div>
               <button type="button" onclick="startGame('game2')" class="relative z-10 btn-pill w-full py-2.5 bg-[#2a7a58] hover:bg-[#205f44] text-white text-xs sm:text-sm font-semibold">
-                Bắt đầu Game 2
+                ▶ Bắt đầu chơi
               </button>
             </div>
 
-            <div class="folk-card p-4 flex flex-col justify-between">
+            <div class="folk-card p-4 flex flex-col justify-between" style="background:linear-gradient(135deg,#fff3d6,#ffe6b0)">
               ${renderCardDecorations()}
               <div class="relative z-10">
-                <span class="inline-block text-xs font-bold px-2.5 py-0.5 rounded-lg bg-[#e2f2fa] text-[#155780] mb-2">Game 3 · 10 bài · 10 điểm</span>
-                <h3 class="font-bold text-[#134c70] text-sm sm:text-base mb-1">Chọn ý nghĩa đúng (A/B/C/D)</h3>
+                <span class="inline-block text-xs font-bold px-2.5 py-0.5 rounded-lg bg-white/80 text-[#8a5900] mb-2">10 bài · 10 💎</span>
+                <h3 class="font-bold text-[#134c70] text-sm sm:text-base mb-1">🎯 Chọn ý nghĩa đúng (A/B/C/D)</h3>
                 <p class="text-xs text-[#476d82] mb-3">Đọc đề bài ca dao, tục ngữ, thành ngữ và chọn A/B/C/D giải thích đúng ý nghĩa nhất.</p>
               </div>
-              <button type="button" onclick="startGame('game3')" class="relative z-10 btn-pill w-full py-2.5 bg-[#1b6ca1] hover:bg-[#124e75] text-white text-xs sm:text-sm font-semibold">
-                Bắt đầu Game 3
+              <button type="button" onclick="startGame('game3')" class="relative z-10 btn-pill w-full py-2.5 bg-[#c98a10] hover:bg-[#a8730b] text-white text-xs sm:text-sm font-semibold">
+                ▶ Bắt đầu chơi
               </button>
             </div>
 
-            <div class="folk-card p-4 flex flex-col justify-between">
+            <div class="folk-card p-4 flex flex-col justify-between" style="background:linear-gradient(135deg,#f1e8ff,#e0d0fa)">
               ${renderCardDecorations()}
               <div class="relative z-10">
-                <span class="inline-block text-xs font-bold px-2.5 py-0.5 rounded-lg bg-[#e1f4e8] text-[#226649] mb-2">Game 4 · 2 lượt × 5 bài = 10 bài · 10 điểm</span>
-                <h3 class="font-bold text-[#134c70] text-sm sm:text-base mb-1">Nối thẻ: Câu & Ý nghĩa</h3>
+                <span class="inline-block text-xs font-bold px-2.5 py-0.5 rounded-lg bg-white/80 text-[#5b3aa6] mb-2">5 bài × 2 lượt · 10 💎</span>
+                <h3 class="font-bold text-[#134c70] text-sm sm:text-base mb-1">🔗 Nối thẻ: Câu & Ý nghĩa</h3>
                 <p class="text-xs text-[#476d82] mb-3">Mỗi lượt gồm 5 câu tương ứng 5 ý nghĩa để bé ghép đôi chính xác.</p>
               </div>
-              <button type="button" onclick="startGame('game4')" class="relative z-10 btn-pill w-full py-2.5 bg-[#2a7a58] hover:bg-[#205f44] text-white text-xs sm:text-sm font-semibold">
-                Bắt đầu Game 4
+              <button type="button" onclick="startGame('game4')" class="relative z-10 btn-pill w-full py-2.5 bg-[#7b4fd1] hover:bg-[#6338b5] text-white text-xs sm:text-sm font-semibold">
+                ▶ Bắt đầu chơi
               </button>
             </div>
           </div>
@@ -2836,7 +2828,7 @@
               <p class="text-2xl mb-1">🎉</p>
               <h2 class="text-lg font-bold text-[#124e75]">Hoàn thành lượt ôn bài!</h2>
               <p class="text-sm text-[#35586c]">${escapeHtml(g.title)}</p>
-              <p class="text-base font-bold text-[#246d4e] mt-1">Điểm số: ${g.score} / ${g.maxPoints} điểm</p>
+              <p class="text-base font-bold text-[#246d4e] mt-1">Điểm số: ${g.score} / ${g.maxPoints} 💎</p>
               <div class="mt-4 flex flex-wrap justify-center gap-2.5">
                 <button type="button" onclick="startGame('${g.type}')" class="btn-pill px-4 py-2.5 bg-[#2a7a58] hover:bg-[#205f44] text-white text-xs sm:text-sm font-semibold">
                   Chơi lại lượt mới
@@ -3170,7 +3162,7 @@
        HỘP THOẠI CÀI ĐẶT: DANH SÁCH GỌN, 20 BÀI, SỬA/XÓA TOÀN QUYỀN, BACKUP / JSON
     ========================================================================= */
     function selectSettingsSection(sectionKey) {
-      if (!isAdmin() && sectionKey !== 'study20') sectionKey = 'study20';
+      if (!isAdmin() && sectionKey !== 'study20' && sectionKey !== 'topics') sectionKey = 'study20';
       const sections = ['study20', 'editor', 'backup', 'topics'];
       appState.activeSettingsSection = appState.activeSettingsSection === sectionKey ? null : sectionKey;
       sections.forEach(key => {
@@ -3191,10 +3183,16 @@
     function openSettingsModal() {
       const modal = document.getElementById('settingsModal');
       modal.hidden = false;
-      ['editor', 'backup', 'topics'].forEach(k => {
+      ['editor', 'backup'].forEach(k => {
         const b = document.getElementById(`settings-nav-${k}`);
         if (b) b.style.display = isAdmin() ? '' : 'none';
       });
+      const tools = document.getElementById('adminTopicTools');
+      if (tools) tools.style.display = isAdmin() ? '' : 'none';
+      const navLabel = document.getElementById('settingsNavTopicsLabel');
+      if (navLabel) navLabel.textContent = isAdmin() ? '4. Chủ đề, Ôn 10 ngày & Khôi phục dữ liệu' : '4. Chu kỳ ôn 10 ngày';
+      const topicsTitle = document.getElementById('settingsTopicsTitle');
+      if (topicsTitle) topicsTitle.textContent = isAdmin() ? '4. Đặt lại chủ đề, Chu kỳ 10 ngày & Khôi phục dữ liệu' : '4. Chu kỳ ôn 10 ngày';
       const simInput = document.getElementById('simDateInput');
       if (simInput) simInput.value = appState.simulatedToday || '';
       const badge = document.getElementById('settingsNavStudyBadge');
@@ -3657,6 +3655,7 @@
     }
 
     function logoutAccount() {
+      stopSpeech();
       saveStateSafe(false);
       appState.currentAccount = null;
       try { sessionStorage.removeItem('ndtv_admin_ok'); } catch (_) {}
@@ -3779,7 +3778,7 @@
       if (e.type === 'login') return '🔓 Đăng nhập';
       if (e.type === 'star') return `⭐ Đã thuộc: “${escapeHtml(e.text)}”`;
       if (e.type === 'unstar') return `☆ Bỏ sao: “${escapeHtml(e.text)}”`;
-      if (e.type === 'game') return `🎮 Trò chơi ${escapeHtml(String(e.game || '').replace('game', ''))}: ${escapeHtml(e.score)}/${escapeHtml(e.max)} điểm`;
+      if (e.type === 'game') return `🎮 ${escapeHtml(({ game1: 'Điền vào chỗ trống', game2: 'Sắp xếp từ theo hàng', game3: 'Chọn ý nghĩa đúng', game4: 'Nối thẻ' })[e.game] || 'Trò chơi')}: ${escapeHtml(e.score)}/${escapeHtml(e.max)} 💎`;
       return escapeHtml(e.type);
     }
 
@@ -3911,6 +3910,160 @@
         try { localStorage.setItem(FEEDBACK_KEY, JSON.stringify(cur.slice(-200))); } catch (_) {}
       }
       if (added) { saveAccounts(); showToast(`Đã nhập thêm ${added} tài khoản.`, 'success'); }
+    }
+
+    /* =========================================================================
+       ĐIỂM TRÒ CHƠI (💎), YÊU THÍCH (❤️) VÀ ĐỌC TO CÓ NGẮT NHỊP (🔊)
+    ========================================================================= */
+    let speakingId = null;
+    let speakToken = 0;
+
+    function fmtPts(n) { return String(Number((Number(n) || 0).toFixed(1))); }
+
+    function addGameScore(type, score) {
+      if (!(type in appState.gameTotals)) return;
+      appState.gameTotals[type] = Number(((appState.gameTotals[type] || 0) + (Number(score) || 0)).toFixed(1));
+    }
+
+    function renderGameScorePanel() {
+      const t = appState.gameTotals || {};
+      const rows = [
+        ['game1', '✏️', 'Điền vào chỗ trống', 'from-[#e2f2fa] to-[#d2ecf8]'],
+        ['game2', '🧩', 'Sắp xếp từ theo hàng', 'from-[#e1f4e8] to-[#d0eddc]'],
+        ['game3', '🎯', 'Chọn ý nghĩa đúng', 'from-[#fff3d6] to-[#ffe9bd]'],
+        ['game4', '🔗', 'Nối thẻ: Câu & Ý nghĩa', 'from-[#f1e8ff] to-[#e4d6fb]']
+      ];
+      const total = rows.reduce((sum, r) => sum + (Number(t[r[0]]) || 0), 0);
+      return `<div class="mt-3 rounded-2xl p-3.5 bg-gradient-to-br from-[#e8f6ff] via-[#f3f0ff] to-[#fff3e0] border border-[#bfe0f0]">
+        <div class="flex items-center gap-3">
+          <div class="text-4xl leading-none">💎</div>
+          <div><div class="text-xs font-semibold text-[#456b80]">Số điểm bé đã đạt được</div>
+          <div class="text-2xl font-extrabold text-[#124e75]">${fmtPts(total)} <span class="text-sm font-bold text-[#5b7f93]">💎 tổng 4 trò chơi</span></div></div>
+        </div>
+        <div class="grid grid-cols-2 gap-2 mt-3">${rows.map(([k, icon, name, grad]) => `
+          <div class="rounded-xl bg-gradient-to-br ${grad} border border-white/70 p-2.5 flex items-center gap-2 shadow-sm">
+            <span class="text-xl">${icon}</span>
+            <div class="min-w-0"><div class="text-[11px] font-semibold text-[#456b80] leading-tight">Trò chơi “${escapeHtml(name)}”</div>
+            <div class="font-bold text-[#124e75] text-sm">${fmtPts(t[k])} 💎</div></div>
+          </div>`).join('')}</div>
+      </div>`;
+    }
+
+    function toggleFavorite(id) {
+      const i = appState.favoriteIds.indexOf(id);
+      if (i >= 0) appState.favoriteIds.splice(i, 1); else appState.favoriteIds.push(id);
+      saveStateSafe(false);
+      renderCurrentView();
+    }
+
+    // Tách câu thành các đoạn đọc kèm thời gian nghỉ: nghỉ ngắn ở dấu phẩy/giữa câu (nhịp 2-2-2 hoặc 4-4), nghỉ dài hơn ở cuối dòng
+    function speechChunks(text) {
+      const out = [];
+      const lines = String(text || '').replace(/\s*\/\s*/g, '\n').split(/\n+/).map(l => l.trim()).filter(Boolean);
+      lines.forEach((line, li) => {
+        const segs = line.match(/[^,;:.!?…]+[,;:.!?…]*/g) || [line];
+        segs.forEach((seg, si) => {
+          const words = seg.replace(/[,;:.!?…]+$/, '').split(/\s+/).filter(Boolean);
+          if (!words.length) return;
+          const n = words.length;
+          const half = Math.ceil(n / 2);
+          const sizes = n === 6 ? [2, 2, 2] : n === 8 ? [4, 4] : n === 7 ? [3, 4] : n > 8 ? [half, n - half] : [n];
+          let start = 0;
+          sizes.forEach((sz, k) => {
+            const lastInSeg = k === sizes.length - 1;
+            let pause = 160;
+            if (lastInSeg) {
+              const lastSeg = si === segs.length - 1;
+              pause = lastSeg ? (li === lines.length - 1 ? 0 : 800) : (/[.!?…]$/.test(seg) ? 700 : 450);
+            }
+            out.push({ t: words.slice(start, start + sz).join(' '), pause });
+            start += sz;
+          });
+        });
+      });
+      return out;
+    }
+
+    function updateSpeakButtons() {
+      if (!document.querySelectorAll) return;
+      document.querySelectorAll('[data-speak-id]').forEach(b => { b.textContent = b.dataset.speakId === speakingId ? '⏹' : '🔊'; });
+    }
+
+    let speechAudios = [];
+
+    function stopSpeech() {
+      speakToken++;
+      speakingId = null;
+      speechAudios.forEach(a => { try { if (a) { a.onended = a.onerror = a.onplaying = null; a.pause(); } } catch (_) {} });
+      speechAudios = [];
+      try { if (window.speechSynthesis) window.speechSynthesis.cancel(); } catch (_) {}
+      updateSpeakButtons();
+    }
+
+    // Đọc văn bản theo từng đoạn ngắt nhịp. Ưu tiên giọng nữ Google (rõ chữ), lỗi/offline thì dùng giọng sẵn có của trình duyệt.
+    function playSpeech(text, id) {
+      stopSpeech();
+      const chunks = speechChunks(text);
+      if (!chunks.length) return;
+      const token = speakToken;
+      speakingId = id || null;
+      updateSpeakButtons();
+
+      const audios = chunks.map(c => {
+        try {
+          const a = new Audio('https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=vi&q=' + encodeURIComponent(c.t));
+          a.preload = 'auto';
+          a.playbackRate = 0.9;
+          return a;
+        } catch (_) { return null; }
+      });
+      speechAudios = audios;
+
+      const finish = () => { if (token === speakToken) { speakingId = null; updateSpeakButtons(); } };
+      const next = i => {
+        if (token !== speakToken) return;
+        if (i >= chunks.length) { finish(); return; }
+        if (audios[i]) viaGoogle(i); else viaBrowser(i);
+      };
+      const failFrom = i => {
+        for (let k = i; k < audios.length; k++) audios[k] = null;
+        viaBrowser(i);
+      };
+      const viaGoogle = i => {
+        const a = audios[i];
+        let timer = setTimeout(() => { if (token === speakToken) failFrom(i); }, 7000);
+        a.onplaying = () => clearTimeout(timer);
+        a.onerror = () => { clearTimeout(timer); if (token === speakToken) failFrom(i); };
+        a.onended = () => { clearTimeout(timer); if (token === speakToken) setTimeout(() => next(i + 1), chunks[i].pause); };
+        const pr = a.play();
+        if (pr && pr.catch) pr.catch(() => { clearTimeout(timer); if (token === speakToken) failFrom(i); });
+      };
+      const viaBrowser = i => {
+        if (token !== speakToken) return;
+        const synth = window.speechSynthesis;
+        if (!synth || typeof SpeechSynthesisUtterance === 'undefined') {
+          showToast('Không phát được âm thanh. Hãy kiểm tra kết nối mạng hoặc dùng trình duyệt khác.', 'warn');
+          finish();
+          return;
+        }
+        const voice = (synth.getVoices() || []).find(v => /^vi/i.test(v.lang));
+        const u = new SpeechSynthesisUtterance(chunks[i].t);
+        u.lang = 'vi-VN';
+        if (voice) u.voice = voice;
+        u.rate = 0.8;
+        u.onend = () => setTimeout(() => next(i + 1), chunks[i].pause);
+        u.onerror = () => finish();
+        synth.speak(u);
+      };
+      next(0);
+    }
+
+    function speakItem(id) {
+      const wasSame = speakingId === id;
+      stopSpeech();
+      if (wasSame) return;
+      const item = appState.items.find(i => i.id === id);
+      if (item) playSpeech(item.text, id);
     }
 
     /* =========================================================================
