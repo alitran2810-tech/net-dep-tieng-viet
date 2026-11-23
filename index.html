@@ -4,6 +4,7 @@
   <!-- Cấu hình hiển thị di động và hỗ trợ tiếng Việt đầy đủ -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="referrer" content="no-referrer" />
   <title>Nét Đẹp Tiếng Việt</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -118,7 +119,7 @@
       input[type="text"], input[type="date"], select { font-size: 16px !important; }
     }
   </style>
-</head>
+<script src="/_aistudio-iframe.js?v=29045eb3"></script></head>
 
 <body class="pb-12">
   <!-- Thanh đầu trang gồm tên ứng dụng, nút Cài đặt (⚙️) và 4 tab chính -->
@@ -216,7 +217,7 @@
         </button>
 
         <button type="button" onclick="selectSettingsSection('topics')" id="settings-nav-topics" class="w-full p-3 rounded-xl border text-left flex items-center justify-between transition bg-white hover:bg-[#eaf5fa] border-[#c5e0ec] text-[#124e75] font-bold">
-          <span id="settingsNavTopicsLabel">4. Chủ đề, Ôn 10 ngày & Khôi phục dữ liệu</span>
+          <span id="settingsNavTopicsLabel">4. Âm thanh, Chủ đề, Ôn 10 ngày & Khôi phục dữ liệu</span>
           <span class="text-xs text-[#4d7185]">Mở ▾</span>
         </button>
       </div>
@@ -334,6 +335,43 @@
             <button type="button" onclick="resetToDefaultCatalog()" class="btn-pill px-3.5 py-2 bg-[#fdeaea] hover:bg-[#fad6d6] text-[#a62626] border border-[#ebb3b3] text-xs font-semibold">
               Khôi phục mặc định
             </button>
+          </div>
+
+          <div class="mt-3 pt-3 border-t border-[#e5f1f7] space-y-2.5">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <label class="text-xs font-semibold text-[#155780]" for="ttsModeSelect">Giọng đọc to (🔊):</label>
+              <div class="flex flex-wrap items-center gap-1.5">
+                <select id="ttsModeSelect" onchange="setTtsMode(this.value)" class="px-2.5 py-1 rounded-lg border border-[#b6d9e9] bg-white text-xs">
+                  <option value="auto">Tự động (Ưu tiên Google Tiếng Việt)</option>
+                  <option value="device">Giọng thiết bị (nếu máy có Tiếng Việt)</option>
+                  <option value="google">Chỉ dùng giọng Google (cần mạng)</option>
+                </select>
+                <button type="button" onclick="testSpeechNow()" class="btn-pill px-2.5 py-1 bg-[#e8f4ff] hover:bg-[#d6ecff] text-[#1b6ca1] border border-[#b6d8f0] text-xs font-semibold">
+                  🔊 Thử âm thanh
+                </button>
+              </div>
+            </div>
+
+            <div class="p-2.5 rounded-xl bg-[#f4fafe] border border-[#cde5f0] space-y-2">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <label class="text-xs font-semibold text-[#155780]" for="ttsRateRange">
+                  Tốc độ đọc: <span id="ttsRateValueBadge" class="inline-block px-2 py-0.5 rounded-md bg-[#e1f4e8] text-[#216648] font-bold">0.9x</span>
+                </label>
+                <div class="flex flex-wrap items-center gap-1">
+                  <button type="button" data-tts-preset="0.75" onclick="setTtsRate(0.75, true)" class="px-2 py-0.5 rounded-lg border text-[11px] font-semibold bg-white hover:bg-[#e5f3f9] text-[#124e75] border-[#b6d9e9]">0.75x Chậm</button>
+                  <button type="button" data-tts-preset="0.9" onclick="setTtsRate(0.9, true)" class="px-2 py-0.5 rounded-lg border text-[11px] font-semibold bg-white hover:bg-[#e5f3f9] text-[#124e75] border-[#b6d9e9]">0.9x Vừa</button>
+                  <button type="button" data-tts-preset="1.0" onclick="setTtsRate(1.0, true)" class="px-2 py-0.5 rounded-lg border text-[11px] font-semibold bg-white hover:bg-[#e5f3f9] text-[#124e75] border-[#b6d9e9]">1.0x Chuẩn</button>
+                  <button type="button" data-tts-preset="1.2" onclick="setTtsRate(1.2, true)" class="px-2 py-0.5 rounded-lg border text-[11px] font-semibold bg-white hover:bg-[#e5f3f9] text-[#124e75] border-[#b6d9e9]">1.2x Nhanh</button>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-[11px] text-[#4d7185] shrink-0">0.6x</span>
+                <input id="ttsRateRange" type="range" min="0.6" max="1.4" step="0.05" value="0.9" oninput="setTtsRate(this.value, false)" onchange="setTtsRate(this.value, true)" class="w-full accent-[#1b6ca1] cursor-pointer" />
+                <span class="text-[11px] text-[#4d7185] shrink-0">1.4x</span>
+              </div>
+            </div>
+
+            <p id="ttsVoiceHint" class="text-[11px] text-[#4d7185]"></p>
           </div>
         </section>
       </div>
@@ -3190,13 +3228,14 @@
       const tools = document.getElementById('adminTopicTools');
       if (tools) tools.style.display = isAdmin() ? '' : 'none';
       const navLabel = document.getElementById('settingsNavTopicsLabel');
-      if (navLabel) navLabel.textContent = isAdmin() ? '4. Chủ đề, Ôn 10 ngày & Khôi phục dữ liệu' : '4. Chu kỳ ôn 10 ngày';
+      if (navLabel) navLabel.textContent = isAdmin() ? '4. Âm thanh, Chủ đề, Ôn 10 ngày & Khôi phục' : '4. Âm thanh & Chu kỳ ôn 10 ngày';
       const topicsTitle = document.getElementById('settingsTopicsTitle');
-      if (topicsTitle) topicsTitle.textContent = isAdmin() ? '4. Đặt lại chủ đề, Chu kỳ 10 ngày & Khôi phục dữ liệu' : '4. Chu kỳ ôn 10 ngày';
+      if (topicsTitle) topicsTitle.textContent = isAdmin() ? '4. Âm thanh, Chủ đề, Chu kỳ 10 ngày & Khôi phục' : '4. Âm thanh & Chu kỳ ôn 10 ngày';
       const simInput = document.getElementById('simDateInput');
       if (simInput) simInput.value = appState.simulatedToday || '';
       const badge = document.getElementById('settingsNavStudyBadge');
       if (badge) badge.textContent = `${appState.studyIds.length} bài`;
+      updateTtsModeUI();
       selectSettingsSection(appState.activeSettingsSection || 'study20');
     }
 
@@ -3989,79 +4028,433 @@
       document.querySelectorAll('[data-speak-id]').forEach(b => { b.textContent = b.dataset.speakId === speakingId ? '⏹' : '🔊'; });
     }
 
-    let speechAudios = [];
+    const TTS_MODE_KEY = 'ndtv_tts_mode_v1';
+    const TTS_RATE_KEY = 'ndtv_tts_rate_v1';
+    let sharedAudio = null;
+    let activeUtterance = null;
+    let speechTimers = [];
+    let speechResumeInterval = null;
+    let googleTtsBlocked = false;
+    let cachedViVoice = null;
+    let speechPrimed = false;
+
+    function getTtsMode() {
+      try {
+        const m = localStorage.getItem(TTS_MODE_KEY);
+        return (m === 'google' || m === 'device' || m === 'auto') ? m : 'auto';
+      } catch (_) {
+        return 'auto';
+      }
+    }
+
+    function getTtsRate() {
+      try {
+        const n = Number(localStorage.getItem(TTS_RATE_KEY));
+        if (Number.isFinite(n) && n >= 0.5 && n <= 1.6) {
+          return Math.round(n * 100) / 100;
+        }
+      } catch (_) {}
+      return 0.9;
+    }
+
+    function setTtsRate(val, announce = false) {
+      const parsed = Number(val);
+      const clamped = Number.isFinite(parsed)
+        ? Math.min(1.4, Math.max(0.6, Math.round(parsed * 100) / 100))
+        : 0.9;
+      try { localStorage.setItem(TTS_RATE_KEY, String(clamped)); } catch (_) {}
+      if (sharedAudio) {
+        try { sharedAudio.playbackRate = clamped; } catch (_) {}
+      }
+      updateTtsModeUI();
+      if (announce) {
+        showToast(`Đã đặt tốc độ đọc: ${clamped}x`, 'info');
+      }
+    }
+
+    function setTtsMode(mode) {
+      try { localStorage.setItem(TTS_MODE_KEY, mode); } catch (_) {}
+      if (mode === 'google') googleTtsBlocked = false;
+      updateTtsModeUI();
+      showToast(
+        mode === 'device'
+          ? 'Đã chuyển sang giọng đọc của thiết bị (hoạt động cả khi mất mạng).'
+          : mode === 'google'
+          ? 'Đã chuyển sang ưu tiên giọng Google (cần kết nối mạng).'
+          : 'Đã bật chế độ Tự động (ưu tiên giọng Google, tự chuyển sang giọng thiết bị nếu bị chặn).',
+        'info'
+      );
+    }
+
+    function refreshViVoice() {
+      try {
+        const synth = window.speechSynthesis;
+        if (!synth || !synth.getVoices) return null;
+        const voices = synth.getVoices() || [];
+        const viVoices = voices.filter(v => /^vi([-_]|$)/i.test(v.lang || '') || /vietnam|tiếng việt/i.test(v.name || ''));
+        cachedViVoice =
+          viVoices.find(v => /google|natural|online|hoaimy|namminh|linh/i.test(v.name || '')) ||
+          viVoices.find(v => /^vi[-_]VN$/i.test(v.lang || '')) ||
+          viVoices[0] ||
+          null;
+        return cachedViVoice;
+      } catch (_) {
+        return null;
+      }
+    }
+
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+      refreshViVoice();
+      try {
+        const onVoicesUpdated = () => {
+          refreshViVoice();
+          updateTtsModeUI();
+        };
+        if (typeof window.speechSynthesis.addEventListener === 'function') {
+          window.speechSynthesis.addEventListener('voiceschanged', onVoicesUpdated);
+        } else {
+          window.speechSynthesis.onvoiceschanged = onVoicesUpdated;
+        }
+      } catch (_) {}
+    }
+
+    function updateTtsModeUI() {
+      const sel = document.getElementById('ttsModeSelect');
+      if (sel) sel.value = getTtsMode();
+      const rate = getTtsRate();
+      const range = document.getElementById('ttsRateRange');
+      if (range) range.value = String(rate);
+      const badge = document.getElementById('ttsRateValueBadge');
+      if (badge) badge.textContent = `${rate}x`;
+      if (document.querySelectorAll) {
+        document.querySelectorAll('[data-tts-preset]').forEach(btn => {
+          const isMatch = Math.abs(Number(btn.dataset.ttsPreset) - rate) < 0.01;
+          btn.className = isMatch
+            ? 'px-2 py-0.5 rounded-lg border text-[11px] font-bold bg-[#1b6ca1] text-white border-[#124e75]'
+            : 'px-2 py-0.5 rounded-lg border text-[11px] font-semibold bg-white hover:bg-[#e5f3f9] text-[#124e75] border-[#b6d9e9]';
+        });
+      }
+      const hint = document.getElementById('ttsVoiceHint');
+      if (hint) {
+        const v = cachedViVoice || refreshViVoice();
+        let voiceCount = 0;
+        try {
+          voiceCount = (window.speechSynthesis && window.speechSynthesis.getVoices && window.speechSynthesis.getVoices().length) || 0;
+        } catch (_) {}
+        hint.textContent = v
+          ? `Giọng Tiếng Việt trên thiết bị: ${v.name} (${v.lang})`
+          : voiceCount > 0
+          ? `Máy hiện có ${voiceCount} giọng nhưng chưa có Tiếng Việt offline — nên dùng chế độ Tự động (sẽ phát giọng Google).`
+          : 'Đang dùng giọng hệ thống mặc định (nếu máy chưa có Tiếng Việt offline, hãy chọn chế độ Tự động).';
+      }
+    }
+
+    function clearSpeechTimers() {
+      speechTimers.forEach(id => clearTimeout(id));
+      speechTimers = [];
+      if (speechResumeInterval) {
+        clearInterval(speechResumeInterval);
+        speechResumeInterval = null;
+      }
+    }
+
+    function addSpeechTimer(fn, ms) {
+      const id = setTimeout(fn, ms);
+      speechTimers.push(id);
+      return id;
+    }
+
+    function getSharedAudio() {
+      if (!sharedAudio) {
+        sharedAudio = new Audio();
+        sharedAudio.preload = 'none';
+        try { sharedAudio.referrerPolicy = 'no-referrer'; } catch (_) {}
+      }
+      return sharedAudio;
+    }
+
+    // Mở khóa Web Speech API ngay trong sự kiện chạm/bấm để iOS/Safari/Chrome không chặn khi fallback
+    function primeSpeechSynthesis() {
+      if (speechPrimed) return;
+      try {
+        const synth = window.speechSynthesis;
+        if (!synth || typeof SpeechSynthesisUtterance === 'undefined') return;
+        const u = new SpeechSynthesisUtterance(' ');
+        u.volume = 0;
+        u.rate = 10;
+        u.lang = 'vi-VN';
+        synth.speak(u);
+        speechPrimed = true;
+      } catch (_) {}
+    }
 
     function stopSpeech() {
       speakToken++;
       speakingId = null;
-      speechAudios.forEach(a => { try { if (a) { a.onended = a.onerror = a.onplaying = null; a.pause(); } } catch (_) {} });
-      speechAudios = [];
-      try { if (window.speechSynthesis) window.speechSynthesis.cancel(); } catch (_) {}
+      clearSpeechTimers();
+      if (sharedAudio) {
+        try {
+          sharedAudio.onended = sharedAudio.onerror = sharedAudio.onplaying = sharedAudio.oncanplay = null;
+          sharedAudio.pause();
+          sharedAudio.removeAttribute('src');
+        } catch (_) {}
+      }
+      if (activeUtterance) {
+        try {
+          activeUtterance.onend = activeUtterance.onerror = null;
+        } catch (_) {}
+        activeUtterance = null;
+      }
+      try {
+        const synth = window.speechSynthesis;
+        if (synth && (synth.speaking || synth.pending || synth.paused)) {
+          synth.cancel();
+        }
+      } catch (_) {}
       updateSpeakButtons();
     }
 
-    // Đọc văn bản theo từng đoạn ngắt nhịp. Ưu tiên giọng nữ Google (rõ chữ), lỗi/offline thì dùng giọng sẵn có của trình duyệt.
+    function buildGoogleTtsUrls(phrase) {
+      const q = encodeURIComponent(phrase);
+      return [
+        `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=vi&q=${q}`,
+        `https://translate.google.com/translate_tts?ie=UTF-8&client=gtx&tl=vi&q=${q}`,
+        `https://translate.googleapis.com/translate_tts?ie=UTF-8&client=gtx&tl=vi&q=${q}`
+      ];
+    }
+
+    // Đọc văn bản theo từng đoạn ngắt nhịp. Khắc phục lỗi Referer trên GitHub Pages,
+    // lỗi preload hàng loạt, lỗi mất User-Gesture trên iOS/Safari và lỗi GC của Web Speech API.
     function playSpeech(text, id) {
+      const synth = window.speechSynthesis;
+      const hadActiveSynth = Boolean(synth && (synth.speaking || synth.pending));
       stopSpeech();
+
       const chunks = speechChunks(text);
       if (!chunks.length) return;
+
       const token = speakToken;
       speakingId = id || null;
       updateSpeakButtons();
 
-      const audios = chunks.map(c => {
-        try {
-          const a = new Audio('https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=vi&q=' + encodeURIComponent(c.t));
-          a.preload = 'auto';
-          a.playbackRate = 0.9;
-          return a;
-        } catch (_) { return null; }
-      });
-      speechAudios = audios;
+      const mode = getTtsMode();
+      const viVoice = cachedViVoice || refreshViVoice();
 
-      const finish = () => { if (token === speakToken) { speakingId = null; updateSpeakButtons(); } };
-      const next = i => {
+      if (mode !== 'device') primeSpeechSynthesis();
+
+      const finish = () => {
         if (token !== speakToken) return;
-        if (i >= chunks.length) { finish(); return; }
-        if (audios[i]) viaGoogle(i); else viaBrowser(i);
+        clearSpeechTimers();
+        activeUtterance = null;
+        speakingId = null;
+        updateSpeakButtons();
       };
-      const failFrom = i => {
-        for (let k = i; k < audios.length; k++) audios[k] = null;
-        viaBrowser(i);
+
+      const failAudioNotice = () => {
+        showToast('Không phát được âm thanh. Hãy kiểm tra mạng hoặc thử đổi sang Giọng thiết bị trong Cài đặt ⚙️.', 'warn');
+        finish();
       };
-      const viaGoogle = i => {
-        const a = audios[i];
-        let timer = setTimeout(() => { if (token === speakToken) failFrom(i); }, 7000);
-        a.onplaying = () => clearTimeout(timer);
-        a.onerror = () => { clearTimeout(timer); if (token === speakToken) failFrom(i); };
-        a.onended = () => { clearTimeout(timer); if (token === speakToken) setTimeout(() => next(i + 1), chunks[i].pause); };
-        const pr = a.play();
-        if (pr && pr.catch) pr.catch(() => { clearTimeout(timer); if (token === speakToken) failFrom(i); });
+
+      const noViVoiceNotice = () => {
+        showToast('Thiết bị chưa có giọng Tiếng Việt nên không thể đọc bằng giọng thiết bị. Hãy chọn "Tự động" hoặc "Ưu tiên giọng Google" trong Cài đặt ⚙️.', 'warn');
+        finish();
       };
-      const viaBrowser = i => {
+
+      const speakBrowserChunk = (chunkIdx, retriedVoices = false) => {
         if (token !== speakToken) return;
-        const synth = window.speechSynthesis;
+        if (chunkIdx >= chunks.length) { finish(); return; }
         if (!synth || typeof SpeechSynthesisUtterance === 'undefined') {
-          showToast('Không phát được âm thanh. Hãy kiểm tra kết nối mạng hoặc dùng trình duyệt khác.', 'warn');
-          finish();
+          failAudioNotice();
           return;
         }
-        const voice = (synth.getVoices() || []).find(v => /^vi/i.test(v.lang));
-        const u = new SpeechSynthesisUtterance(chunks[i].t);
-        u.lang = 'vi-VN';
+
+        const voice = cachedViVoice || refreshViVoice();
+        const allVoices = (synth.getVoices && synth.getVoices()) || [];
+        if (!voice) {
+          if (!retriedVoices && allVoices.length === 0) {
+            addSpeechTimer(() => speakBrowserChunk(chunkIdx, true), 150);
+            return;
+          }
+          // Nếu trình duyệt liệt kê được giọng nhưng không có tiếng Việt:
+          // ưu tiên chuyển sang giọng Google Tiếng Việt nếu đang có mạng thay vì đọc sai bằng giọng tiếng Anh.
+          if (allVoices.length > 0) {
+            if (!googleTtsBlocked && navigator.onLine !== false) {
+              showToast('Máy chưa cài giọng Tiếng Việt offline — đang đọc bằng giọng Google Tiếng Việt.', 'info');
+              playGoogleChunk(chunkIdx, 0);
+              return;
+            }
+            noViVoiceNotice();
+            return;
+          }
+          // Nếu trình duyệt ẩn danh sách giọng (allVoices.length === 0, như iOS WebView/Firefox): vẫn thử lang vi-VN
+        }
+
+        const chunkObj = chunks[chunkIdx];
+        const rate = getTtsRate();
+        const u = new SpeechSynthesisUtterance(chunkObj.t);
+        activeUtterance = u; // Giữ tham chiếu toàn cục để Chrome không thu gom rác làm mất sự kiện onend
+        u.lang = voice ? (voice.lang || 'vi-VN') : 'vi-VN';
         if (voice) u.voice = voice;
-        u.rate = 0.8;
-        u.onend = () => setTimeout(() => next(i + 1), chunks[i].pause);
-        u.onerror = () => finish();
-        synth.speak(u);
+        u.rate = rate;
+        u.pitch = 1.0;
+        u.volume = 1.0;
+
+        let settled = false;
+        const advance = () => {
+          if (settled || token !== speakToken) return;
+          settled = true;
+          clearSpeechTimers();
+          if (chunkIdx + 1 < chunks.length) {
+            const basePause = Math.max(220, chunkObj.pause || 220);
+            const scaledPause = Math.round(basePause / Math.max(0.65, rate));
+            addSpeechTimer(() => speakBrowserChunk(chunkIdx + 1, true), scaledPause);
+          } else {
+            finish();
+          }
+        };
+
+        const watchdogMs = Math.max(2800, Math.round((chunkObj.t.length * 280) / Math.min(rate, 1)));
+        addSpeechTimer(() => {
+          if (!settled && token === speakToken) advance();
+        }, watchdogMs);
+
+        u.onend = advance;
+        u.onerror = (ev) => {
+          if (settled || token !== speakToken) return;
+          if (ev && (ev.error === 'interrupted' || ev.error === 'canceled')) return;
+          settled = true;
+          clearSpeechTimers();
+          failAudioNotice();
+        };
+
+        try {
+          if (synth.paused) synth.resume();
+          synth.speak(u);
+          speechPrimed = true;
+          if (!speechResumeInterval) {
+            speechResumeInterval = setInterval(() => {
+              try {
+                if (token === speakToken && synth.paused) synth.resume();
+              } catch (_) {}
+            }, 500);
+          }
+        } catch (_) {
+          settled = true;
+          failAudioNotice();
+        }
       };
-      next(0);
+
+      const startBrowserSpeech = () => {
+        if (token !== speakToken) return;
+        if (!synth || typeof SpeechSynthesisUtterance === 'undefined') {
+          failAudioNotice();
+          return;
+        }
+        if (hadActiveSynth || synth.speaking || synth.pending) {
+          addSpeechTimer(() => speakBrowserChunk(0, false), 60);
+        } else {
+          speakBrowserChunk(0, false);
+        }
+      };
+
+      const playGoogleChunk = (i, urlVariant = 0) => {
+        if (token !== speakToken) return;
+        if (i >= chunks.length) { finish(); return; }
+
+        const urls = buildGoogleTtsUrls(chunks[i].t);
+        if (urlVariant >= urls.length) {
+          googleTtsBlocked = true;
+          if (mode === 'google') {
+            failAudioNotice();
+          } else {
+            startBrowserSpeech();
+          }
+          return;
+        }
+
+        const audio = getSharedAudio();
+        let handled = false;
+        const onFail = () => {
+          if (handled || token !== speakToken) return;
+          handled = true;
+          clearSpeechTimers();
+          audio.onended = audio.onerror = audio.onplaying = audio.oncanplay = null;
+          if (i === 0 && urlVariant + 1 < urls.length) {
+            playGoogleChunk(i, urlVariant + 1);
+          } else {
+            googleTtsBlocked = true;
+            if (mode === 'google') {
+              failAudioNotice();
+            } else {
+              startBrowserSpeech();
+            }
+          }
+        };
+
+        const timeoutTimer = addSpeechTimer(onFail, 2500);
+        audio.onplaying = () => {
+          clearTimeout(timeoutTimer);
+          try { audio.playbackRate = getTtsRate(); } catch (_) {}
+        };
+        audio.onerror = onFail;
+        audio.onended = () => {
+          if (handled || token !== speakToken) return;
+          handled = true;
+          clearTimeout(timeoutTimer);
+          const rateNow = getTtsRate();
+          const scaledPause = Math.round(chunks[i].pause / Math.max(0.65, rateNow));
+          addSpeechTimer(() => playGoogleChunk(i + 1, 0), scaledPause);
+        };
+
+        const targetRate = getTtsRate();
+        audio.defaultPlaybackRate = targetRate;
+        audio.src = urls[urlVariant];
+        audio.playbackRate = targetRate;
+        try {
+          const pr = audio.play();
+          if (pr && typeof pr.catch === 'function') {
+            pr.catch(onFail);
+          }
+        } catch (_) {
+          onFail();
+        }
+      };
+
+      const allVoicesNow = (synth && synth.getVoices && synth.getVoices()) || [];
+      const deviceHasNoViVoice = allVoicesNow.length > 0 && !viVoice;
+
+      const shouldTryGoogle =
+        mode === 'google' ||
+        (mode === 'auto' && !googleTtsBlocked && navigator.onLine !== false) ||
+        (mode === 'device' && deviceHasNoViVoice && !googleTtsBlocked && navigator.onLine !== false);
+
+      if (shouldTryGoogle) {
+        if (mode === 'device' && deviceHasNoViVoice) {
+          showToast('Máy chưa cài giọng Tiếng Việt offline — đang đọc bằng giọng Google Tiếng Việt.', 'info');
+        }
+        playGoogleChunk(0, 0);
+      } else if (viVoice || mode === 'device' || (synth && typeof SpeechSynthesisUtterance !== 'undefined')) {
+        startBrowserSpeech();
+      } else {
+        failAudioNotice();
+      }
     }
 
+    function testSpeechNow() {
+      playSpeech('Công cha như núi Thái Sơn\nNghĩa mẹ như nước trong nguồn chảy ra', null);
+    }
+
+    window.addEventListener('message', (ev) => {
+      if (ev && ev.data && ev.data.type === 'NDTV_TEST_AUDIO') {
+        testSpeechNow();
+      }
+    });
+
     function speakItem(id) {
-      const wasSame = speakingId === id;
-      stopSpeech();
-      if (wasSame) return;
+      if (speakingId === id) {
+        stopSpeech();
+        return;
+      }
       const item = appState.items.find(i => i.id === id);
       if (item) playSpeech(item.text, id);
     }
