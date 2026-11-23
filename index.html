@@ -3,7 +3,7 @@
 <head>
   <!-- Cấu hình hiển thị di động và hỗ trợ tiếng Việt đầy đủ -->
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Nét Đẹp Tiếng Việt</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -109,6 +109,14 @@
     #settingsModal[hidden] {
       display: none !important;
     }
+
+    /* Thuộc tính hidden luôn thắng các lớp display (flex...) của Tailwind */
+    [hidden] { display: none !important; }
+
+    /* Ô nhập 16px trên điện thoại: tránh iOS tự phóng to khi chạm vào ô */
+    @media (max-width: 639px) {
+      input[type="text"], input[type="date"], select { font-size: 16px !important; }
+    }
   </style>
 </head>
 
@@ -132,6 +140,9 @@
           </div>
         </div>
 
+        <div class="flex items-center gap-1.5 shrink-0">
+        <button type="button" onclick="openFeedback()" aria-label="Gửi phản hồi" title="Phản hồi" class="btn-pill px-2.5 py-2 bg-[#e7f4fa] hover:bg-[#d5ebf5] text-[#124e75] border border-[#b3d9ea] text-xs sm:text-sm">✉️<span class="hidden sm:inline"> Phản hồi</span></button>
+        <button type="button" onclick="openProfile('profile')" aria-label="Tài khoản" title="Tài khoản" class="btn-pill px-2.5 py-2 bg-[#e1f4e8] hover:bg-[#ccebd7] text-[#216648] border border-[#9fd4b3] text-xs sm:text-sm max-w-[120px] truncate">👤 <span id="accountBtnLabel">Tài khoản</span></button>
         <button
           type="button"
           onclick="openSettingsModal()"
@@ -142,6 +153,7 @@
           <span>⚙️</span>
           <span class="hidden sm:inline">Cài đặt</span>
         </button>
+        </div>
       </div>
 
       <!-- 4 tab chính trên đầu -->
@@ -163,7 +175,7 @@
   </header>
 
   <!-- Khung thông báo hệ thống thay thế alert() -->
-  <div id="toastBanner" class="max-w-3xl mx-auto px-3 pt-2.5 hidden">
+  <div id="toastBanner" role="status" aria-live="polite" class="fixed inset-x-0 top-24 z-[60] max-w-3xl mx-auto px-3 hidden">
     <div id="toastInner" class="px-3.5 py-2.5 rounded-xl border text-xs sm:text-sm font-medium flex items-center justify-between gap-2 shadow-sm">
       <span id="toastMessage"></span>
       <button type="button" onclick="hideToast()" class="text-xs font-bold px-2 py-0.5 rounded-lg bg-white/70 hover:bg-white">Đóng</button>
@@ -174,12 +186,12 @@
   <main id="mainContainer" class="max-w-3xl mx-auto px-3 pt-3"></main>
 
   <!-- Hộp thoại Cài đặt (mặc định ẩn hoàn toàn, mở gọn từng mục theo danh sách) -->
-  <div id="settingsModal" hidden class="fixed inset-0 z-50 bg-[#0d2738]/50 backdrop-blur-[2px] flex items-center justify-center p-3">
+  <div id="settingsModal" hidden role="dialog" aria-modal="true" aria-labelledby="settingsTitle" class="fixed inset-0 z-50 bg-[#0d2738]/50 backdrop-blur-[2px] flex items-center justify-center p-3">
     <div class="bg-[#f4fbfe] border-2 border-[#a4d1e4] rounded-2xl max-w-2xl w-full max-h-[88vh] overflow-y-auto shadow-2xl p-4 sm:p-5">
       <div class="flex items-center justify-between border-b border-[#cce6f1] pb-3 mb-3">
         <div class="flex items-center gap-2">
           <span class="text-xl">⚙️</span>
-          <h2 class="text-base sm:text-lg font-bold text-[#124e75]">Cài đặt & Quản lý Kho bài</h2>
+          <h2 id="settingsTitle" class="text-base sm:text-lg font-bold text-[#124e75]">Cài đặt & Quản lý Kho bài</h2>
         </div>
         <button type="button" onclick="closeSettingsModal()" class="btn-pill px-3 py-1.5 bg-white hover:bg-[#e5f3f9] text-[#124e75] border border-[#b6dceb] text-xs sm:text-sm">
           Đóng
@@ -222,6 +234,9 @@
 
           <div class="flex flex-wrap gap-2 mb-2.5">
             <input id="studyPickerSearch" type="text" oninput="renderStudyPickerList()" placeholder="Tìm câu hoặc ý nghĩa để chọn vào Góc học tập..." class="flex-1 min-w-[180px] px-3 py-2 rounded-xl border border-[#b9dceb] bg-[#f8fcfe] text-xs sm:text-sm focus:outline-none focus:border-[#1b6ca1]" />
+            <button type="button" onclick="randomPickStudy20()" class="btn-pill px-3 py-2 bg-[#fff3d6] hover:bg-[#ffe9b8] text-[#8a5900] border border-[#f0cf8a] text-xs font-semibold">
+              🎲 Chọn ngẫu nhiên 20 bài
+            </button>
             <button type="button" onclick="autoFillStudyTo20()" class="btn-pill px-3 py-2 bg-[#e1f4e8] hover:bg-[#ccebd7] text-[#216648] border border-[#9fd4b3] text-xs font-semibold">
               Tự đủ 20 bài (ưu tiên chưa sao)
             </button>
@@ -338,6 +353,19 @@
         </section>
       </div>
     </div>
+  </div>
+
+  <div id="appModal" hidden role="dialog" aria-modal="true" aria-labelledby="appModalTitle" class="fixed inset-0 z-50 bg-[#0d2738]/50 backdrop-blur-[2px] flex items-center justify-center p-3">
+    <div class="bg-[#f4fbfe] border-2 border-[#a4d1e4] rounded-2xl max-w-2xl w-full max-h-[88vh] overflow-y-auto shadow-2xl p-4 sm:p-5">
+      <div class="flex items-center justify-between border-b border-[#cce6f1] pb-3 mb-3">
+        <h2 id="appModalTitle" class="text-base sm:text-lg font-bold text-[#124e75]"></h2>
+        <button type="button" onclick="closeAppModal()" class="btn-pill px-3 py-1.5 bg-white hover:bg-[#e5f3f9] text-[#124e75] border border-[#b6dceb] text-xs sm:text-sm">Đóng</button>
+      </div>
+      <div id="appModalBody" class="text-xs sm:text-sm space-y-3"></div>
+    </div>
+  </div>
+  <div id="authOverlay" hidden class="fixed inset-0 z-[70] bg-[#e4f3fa] overflow-y-auto p-4">
+    <div id="authBox" class="max-w-md mx-auto mt-6 bg-white rounded-2xl border-2 border-[#a4d1e4] p-5 shadow-xl"></div>
   </div>
 
   <script>
@@ -1249,6 +1277,7 @@
     }
 
     function setSimulatedDate(val) {
+      if (!requireAdmin()) return;
       appState.simulatedToday = val ? toDateOnlyStr(val) : null;
       syncReviewWindowsWithToday();
       saveStateSafe(false);
@@ -1366,6 +1395,22 @@
     const STORAGE_KEY = 'net_dep_tieng_viet_state_v1';
     const BACKUP_STORAGE_KEY = 'net_dep_tieng_viet_autobackup_v1';
     const PAGE_SIZE = 20;
+    const MIN_VALID_ITEMS = 1;
+    const ADMIN_EMAIL = 'alitran2810@gmail.com';
+    const CATALOG_KEY = 'net_dep_tieng_viet_catalog_v2';
+    const CATALOG_BACKUP_KEY = 'net_dep_tieng_viet_catalog_backup_v2';
+    const ACCOUNTS_KEY = 'net_dep_tieng_viet_accounts_v2';
+    const PROGRESS_PREFIX = 'net_dep_tieng_viet_progress_v2:';
+    const FEEDBACK_KEY = 'net_dep_tieng_viet_feedback_v2';
+    const LEGACY_PENDING_KEY = 'net_dep_tieng_viet_legacy_pending_v2';
+    let authMode = 'login';
+    let authPendingId = null;
+    const VALID_CATEGORIES = ['Ca dao', 'Tục ngữ', 'Thành ngữ'];
+    const MAX_IMPORT_BYTES = 5 * 1024 * 1024;
+    const pendingConfirms = {};
+    let searchDebounceTimer = null;
+    let toastTimer = null;
+    let idCounter = 0;
 
     let appState = {
       activeTab: 'all',
@@ -1381,6 +1426,10 @@
       items: [],
       studyIds: [],
       forgottenReviewIds: [],
+      retiredNorms: [],
+      accounts: [],
+      currentAccount: null,
+      history: [],
       editingItemId: null,
       game: null
     };
@@ -1421,15 +1470,20 @@
     function normalizeItemShape(raw, index = 0) {
       const text = String(raw?.text || '').trim();
       const meaning = String(raw?.meaning || '').trim() || 'Câu ca dao, tục ngữ, thành ngữ giàu giá trị giáo dục truyền thống.';
-      const category = raw?.category || detectCategory(text);
+      const category = VALID_CATEGORIES.includes(raw?.category) ? raw.category : detectCategory(text);
       const topic = String(raw?.topic || '').trim() || detectTopic(text, meaning);
       const starred = Boolean(raw?.starred);
-      const review = Object.assign(createReviewMeta(), raw?.review || {});
+      const reviewBase = createReviewMeta();
+      const reviewRaw = raw?.review && typeof raw.review === 'object' ? raw.review : {};
+      const review = {};
+      Object.keys(reviewBase).forEach(k => {
+        review[k] = reviewRaw[k] ?? reviewBase[k];
+      });
       if (starred && !review.masteredAt) {
         initReviewScheduleForMasteredItem({ ...raw, review }, getEffectiveTodayDate());
       }
       return {
-        id: raw?.id || `item-${index + 1}`,
+        id: String(raw?.id ?? '').replace(/[^\w-]/g, '') || `item-${index + 1}`,
         text,
         meaning,
         category,
@@ -1532,95 +1586,144 @@
       };
     }
 
+    function lsGet(k, d) {
+      try { const r = localStorage.getItem(k); return r ? JSON.parse(r) : d; } catch (_) { return d; }
+    }
+
+    function stripItem(it) {
+      return { id: it.id, text: it.text, meaning: it.meaning, category: it.category, topic: it.topic, source: it.source };
+    }
+
+    function sanitizeReview(r) {
+      const base = createReviewMeta();
+      const o = r && typeof r === 'object' ? r : {};
+      Object.keys(base).forEach(k => { base[k] = o[k] ?? base[k]; });
+      return base;
+    }
+
+    // Kho bài (dùng chung) lưu riêng; tiến độ + lịch sử lưu theo từng tài khoản
     function saveStateSafe(showAutoSaveNotice = false) {
       try {
-        if (!Array.isArray(appState.items) || appState.items.length < 376) {
-          verifyAndHealStorage(true);
+        const cat = JSON.stringify({ items: appState.items.map(stripItem), retiredNorms: appState.retiredNorms });
+        const prev = localStorage.getItem(CATALOG_KEY);
+        if (prev !== cat) {
+          localStorage.setItem(CATALOG_KEY, cat);
+          if (prev) {
+            try { localStorage.setItem(CATALOG_BACKUP_KEY, prev); } catch (_) { localStorage.removeItem(CATALOG_BACKUP_KEY); }
+          }
         }
-        const payload = JSON.stringify({
-          activeTab: appState.activeTab,
-          pages: appState.pages,
-          searchQuery: appState.searchQuery,
-          categoryFilter: appState.categoryFilter,
-          filterMode: appState.filterMode,
-          topicFilter: appState.topicFilter,
-          letterFilter: appState.letterFilter,
-          sortOrder: appState.sortOrder,
-          simulatedToday: appState.simulatedToday,
-          items: appState.items,
-          studyIds: appState.studyIds,
-          forgottenReviewIds: appState.forgottenReviewIds,
-          savedAt: new Date().toISOString()
-        });
-        localStorage.setItem(STORAGE_KEY, payload);
-        localStorage.setItem(BACKUP_STORAGE_KEY, payload);
+        const acc = appState.currentAccount;
+        if (acc) {
+          const progress = {};
+          appState.items.forEach(it => { if (it.starred) progress[it.id] = { starred: true, review: it.review }; });
+          localStorage.setItem(PROGRESS_PREFIX + acc.id, JSON.stringify({
+            progress,
+            studyIds: appState.studyIds,
+            forgottenReviewIds: appState.forgottenReviewIds,
+            simulatedToday: appState.simulatedToday,
+            history: appState.history,
+            ui: {
+              activeTab: appState.activeTab, pages: appState.pages, searchQuery: appState.searchQuery,
+              categoryFilter: appState.categoryFilter, filterMode: appState.filterMode, topicFilter: appState.topicFilter,
+              letterFilter: appState.letterFilter, sortOrder: appState.sortOrder
+            },
+            savedAt: new Date().toISOString()
+          }));
+        }
         updateHeaderSummary();
-        if (showAutoSaveNotice) {
-          showToast('Đã tự động lưu & sao lưu an toàn vào bộ nhớ.', 'success');
-        }
+        if (showAutoSaveNotice) showToast('Đã tự động lưu vào bộ nhớ.', 'success');
+        return true;
       } catch (err) {
         console.error('Lỗi lưu localStorage:', err);
+        showToast('Không lưu được dữ liệu (bộ nhớ trình duyệt đầy hoặc bị chặn).', 'warn');
+        return false;
       }
     }
 
-    function loadStateWithRecovery() {
+    function loadCatalog() {
       const defaults = buildDefaultCatalog();
-      let parsed = null;
-
-      try {
-        const rawMain = localStorage.getItem(STORAGE_KEY);
-        if (rawMain) parsed = JSON.parse(rawMain);
-      } catch (_) {
-        parsed = null;
+      let parsed = lsGet(CATALOG_KEY, null);
+      if (!parsed || !Array.isArray(parsed.items) || parsed.items.length < MIN_VALID_ITEMS) {
+        const b = lsGet(CATALOG_BACKUP_KEY, null);
+        parsed = b && Array.isArray(b.items) && b.items.length >= MIN_VALID_ITEMS ? b : null;
       }
-
-      if (!parsed || !Array.isArray(parsed.items) || parsed.items.length < 376) {
-        try {
-          const rawBackup = localStorage.getItem(BACKUP_STORAGE_KEY);
-          if (rawBackup) {
-            const backupParsed = JSON.parse(rawBackup);
-            if (backupParsed && Array.isArray(backupParsed.items) && backupParsed.items.length >= 376) {
-              parsed = backupParsed;
-            }
-          }
-        } catch (_) {}
+      if (!parsed) {
+        // Chuyển dữ liệu phiên bản cũ (1 người dùng): kho bài -> dùng chung, dấu sao -> gắn vào tài khoản đầu tiên
+        const old = lsGet(STORAGE_KEY, null);
+        if (old && Array.isArray(old.items) && old.items.length >= MIN_VALID_ITEMS) {
+          parsed = { items: old.items, retiredNorms: old.retiredNorms };
+          const prog = {};
+          old.items.forEach(it => { if (it && it.starred) prog[it.id] = { starred: true, review: sanitizeReview(it.review) }; });
+          try {
+            localStorage.setItem(LEGACY_PENDING_KEY, JSON.stringify({
+              progress: prog, studyIds: old.studyIds || [], forgottenReviewIds: old.forgottenReviewIds || [],
+              simulatedToday: old.simulatedToday || null, history: []
+            }));
+          } catch (_) {}
+        }
       }
+      if (!parsed) { appState.items = defaults; appState.retiredNorms = []; return; }
 
-      if (!parsed || !Array.isArray(parsed.items) || parsed.items.length < 376) {
-        appState.items = defaults;
-        appState.studyIds = ensure20StudyItems(defaults, []);
-        appState.forgottenReviewIds = [];
-        saveStateSafe(false);
-        return;
-      }
-
-      const normalizedParsed = parsed.items.map((it, idx) => normalizeItemShape(it, idx));
-      const existingNorms = new Set(normalizedParsed.map(it => normalizeText(it.text)));
-      const mergedItems = [...normalizedParsed];
-      defaults.forEach(defItem => {
-        if (!existingNorms.has(normalizeText(defItem.text))) {
-          existingNorms.add(normalizeText(defItem.text));
-          mergedItems.push(defItem);
+      const items = parsed.items.map((it, idx) => normalizeItemShape(it, idx));
+      const seenIds = new Set();
+      items.forEach(it => { if (seenIds.has(it.id)) it.id = genId('fix'); seenIds.add(it.id); });
+      const retired = new Set(Array.isArray(parsed.retiredNorms) ? parsed.retiredNorms.filter(x => typeof x === 'string') : []);
+      const norms = new Set(items.map(it => normalizeText(it.text)));
+      defaults.forEach(d => {
+        const n = normalizeText(d.text);
+        if (!norms.has(n) && !retired.has(n)) {
+          norms.add(n);
+          if (seenIds.has(d.id)) d.id = genId('item');
+          seenIds.add(d.id);
+          items.push(d);
         }
       });
+      appState.items = items;
+      appState.retiredNorms = Array.from(retired);
+    }
 
-      appState.items = mergedItems;
-      appState.activeTab = ['all', 'study', 'games', 'mastered'].includes(parsed.activeTab) ? parsed.activeTab : 'all';
-      appState.pages = Object.assign({ all: 1, study: 1, mastered: 1 }, parsed.pages || {});
-      appState.searchQuery = parsed.searchQuery || '';
-      appState.categoryFilter = parsed.categoryFilter || 'all';
-      appState.filterMode = ['all', 'topic', 'letter'].includes(parsed.filterMode) ? parsed.filterMode : 'all';
-      appState.topicFilter = parsed.topicFilter || 'all';
-      appState.letterFilter = parsed.letterFilter || 'all';
-      appState.sortOrder = ['default', 'asc', 'desc'].includes(parsed.sortOrder) ? parsed.sortOrder : 'default';
-      appState.simulatedToday = parsed.simulatedToday || null;
-      appState.studyIds = ensure20StudyItems(mergedItems, parsed.studyIds || []);
-      appState.forgottenReviewIds = Array.isArray(parsed.forgottenReviewIds) ? parsed.forgottenReviewIds : [];
+    function applyAccountProgress() {
+      const acc = appState.currentAccount;
+      const data = acc ? lsGet(PROGRESS_PREFIX + acc.id, {}) : {};
+      const prog = data.progress || {};
+      appState.items.forEach(it => {
+        const pr = prog[it.id];
+        if (pr && pr.starred) { it.starred = true; it.review = sanitizeReview(pr.review); }
+        else { it.starred = false; it.review = createReviewMeta(); }
+      });
+      const ui = data.ui || {};
+      appState.activeTab = ['all', 'study', 'games', 'mastered'].includes(ui.activeTab) ? ui.activeTab : 'all';
+      appState.pages = Object.assign({ all: 1, study: 1, mastered: 1 }, ui.pages || {});
+      appState.searchQuery = ui.searchQuery || '';
+      appState.categoryFilter = ui.categoryFilter || 'all';
+      appState.filterMode = ['all', 'topic', 'letter'].includes(ui.filterMode) ? ui.filterMode : 'all';
+      appState.topicFilter = ui.topicFilter || 'all';
+      appState.letterFilter = ui.letterFilter || 'all';
+      appState.sortOrder = ['default', 'asc', 'desc'].includes(ui.sortOrder) ? ui.sortOrder : 'default';
+      appState.simulatedToday = data.simulatedToday || null;
+      appState.studyIds = ensure20StudyItems(appState.items, data.studyIds || []);
+      appState.forgottenReviewIds = Array.isArray(data.forgottenReviewIds) ? data.forgottenReviewIds : [];
+      appState.history = Array.isArray(data.history) ? data.history : [];
+      appState.game = null;
+      appState.editingItemId = null;
       syncReviewWindowsWithToday();
+    }
+
+    function loadStateWithRecovery() {
+      loadCatalog();
+      const store = lsGet(ACCOUNTS_KEY, { accounts: [], currentId: null });
+      appState.accounts = Array.isArray(store.accounts) ? store.accounts : [];
+      appState.currentAccount = appState.accounts.find(a => a.id === store.currentId) || null;
+      try {
+        // Tài khoản quản trị phải nhập lại PIN ở mỗi phiên mới
+        if (appState.currentAccount && isAdminAcc(appState.currentAccount) && !sessionStorage.getItem('ndtv_admin_ok')) appState.currentAccount = null;
+      } catch (_) {}
+      applyAccountProgress();
       saveStateSafe(false);
     }
 
     function verifyAndHealStorage(silent = false) {
+      if (!requireAdmin()) return;
       loadStateWithRecovery();
       if (!silent) {
         showToast(`Đã kiểm tra và xác nhận kho dữ liệu an toàn (${appState.items.length} bài, 20 bài Góc học tập).`, 'success');
@@ -1629,10 +1732,13 @@
     }
 
     function resetToDefaultCatalog() {
+      if (!requireAdmin()) return;
+      if (!confirmTwice('reset', 'Thao tác này đưa kho bài về mặc định (xóa bài tự thêm/chỉnh sửa) và xóa dấu sao của tài khoản đang đăng nhập.')) return;
       const defaults = buildDefaultCatalog();
       appState.items = defaults;
       appState.studyIds = ensure20StudyItems(defaults, []);
       appState.forgottenReviewIds = [];
+      appState.retiredNorms = [];
       appState.pages = { all: 1, study: 1, mastered: 1 };
       appState.filterMode = 'all';
       appState.topicFilter = 'all';
@@ -1649,6 +1755,7 @@
     }
 
     function reclassifyAllCategories() {
+      if (!requireAdmin()) return;
       appState.items = appState.items.map(it => ({
         ...it,
         category: detectCategory(it.text),
@@ -1677,6 +1784,7 @@
         item.review = createReviewMeta();
       }
 
+      logHistory(nextStarred ? 'star' : 'unstar', { text: item.text.replace(/\n/g, ' / ').slice(0, 60) });
       let noticeMsg = nextStarred
         ? 'Đã đánh dấu ⭐ (Đã thuộc từ) và kích hoạt lịch nhắc ôn tập sau 10 ngày.'
         : 'Đã bỏ dấu sao khỏi bài này.';
@@ -1712,6 +1820,8 @@
       }
 
       banner.classList.remove('hidden');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(hideToast, 6000);
     }
 
     function hideToast() {
@@ -1834,7 +1944,11 @@
     }
 
     function renderCurrentView() {
+      const activeEl = document.activeElement;
+      const keepSearchFocus = Boolean(activeEl && activeEl.id === 'searchInput');
+      const caretPos = keepSearchFocus ? activeEl.selectionStart : null;
       updateTabStyles();
+      updateAccountButton();
       updateHeaderSummary();
       const container = document.getElementById('mainContainer');
       if (appState.activeTab === 'all') {
@@ -1845,6 +1959,14 @@
         renderGamesTab(container);
       } else if (appState.activeTab === 'mastered') {
         renderMasteredTab(container);
+      }
+      if (keepSearchFocus) {
+        const el = document.getElementById('searchInput');
+        if (el) {
+          el.focus();
+          const pos = caretPos ?? el.value.length;
+          try { el.setSelectionRange(pos, pos); } catch (_) {}
+        }
       }
     }
 
@@ -1884,7 +2006,7 @@
     }
 
     function renderAllTab(container) {
-      const q = (appState.searchQuery || '').trim().toLowerCase();
+      const q = foldVi((appState.searchQuery || '').trim());
       const cat = appState.categoryFilter || 'all';
       const availableTopics = Array.from(new Set(appState.items.map(it => it.topic || detectTopic(it.text, it.meaning))));
       const availableLetters = Array.from(new Set(appState.items.map(it => getFirstLetterKey(it.text)))).sort((a, b) => a.localeCompare(b, 'vi'));
@@ -1896,10 +2018,10 @@
         const matchTopic = appState.topicFilter === 'all' || topicVal === appState.topicFilter;
         const matchLetter = appState.letterFilter === 'all' || letterVal === appState.letterFilter;
         const matchQuery = !q ||
-          it.text.toLowerCase().includes(q) ||
-          it.meaning.toLowerCase().includes(q) ||
-          topicVal.toLowerCase().includes(q) ||
-          (it.category || '').toLowerCase().includes(q);
+          foldVi(it.text).includes(q) ||
+          foldVi(it.meaning).includes(q) ||
+          foldVi(topicVal).includes(q) ||
+          foldVi(it.category).includes(q);
         return matchCat && matchTopic && matchLetter && matchQuery;
       });
 
@@ -1919,9 +2041,13 @@
         <div class="bg-white/90 border border-[#c3e2ef] rounded-2xl p-3 mb-3 shadow-sm space-y-2.5">
           <div class="flex items-center gap-1.5">
             <input
+              id="searchInput"
               type="text"
-              value="${escapeAttr(appState.searchQuery)}"
-              oninput="appState.searchQuery = this.value; appState.pages.all = 1; renderCurrentView();"
+              inputmode="search"
+              autocomplete="off"
+              value="${escapeHtml(appState.searchQuery)}"
+              oninput="onSearchInput(this, event)"
+              oncompositionend="onSearchInput(this)"
               placeholder="Tìm câu ca dao, tục ngữ, thành ngữ, chủ đề..."
               class="flex-1 min-w-0 px-3 py-2 rounded-xl border border-[#b7dceb] bg-[#f8fcfe] text-xs sm:text-sm focus:outline-none focus:border-[#1b6ca1]"
             />
@@ -2584,6 +2710,8 @@
         g.index += 1;
       } else {
         g.completed = true;
+        logHistory('game', { game: String(g.type || ''), score: g.score, max: g.maxPoints });
+        saveStateSafe(false);
       }
       renderCurrentView();
     }
@@ -3042,6 +3170,7 @@
        HỘP THOẠI CÀI ĐẶT: DANH SÁCH GỌN, 20 BÀI, SỬA/XÓA TOÀN QUYỀN, BACKUP / JSON
     ========================================================================= */
     function selectSettingsSection(sectionKey) {
+      if (!isAdmin() && sectionKey !== 'study20') sectionKey = 'study20';
       const sections = ['study20', 'editor', 'backup', 'topics'];
       appState.activeSettingsSection = appState.activeSettingsSection === sectionKey ? null : sectionKey;
       sections.forEach(key => {
@@ -3062,6 +3191,10 @@
     function openSettingsModal() {
       const modal = document.getElementById('settingsModal');
       modal.hidden = false;
+      ['editor', 'backup', 'topics'].forEach(k => {
+        const b = document.getElementById(`settings-nav-${k}`);
+        if (b) b.style.display = isAdmin() ? '' : 'none';
+      });
       const simInput = document.getElementById('simDateInput');
       if (simInput) simInput.value = appState.simulatedToday || '';
       const badge = document.getElementById('settingsNavStudyBadge');
@@ -3076,11 +3209,11 @@
     function renderStudyPickerList() {
       const container = document.getElementById('studyPickerList');
       const badge = document.getElementById('selectedStudyCountBadge');
-      const kw = (document.getElementById('studyPickerSearch')?.value || '').trim().toLowerCase();
+      const kw = foldVi((document.getElementById('studyPickerSearch')?.value || '').trim());
       badge.textContent = `${appState.studyIds.length} / 20 bài`;
 
       const list = appState.items.filter(it =>
-        !kw || it.text.toLowerCase().includes(kw) || it.meaning.toLowerCase().includes(kw)
+        !kw || foldVi(it.text).includes(kw) || foldVi(it.meaning).includes(kw)
       ).slice(0, 80);
 
       container.innerHTML = list.map(it => {
@@ -3133,6 +3266,26 @@
       showToast('Đã tự động chọn 20 bài (ưu tiên các bài chưa có dấu sao ⭐).', 'success');
     }
 
+    // Chọn ngẫu nhiên 20 bài mới (thay toàn bộ lựa chọn hiện tại), ưu tiên bài chưa có sao
+    function randomPickStudy20() {
+      const shuffle = arr => {
+        const a = arr.slice();
+        for (let i = a.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+      };
+      const fresh = shuffle(appState.items.filter(it => !it.starred));
+      const starred = shuffle(appState.items.filter(it => it.starred));
+      const picked = fresh.concat(starred).slice(0, 20).map(it => it.id);
+      appState.studyIds = ensure20StudyItems(appState.items, picked);
+      saveStateSafe(false);
+      renderStudyPickerList();
+      renderCurrentView();
+      showToast('Đã chọn ngẫu nhiên 20 bài mới cho Góc học tập (ưu tiên bài chưa có sao ⭐).', 'success');
+    }
+
     function saveStudySelection() {
       appState.studyIds = ensure20StudyItems(appState.items, appState.studyIds);
       saveStateSafe(true);
@@ -3142,6 +3295,7 @@
     }
 
     function addNewLessonItem() {
+      if (!requireAdmin()) return;
       const contentEl = document.getElementById('editItemContent');
       const meaningEl = document.getElementById('editItemMeaning');
       const catEl = document.getElementById('editItemCategory');
@@ -3188,10 +3342,10 @@
     }
 
     function renderEditableMatches() {
-      const kw = (document.getElementById('editSearchKeyword')?.value || '').trim().toLowerCase();
+      const kw = foldVi((document.getElementById('editSearchKeyword')?.value || '').trim());
       const box = document.getElementById('editableMatchesList');
       const matches = appState.items.filter(it =>
-        !kw || it.text.toLowerCase().includes(kw) || it.meaning.toLowerCase().includes(kw) || (it.topic || '').toLowerCase().includes(kw)
+        !kw || foldVi(it.text).includes(kw) || foldVi(it.meaning).includes(kw) || foldVi(it.topic).includes(kw)
       ).slice(0, 30);
 
       box.innerHTML = matches.map(it => {
@@ -3218,6 +3372,7 @@
     }
 
     function saveExistingLessonEdit() {
+      if (!requireAdmin()) return;
       if (!appState.editingItemId) {
         showToast('Hãy tìm và chọn một bài học bên dưới trước khi lưu sửa.', 'warn');
         return;
@@ -3235,6 +3390,9 @@
         return;
       }
 
+      if (normalizeText(appState.items[idx].text) !== normalizeText(text)) {
+        retireDefaultText(appState.items[idx]);
+      }
       appState.items[idx] = {
         ...appState.items[idx],
         text,
@@ -3250,12 +3408,15 @@
     }
 
     function deleteSelectedLessonItem() {
+      if (!requireAdmin()) return;
       if (!appState.editingItemId) {
         showToast('Hãy tìm và chọn một bài học trước khi bấm Xóa.', 'warn');
         return;
       }
       const targetId = appState.editingItemId;
       const found = appState.items.find(it => it.id === targetId);
+      if (!confirmTwice('delete-' + targetId, 'Sắp xóa bài đang chọn.')) return;
+      if (found) retireDefaultText(found);
       appState.items = appState.items.filter(it => it.id !== targetId);
       appState.studyIds = ensure20StudyItems(appState.items, appState.studyIds.filter(id => id !== targetId));
       appState.forgottenReviewIds = (appState.forgottenReviewIds || []).filter(id => id !== targetId);
@@ -3269,13 +3430,18 @@
     }
 
     function downloadBackupJson() {
+      if (!requireAdmin()) return;
       try {
+        saveStateSafe(false);
         const dataStr = JSON.stringify({
           app: 'Nét Đẹp Tiếng Việt',
           exportedAt: new Date().toISOString(),
-          items: appState.items,
+          items: appState.items.map(stripItem).map((it, i) => Object.assign(it, { starred: appState.items[i].starred, review: appState.items[i].review })),
           studyIds: appState.studyIds,
-          forgottenReviewIds: appState.forgottenReviewIds
+          forgottenReviewIds: appState.forgottenReviewIds,
+          accounts: appState.accounts,
+          progress: Object.fromEntries(appState.accounts.map(a => [a.id, lsGet(PROGRESS_PREFIX + a.id, null)])),
+          feedbacks: lsGet(FEEDBACK_KEY, [])
         }, null, 2);
         const blob = new Blob([dataStr], { type: 'application/json;charset=utf-8' });
         const url = URL.createObjectURL(blob);
@@ -3293,12 +3459,19 @@
     }
 
     function handleImportJsonFile(event) {
+      if (!requireAdmin()) return;
       const file = event.target.files?.[0];
       if (!file) return;
+      if (file.size > MAX_IMPORT_BYTES) {
+        showToast('Tệp .JSON quá lớn (tối đa 5 MB).', 'warn');
+        event.target.value = '';
+        return;
+      }
       const reader = new FileReader();
       reader.onload = () => {
         try {
           const parsed = JSON.parse(String(reader.result || ''));
+          importAccountsFrom(parsed);
           const incomingList = Array.isArray(parsed) ? parsed : (Array.isArray(parsed.items) ? parsed.items : []);
           if (incomingList.length === 0) {
             showToast('Tệp .JSON không chứa danh sách bài học hợp lệ.', 'warn');
@@ -3334,7 +3507,7 @@
               return;
             }
 
-            appState.items.push(candidate);
+            appState.items.push({ ...candidate, id: genId('imported') });
             addedCount++;
           });
 
@@ -3377,14 +3550,16 @@
     }
 
     function resolveSimilarityChoice(choice) {
+      if (!requireAdmin()) return;
       if (!currentSimilarityPair) return;
       const { candidate, existing } = currentSimilarityPair;
 
       if (choice === 'add') {
-        appState.items.push({ ...candidate, id: `imported-${Date.now()}-${Math.floor(Math.random() * 1000)}` });
+        appState.items.push({ ...candidate, id: genId('imported') });
       } else if (choice === 'overwrite') {
         const idx = appState.items.findIndex(it => it.id === existing.id);
         if (idx !== -1) {
+          retireDefaultText(existing);
           appState.items[idx] = {
             ...existing,
             text: candidate.text,
@@ -3415,6 +3590,373 @@
       return map[topic] || 'bg-[#e6f3fa] text-[#195378] border-[#bcdcf0]';
     }
 
+    /* =========================================================================
+       TÀI KHOẢN, LỊCH SỬ HỌC, QUẢN TRỊ & HỘP THƯ PHẢN HỒI
+       Lưu ý: ứng dụng chạy hoàn toàn trên trình duyệt (không có máy chủ), nên
+       quyền admin theo email + PIN chỉ là lớp bảo vệ nhẹ, không phải bảo mật thật.
+    ========================================================================= */
+    const A_IN = 'w-full px-3 py-2 rounded-xl border border-[#b9dceb] bg-white text-sm';
+    const A_BTN = 'btn-pill px-3.5 py-2 bg-[#1b6ca1] hover:bg-[#124e75] text-white text-sm font-semibold';
+    const A_BTN2 = 'btn-pill px-3.5 py-2 bg-white hover:bg-[#e5f3f9] text-[#124e75] border border-[#b6dceb] text-sm font-semibold';
+    const A_DEL = 'btn-pill px-2.5 py-1 bg-[#fdeaea] hover:bg-[#fad6d6] text-[#a62626] border border-[#ebb3b3] text-xs font-semibold';
+
+    function normEmail(e) { return String(e || '').trim().toLowerCase(); }
+    function isAdminAcc(a) { return Boolean(a) && normEmail(a.email) === ADMIN_EMAIL; }
+    function isAdmin() { return isAdminAcc(appState.currentAccount); }
+    function requireAdmin() {
+      if (isAdmin()) return true;
+      showToast('Chức năng này chỉ dành cho quản trị viên.', 'warn');
+      return false;
+    }
+
+    // Băm PIN đơn giản (chỉ để không lưu PIN dạng chữ thường)
+    function hashPin(pin, salt) {
+      let h1 = 0xdeadbeef, h2 = 0x41c6ce57;
+      const str = salt + ':' + pin;
+      for (let i = 0; i < str.length; i++) {
+        const c = str.charCodeAt(i);
+        h1 = Math.imul(h1 ^ c, 2654435761);
+        h2 = Math.imul(h2 ^ c, 1597334677);
+      }
+      h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+      h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+      return (4294967296 * (2097151 & h2) + (h1 >>> 0)).toString(36);
+    }
+
+    function saveAccounts() {
+      try {
+        localStorage.setItem(ACCOUNTS_KEY, JSON.stringify({ accounts: appState.accounts, currentId: appState.currentAccount ? appState.currentAccount.id : null }));
+        return true;
+      } catch (_) { showToast('Không lưu được tài khoản.', 'warn'); return false; }
+    }
+
+    function logHistory(type, info) {
+      if (!appState.currentAccount) return;
+      appState.history.push(Object.assign({ t: new Date().toISOString(), type }, info || {}));
+      if (appState.history.length > 500) appState.history.splice(0, appState.history.length - 500);
+    }
+
+    function updateAccountButton() {
+      const el = document.getElementById('accountBtnLabel');
+      const a = appState.currentAccount;
+      if (el) el.textContent = a ? (isAdminAcc(a) ? '🔑 ' : '') + a.name : 'Tài khoản';
+    }
+
+    function enterAccount(acc) {
+      if (appState.currentAccount) saveStateSafe(false);
+      appState.currentAccount = acc;
+      acc.lastLoginAt = new Date().toISOString();
+      try { if (isAdminAcc(acc)) sessionStorage.setItem('ndtv_admin_ok', '1'); } catch (_) {}
+      saveAccounts();
+      applyAccountProgress();
+      logHistory('login');
+      saveStateSafe(false);
+      authMode = 'login';
+      renderAuth();
+      renderCurrentView();
+    }
+
+    function logoutAccount() {
+      saveStateSafe(false);
+      appState.currentAccount = null;
+      try { sessionStorage.removeItem('ndtv_admin_ok'); } catch (_) {}
+      saveAccounts();
+      applyAccountProgress();
+      authMode = 'login';
+      closeAppModal();
+      closeSettingsModal();
+      renderAuth();
+      renderCurrentView();
+    }
+
+    function authError(msg) { const e = document.getElementById('authError'); if (e) e.textContent = msg; }
+    function authVal(id) { return (document.getElementById(id)?.value || '').trim(); }
+
+    function renderAuth() {
+      const ov = document.getElementById('authOverlay');
+      const box = document.getElementById('authBox');
+      if (appState.currentAccount) { ov.hidden = true; return; }
+      ov.hidden = false;
+      const head = '<div class="text-center mb-4"><div class="text-3xl mb-1">🌾</div><h1 class="text-lg font-bold text-[#124e75]">Nét Đẹp Tiếng Việt</h1></div>';
+      const err = '<p id="authError" role="alert" class="text-xs font-semibold text-[#a62626] min-h-[1rem] mt-2"></p>';
+      const accs = appState.accounts;
+
+      if (authMode === 'pin') {
+        const acc = accs.find(a => a.id === authPendingId);
+        if (!acc) { authMode = 'login'; return renderAuth(); }
+        box.innerHTML = head + `<p class="text-sm mb-2">${acc.pinHash ? 'Nhập mã PIN quản trị của' : 'Tạo mã PIN (4–8 chữ số) cho tài khoản quản trị'} <b>${escapeHtml(acc.name)}</b>:</p>
+          <input id="authPin" type="password" inputmode="numeric" maxlength="8" autocomplete="off" class="${A_IN}" onkeydown="if(event.key==='Enter')submitPin()" />${err}
+          <div class="flex gap-2 mt-3"><button type="button" onclick="submitPin()" class="${A_BTN}">Vào</button><button type="button" onclick="authMode='login';renderAuth()" class="${A_BTN2}">Quay lại</button></div>`;
+        return;
+      }
+
+      if (authMode === 'register' || accs.length === 0) {
+        const first = accs.length === 0;
+        box.innerHTML = head + `<h2 class="font-bold text-[#124e75] mb-2">Tạo tài khoản mới</h2>
+          <div class="space-y-2">
+            <input id="regName" type="text" maxlength="40" placeholder="Tên của bạn *" class="${A_IN}" />
+            <input id="regSchool" type="text" maxlength="60" placeholder="Trường *" class="${A_IN}" />
+            <input id="regGrade" type="text" maxlength="10" placeholder="Lớp * (ví dụ: 3A)" class="${A_IN}" />
+            <input id="regEmail" type="email" maxlength="80" placeholder="Email (không bắt buộc)" oninput="toggleRegPin(this)" class="${A_IN}" />
+            <div id="regPinBox" hidden><input id="regPin" type="password" inputmode="numeric" maxlength="8" placeholder="Tạo mã PIN quản trị (4–8 chữ số)" class="${A_IN}" /></div>
+          </div>${first ? '<p class="text-[11px] text-[#4d7185] mt-2">Dữ liệu học đã có trên máy này (nếu có) sẽ được gắn vào tài khoản đầu tiên.</p>' : ''}${err}
+          <div class="flex gap-2 mt-3"><button type="button" onclick="submitRegister()" class="${A_BTN}">Tạo & vào học</button>${first ? '' : `<button type="button" onclick="authMode='login';renderAuth()" class="${A_BTN2}">Quay lại</button>`}</div>`;
+        return;
+      }
+
+      box.innerHTML = head + `<h2 class="font-bold text-[#124e75] mb-2">Chọn tài khoản</h2>
+        <div class="space-y-1.5 max-h-60 overflow-y-auto">${accs.map(a => `<button type="button" onclick="loginAs('${escapeAttr(a.id)}')" class="w-full text-left p-2.5 rounded-xl border border-[#c5e0ec] bg-[#f6fbfe] hover:bg-[#e3f3fa]"><span class="font-bold text-[#124e75]">${isAdminAcc(a) ? '🔑 ' : ''}${escapeHtml(a.name)}</span><span class="block text-[11px] text-[#4d7185]">${escapeHtml(a.school)} · Lớp ${escapeHtml(a.grade)}</span></button>`).join('')}</div>
+        <div class="flex gap-1.5 mt-3"><input id="loginEmail" type="email" placeholder="Hoặc đăng nhập bằng email" class="${A_IN}" onkeydown="if(event.key==='Enter')loginByEmail()" /><button type="button" onclick="loginByEmail()" class="${A_BTN} shrink-0">Vào</button></div>${err}
+        <button type="button" onclick="authMode='register';renderAuth()" class="${A_BTN2} w-full mt-2">+ Tạo tài khoản mới</button>`;
+    }
+
+    function toggleRegPin(el) { document.getElementById('regPinBox').hidden = normEmail(el.value) !== ADMIN_EMAIL; }
+
+    function submitRegister() {
+      const name = authVal('regName'), school = authVal('regSchool'), grade = authVal('regGrade'), email = authVal('regEmail'), pin = authVal('regPin');
+      if (name.length < 2) return authError('Vui lòng nhập tên (ít nhất 2 ký tự).');
+      if (!school) return authError('Vui lòng nhập tên trường.');
+      if (!grade) return authError('Vui lòng nhập lớp.');
+      if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return authError('Email chưa đúng định dạng.');
+      if (email && appState.accounts.some(a => normEmail(a.email) === normEmail(email))) return authError('Email này đã có tài khoản, hãy đăng nhập.');
+      const acc = { id: genId('acc'), name, school, grade, email, createdAt: new Date().toISOString(), lastLoginAt: null };
+      if (isAdminAcc(acc)) {
+        if (!/^\d{4,8}$/.test(pin)) return authError('Tài khoản quản trị cần mã PIN 4–8 chữ số.');
+        acc.pinHash = hashPin(pin, acc.id);
+      }
+      if (appState.accounts.length === 0) {
+        const pend = lsGet(LEGACY_PENDING_KEY, null);
+        if (pend) {
+          try { localStorage.setItem(PROGRESS_PREFIX + acc.id, JSON.stringify(pend)); localStorage.removeItem(LEGACY_PENDING_KEY); } catch (_) {}
+        }
+      }
+      appState.accounts.push(acc);
+      enterAccount(acc);
+    }
+
+    function loginAs(id) {
+      const acc = appState.accounts.find(a => a.id === id);
+      if (!acc) return;
+      if (isAdminAcc(acc)) { authPendingId = id; authMode = 'pin'; renderAuth(); }
+      else enterAccount(acc);
+    }
+
+    function loginByEmail() {
+      const em = normEmail(authVal('loginEmail'));
+      const acc = em && appState.accounts.find(a => normEmail(a.email) === em);
+      if (!acc) return authError('Chưa có tài khoản với email này.');
+      loginAs(acc.id);
+    }
+
+    function submitPin() {
+      const acc = appState.accounts.find(a => a.id === authPendingId);
+      const pin = authVal('authPin');
+      if (!acc) return;
+      if (!/^\d{4,8}$/.test(pin)) return authError('PIN gồm 4–8 chữ số.');
+      if (!acc.pinHash) acc.pinHash = hashPin(pin, acc.id);
+      else if (acc.pinHash !== hashPin(pin, acc.id)) return authError('Sai mã PIN.');
+      enterAccount(acc);
+    }
+
+    /* ---------- Hộp thoại Hồ sơ / Lịch sử / Quản trị ---------- */
+    function openAppModal(title, html) {
+      document.getElementById('appModalTitle').textContent = title;
+      document.getElementById('appModalBody').innerHTML = html;
+      document.getElementById('appModal').hidden = false;
+    }
+    function closeAppModal() { const m = document.getElementById('appModal'); if (m) m.hidden = true; }
+
+    function accData(id) {
+      const cur = appState.currentAccount;
+      if (cur && cur.id === id) return { mastered: appState.items.filter(i => i.starred).length, history: appState.history };
+      const d = lsGet(PROGRESS_PREFIX + id, {});
+      return { mastered: Object.keys(d.progress || {}).length, history: Array.isArray(d.history) ? d.history : [] };
+    }
+
+    function fmtTime(t) { try { return new Date(t).toLocaleString('vi-VN'); } catch (_) { return ''; } }
+
+    function fmtHistory(e) {
+      if (e.type === 'login') return '🔓 Đăng nhập';
+      if (e.type === 'star') return `⭐ Đã thuộc: “${escapeHtml(e.text)}”`;
+      if (e.type === 'unstar') return `☆ Bỏ sao: “${escapeHtml(e.text)}”`;
+      if (e.type === 'game') return `🎮 Trò chơi ${escapeHtml(String(e.game || '').replace('game', ''))}: ${escapeHtml(e.score)}/${escapeHtml(e.max)} điểm`;
+      return escapeHtml(e.type);
+    }
+
+    function openProfile(tab = 'profile', viewId = null) {
+      const me = appState.currentAccount;
+      if (!me) return;
+      const admin = isAdmin();
+      const tabs = [['profile', 'Hồ sơ'], ['history', 'Lịch sử học']].concat(admin ? [['admin', 'Tài khoản'], ['inbox', 'Hộp thư']] : []);
+      const nav = `<div class="flex flex-wrap gap-1.5">${tabs.map(([k, l]) => `<button type="button" onclick="openProfile('${k}')" class="btn-pill px-3 py-1.5 text-xs border ${k === tab ? 'bg-[#1b6ca1] text-white border-[#124e75]' : 'bg-white text-[#124e75] border-[#b6dceb]'}">${l}</button>`).join('')}</div>`;
+      let body = '';
+
+      if (tab === 'profile') {
+        const st = accData(me.id);
+        const games = st.history.filter(e => e.type === 'game').length;
+        body = `<div class="p-3 rounded-xl bg-white border border-[#cde7f2] space-y-1">
+          <p><b>${escapeHtml(me.name)}</b> ${admin ? '<span class="px-1.5 py-0.5 rounded bg-[#fff3cd] text-[#8a5900] text-[11px] font-bold">Quản trị viên</span>' : ''}</p>
+          <p>Trường: ${escapeHtml(me.school)} · Lớp: ${escapeHtml(me.grade)}</p>
+          <p>Email: ${escapeHtml(me.email || '(chưa có)')}</p>
+          <p>Tạo ngày: ${escapeHtml(fmtTime(me.createdAt))}</p></div>
+          <div class="grid grid-cols-2 gap-2"><div class="p-3 rounded-xl bg-[#e1f4e8] text-center"><div class="text-xl font-bold text-[#216648]">${st.mastered}</div>bài đã thuộc ⭐</div><div class="p-3 rounded-xl bg-[#e3f3fa] text-center"><div class="text-xl font-bold text-[#124e75]">${games}</div>lượt chơi hoàn thành</div></div>
+          <button type="button" onclick="logoutAccount()" class="${A_BTN2}">Đăng xuất / đổi tài khoản</button>`;
+      } else if (tab === 'history') {
+        const id = viewId || me.id;
+        const acc = appState.accounts.find(a => a.id === id) || me;
+        const list = accData(acc.id).history.slice().reverse().slice(0, 80);
+        body = `<p class="font-semibold text-[#124e75]">Lịch sử của ${escapeHtml(acc.name)} (${list.length} hoạt động gần nhất)</p>` +
+          (list.length ? `<ul class="divide-y divide-[#e3f0f6] bg-white rounded-xl border border-[#cde7f2]">${list.map(e => `<li class="px-3 py-2"><div>${fmtHistory(e)}</div><div class="text-[11px] text-[#6a8a9b]">${escapeHtml(fmtTime(e.t))}</div></li>`).join('')}</ul>` : '<p class="text-[#4d7185]">Chưa có hoạt động nào.</p>');
+      } else if (tab === 'admin' && admin) {
+        body = appState.accounts.map(a => {
+          const st = accData(a.id);
+          return `<div class="p-3 rounded-xl bg-white border border-[#cde7f2] flex flex-wrap items-center justify-between gap-2">
+            <div class="min-w-0"><b>${isAdminAcc(a) ? '🔑 ' : ''}${escapeHtml(a.name)}</b><div class="text-[11px] text-[#4d7185]">${escapeHtml(a.school)} · Lớp ${escapeHtml(a.grade)}${a.email ? ' · ' + escapeHtml(a.email) : ''}</div>
+            <div class="text-[11px] text-[#4d7185]">⭐ ${st.mastered} · 🎮 ${st.history.filter(e => e.type === 'game').length} · Vào gần nhất: ${escapeHtml(a.lastLoginAt ? fmtTime(a.lastLoginAt) : '—')}</div></div>
+            <div class="flex gap-1.5"><button type="button" onclick="openProfile('history','${escapeAttr(a.id)}')" class="btn-pill px-2.5 py-1 bg-[#e3f3fa] text-[#124e75] border border-[#9ccbe0] text-xs font-semibold">Xem lịch sử</button>
+            ${a.id !== me.id ? `<button type="button" onclick="deleteAccount('${escapeAttr(a.id)}')" class="${A_DEL}">Xóa</button>` : ''}</div></div>`;
+        }).join('');
+      } else if (tab === 'inbox' && admin) {
+        const fbs = lsGet(FEEDBACK_KEY, []).slice().reverse();
+        body = '<p class="text-[11px] text-[#4d7185]">Chỉ hiển thị phản hồi được gửi từ thiết bị này. Phản hồi từ thiết bị khác sẽ đến qua email của bạn.</p>' +
+          (fbs.length ? fbs.map(f => `<div class="p-3 rounded-xl bg-white border ${f.status === 'done' ? 'border-[#cde7f2] opacity-70' : 'border-[#f0c674]'}">
+            <div class="flex justify-between gap-2"><b>${escapeHtml(f.type)}</b><span class="text-[11px] text-[#6a8a9b]">${escapeHtml(fmtTime(f.createdAt))}</span></div>
+            <div class="text-[11px] text-[#4d7185]">${escapeHtml(f.name)} · ${escapeHtml(f.school)} · Lớp ${escapeHtml(f.grade)}${f.email ? ' · ' + escapeHtml(f.email) : ''}</div>
+            <p class="mt-1 whitespace-pre-line">${escapeHtml(f.message)}</p>
+            <div class="flex gap-1.5 mt-2"><button type="button" onclick="toggleFeedback('${escapeAttr(f.id)}')" class="btn-pill px-2.5 py-1 bg-[#e1f4e8] text-[#216648] border border-[#9fd4b3] text-xs font-semibold">${f.status === 'done' ? 'Mở lại' : 'Đã xử lý'}</button><button type="button" onclick="deleteFeedback('${escapeAttr(f.id)}')" class="${A_DEL}">Xóa</button></div></div>`).join('') : '<p class="text-[#4d7185]">Hộp thư trống.</p>');
+      }
+      openAppModal(tab === 'history' && viewId ? 'Lịch sử học' : 'Tài khoản', nav + body);
+    }
+
+    function deleteAccount(id) {
+      if (!requireAdmin() || id === appState.currentAccount.id) return;
+      if (!confirmTwice('delacc-' + id, 'Sắp xóa tài khoản và toàn bộ lịch sử học của tài khoản này.')) return;
+      appState.accounts = appState.accounts.filter(a => a.id !== id);
+      try { localStorage.removeItem(PROGRESS_PREFIX + id); } catch (_) {}
+      saveAccounts();
+      openProfile('admin');
+    }
+
+    function toggleFeedback(id) {
+      if (!requireAdmin()) return;
+      const l = lsGet(FEEDBACK_KEY, []).map(f => f.id === id ? Object.assign(f, { status: f.status === 'done' ? 'new' : 'done' }) : f);
+      localStorage.setItem(FEEDBACK_KEY, JSON.stringify(l));
+      openProfile('inbox');
+    }
+    function deleteFeedback(id) {
+      if (!requireAdmin() || !confirmTwice('delfb-' + id, 'Sắp xóa phản hồi này.')) return;
+      localStorage.setItem(FEEDBACK_KEY, JSON.stringify(lsGet(FEEDBACK_KEY, []).filter(f => f.id !== id)));
+      openProfile('inbox');
+    }
+
+    /* ---------- Phản hồi: lưu trên máy + mở ứng dụng thư gửi tới admin ---------- */
+    function openFeedback() {
+      const me = appState.currentAccount;
+      if (!me) return;
+      const mine = lsGet(FEEDBACK_KEY, []).filter(f => f.accountId === me.id).slice(-5).reverse();
+      openAppModal('Gửi phản hồi', `<p class="text-[#4d7185]">Báo lỗi, đặt câu hỏi hoặc đề xuất. Phản hồi được gửi tới <b>Admin</b>.</p>
+        <select id="fbType" class="${A_IN}"><option>Báo lỗi</option><option>Thắc mắc</option><option>Yêu cầu / Đề xuất</option><option>Khác</option></select>
+        <textarea id="fbMsg" rows="5" maxlength="1500" placeholder="Mô tả chi tiết (ít nhất 5 ký tự)..." class="${A_IN}"></textarea>
+        <label class="flex items-center gap-2 text-xs"><input id="fbInfo" type="checkbox" checked /> Kèm tên, trường, lớp và thông tin thiết bị để admin dễ hỗ trợ</label>
+        <div class="flex flex-wrap gap-2"><button type="button" onclick="sendFeedback()" class="${A_BTN}">Gửi tới admin</button><button type="button" onclick="copyFeedback()" class="${A_BTN2}">Sao chép nội dung</button></div>
+        ${mine.length ? `<div class="pt-2 border-t border-[#cce6f1]"><p class="font-semibold text-[#124e75] mb-1">Phản hồi bạn đã gửi gần đây</p>${mine.map(f => `<p class="text-[11px] text-[#4d7185]">• ${escapeHtml(fmtTime(f.createdAt))} — ${escapeHtml(f.type)}: ${escapeHtml(f.message.slice(0, 60))}${f.message.length > 60 ? '…' : ''}</p>`).join('')}</div>` : ''}`);
+    }
+
+    function feedbackMail() {
+      const me = appState.currentAccount;
+      const type = document.getElementById('fbType').value;
+      const msg = (document.getElementById('fbMsg').value || '').trim();
+      const info = document.getElementById('fbInfo').checked;
+      const body = msg + (info ? `\n\n---\nNgười gửi: ${me.name} - ${me.school} - Lớp ${me.grade}${me.email ? ' - ' + me.email : ''}\nThiết bị: ${navigator.userAgent}` : '');
+      return { type, msg, body, subject: `[Nét Đẹp Tiếng Việt] ${type}` };
+    }
+
+    function sendFeedback() {
+      const me = appState.currentAccount;
+      const f = feedbackMail();
+      if (f.msg.length < 5) { showToast('Vui lòng nhập nội dung phản hồi (ít nhất 5 ký tự).', 'warn'); return; }
+      try {
+        const list = lsGet(FEEDBACK_KEY, []);
+        list.push({ id: genId('fb'), accountId: me.id, name: me.name, school: me.school, grade: me.grade, email: me.email || '', type: f.type, message: f.msg, createdAt: new Date().toISOString(), status: 'new' });
+        localStorage.setItem(FEEDBACK_KEY, JSON.stringify(list.slice(-200)));
+      } catch (_) {}
+      window.location.href = `mailto:${ADMIN_EMAIL}?subject=${encodeURIComponent(f.subject)}&body=${encodeURIComponent(f.body)}`;
+      showToast(`Đã lưu phản hồi. Nếu ứng dụng email không tự mở, hãy bấm “Sao chép nội dung” rồi gửi tới ${ADMIN_EMAIL}.`, 'success');
+    }
+
+    function copyFeedback() {
+      const f = feedbackMail();
+      const done = () => showToast('Đã sao chép nội dung phản hồi.', 'success');
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(`${f.subject}\n\n${f.body}`).then(done, () => showToast('Không sao chép được, hãy chọn và sao chép thủ công.', 'warn'));
+      else showToast('Trình duyệt không hỗ trợ sao chép tự động.', 'warn');
+    }
+
+    /* ---------- Nhập tài khoản từ tệp sao lưu (chỉ admin) ---------- */
+    function importAccountsFrom(parsed) {
+      if (!parsed || !Array.isArray(parsed.accounts)) return;
+      let added = 0;
+      parsed.accounts.forEach(a => {
+        if (!a || !a.id || !a.name) return;
+        const id = String(a.id).replace(/[^\w-]/g, '');
+        if (!id || appState.accounts.some(x => x.id === id || (a.email && normEmail(x.email) === normEmail(a.email)))) return;
+        appState.accounts.push({ id, name: String(a.name).slice(0, 40), school: String(a.school || '').slice(0, 60), grade: String(a.grade || '').slice(0, 10), email: String(a.email || '').slice(0, 80), createdAt: a.createdAt || new Date().toISOString(), lastLoginAt: a.lastLoginAt || null, pinHash: a.pinHash || undefined });
+        const pr = parsed.progress && parsed.progress[a.id];
+        if (pr && typeof pr === 'object') { try { localStorage.setItem(PROGRESS_PREFIX + id, JSON.stringify(pr)); } catch (_) {} }
+        added++;
+      });
+      if (Array.isArray(parsed.feedbacks)) {
+        const cur = lsGet(FEEDBACK_KEY, []);
+        const have = new Set(cur.map(f => f.id));
+        parsed.feedbacks.forEach(f => { if (f && f.id && f.message && !have.has(f.id)) cur.push(f); });
+        try { localStorage.setItem(FEEDBACK_KEY, JSON.stringify(cur.slice(-200))); } catch (_) {}
+      }
+      if (added) { saveAccounts(); showToast(`Đã nhập thêm ${added} tài khoản.`, 'success'); }
+    }
+
+    /* =========================================================================
+       HÀM HỖ TRỢ: id duy nhất, bỏ dấu tiếng Việt, xác nhận 2 lần, tìm kiếm
+    ========================================================================= */
+    function genId(prefix) {
+      idCounter += 1;
+      return `${prefix}-${Date.now().toString(36)}-${idCounter}-${Math.floor(Math.random() * 1e6).toString(36)}`;
+    }
+
+    // "Công cha" -> "cong cha" (để gõ không dấu vẫn tìm được)
+    function foldVi(str) {
+      return String(str || '')
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/đ/g, 'd');
+    }
+
+    // Lần bấm 1: nhắc; lần bấm 2 trong 5 giây: xác nhận (không dùng confirm() vì có thể bị chặn trong khung nhúng)
+    function confirmTwice(key, message) {
+      const now = Date.now();
+      if (pendingConfirms[key] && now - pendingConfirms[key] < 5000) {
+        delete pendingConfirms[key];
+        return true;
+      }
+      pendingConfirms[key] = now;
+      showToast(`${message} Bấm lại lần nữa trong 5 giây để xác nhận.`, 'warn');
+      return false;
+    }
+
+    // Bài mặc định bị xóa/sửa: ghi nhớ để lần mở sau không tự thêm lại bản gốc
+    function retireDefaultText(item) {
+      if (!item || (item.source !== 'base-376' && item.source !== 'page-31-40')) return;
+      const norm = normalizeText(item.text);
+      if (norm && !appState.retiredNorms.includes(norm)) appState.retiredNorms.push(norm);
+    }
+
+    function onSearchInput(inputEl, ev) {
+      appState.searchQuery = inputEl.value;
+      appState.pages.all = 1;
+      clearTimeout(searchDebounceTimer);
+      if (ev && ev.isComposing) return; // đang gõ dấu (Telex/VNI): đợi gõ xong mới lọc
+      searchDebounceTimer = setTimeout(renderCurrentView, 200);
+    }
+
     function escapeHtml(str) {
       return String(str || '')
         .replace(/&/g, '&amp;')
@@ -3424,12 +3966,16 @@
         .replace(/'/g, '&#39;');
     }
 
+    // Dùng cho chuỗi nằm trong onclick="...('...')": thoát JS trước, rồi thoát HTML
     function escapeAttr(str) {
-      return String(str || '')
+      const js = String(str ?? '')
         .replace(/\\/g, '\\\\')
         .replace(/'/g, "\\'")
-        .replace(/"/g, '&quot;')
-        .replace(/\n/g, '\\n');
+        .replace(/\n/g, '\\n')
+        .replace(/\r/g, '\\r')
+        .replace(/\u2028/g, '\\u2028')
+        .replace(/\u2029/g, '\\u2029');
+      return escapeHtml(js);
     }
 
     /* =========================================================================
@@ -3437,7 +3983,15 @@
     ========================================================================= */
     window.addEventListener('DOMContentLoaded', () => {
       loadStateWithRecovery();
+      renderAuth();
       renderCurrentView();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape') return;
+      const modal = document.getElementById('settingsModal');
+      if (modal && !modal.hidden) closeSettingsModal();
+      closeAppModal();
     });
   </script>
 </body>
