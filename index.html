@@ -6,6 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="referrer" content="no-referrer" />
   <title>Nét Đẹp Tiếng Việt</title>
+  <meta name="description" content="Ứng dụng học ca dao, tục ngữ, thành ngữ tiếng Việt kèm trò chơi luyện nhớ và đọc to ngắt nhịp chuẩn." />
+  <meta property="og:title" content="Nét Đẹp Tiếng Việt" />
+  <meta property="og:description" content="Ứng dụng học ca dao, tục ngữ, thành ngữ tiếng Việt kèm trò chơi luyện nhớ và đọc to ngắt nhịp chuẩn." />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -199,6 +204,47 @@
         </button>
       </div>
 
+      <!-- Chọn giọng đọc & tốc độ đọc (luôn hiển thị ngay đầu Cài đặt) -->
+      <div class="mb-3 p-3 rounded-xl bg-white border border-[#cde7f2] space-y-2.5 text-xs sm:text-sm">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <label class="text-xs font-bold text-[#124e75]" for="ttsModeSelect">🔊 Giọng đọc to:</label>
+          <div class="flex flex-wrap items-center gap-1.5">
+            <select id="ttsModeSelect" onchange="setTtsMode(this.value)" class="px-2.5 py-1 rounded-lg border border-[#b6d9e9] bg-[#f8fcfe] text-xs font-semibold text-[#124e75]">
+              <option value="auto">Tự động (Ưu tiên Google Tiếng Việt)</option>
+              <option value="device">Giọng thiết bị (nếu máy có Tiếng Việt)</option>
+              <option value="google">Chỉ dùng giọng Google (cần mạng)</option>
+            </select>
+            <button type="button" onclick="testSpeechNow()" class="btn-pill px-2.5 py-1 bg-[#e8f4ff] hover:bg-[#d6ecff] text-[#1b6ca1] border border-[#b6d8f0] text-xs font-semibold">
+              🔊 Thử âm thanh
+            </button>
+            <button type="button" onclick="downloadStandaloneHtml()" class="btn-pill px-2.5 py-1 bg-[#e1f4e8] hover:bg-[#ccebd7] text-[#216648] border border-[#9fd4b3] text-xs font-semibold" title="Tải file index.html đầy đủ để đưa lên GitHub">
+              📥 Tải index.html
+            </button>
+          </div>
+        </div>
+
+        <div class="p-2.5 rounded-xl bg-[#f4fafe] border border-[#cde5f0] space-y-2">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <label class="text-xs font-semibold text-[#155780]" for="ttsRateRange">
+              Tốc độ đọc: <span id="ttsRateValueBadge" class="inline-block px-2 py-0.5 rounded-md bg-[#e1f4e8] text-[#216648] font-bold">0.9x</span>
+            </label>
+            <div class="flex flex-wrap items-center gap-1">
+              <button type="button" data-tts-preset="0.75" onclick="setTtsRate(0.75, true)" class="px-2 py-0.5 rounded-lg border text-[11px] font-semibold bg-white hover:bg-[#e5f3f9] text-[#124e75] border-[#b6d9e9]">0.75x Chậm</button>
+              <button type="button" data-tts-preset="0.9" onclick="setTtsRate(0.9, true)" class="px-2 py-0.5 rounded-lg border text-[11px] font-semibold bg-white hover:bg-[#e5f3f9] text-[#124e75] border-[#b6d9e9]">0.9x Vừa</button>
+              <button type="button" data-tts-preset="1.0" onclick="setTtsRate(1.0, true)" class="px-2 py-0.5 rounded-lg border text-[11px] font-semibold bg-white hover:bg-[#e5f3f9] text-[#124e75] border-[#b6d9e9]">1.0x Chuẩn</button>
+              <button type="button" data-tts-preset="1.2" onclick="setTtsRate(1.2, true)" class="px-2 py-0.5 rounded-lg border text-[11px] font-semibold bg-white hover:bg-[#e5f3f9] text-[#124e75] border-[#b6d9e9]">1.2x Nhanh</button>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-[11px] text-[#4d7185] shrink-0">0.6x</span>
+            <input id="ttsRateRange" type="range" min="0.6" max="1.4" step="0.05" value="0.9" oninput="setTtsRate(this.value, false)" onchange="setTtsRate(this.value, true)" class="w-full accent-[#1b6ca1] cursor-pointer" />
+            <span class="text-[11px] text-[#4d7185] shrink-0">1.4x</span>
+          </div>
+        </div>
+
+        <p id="ttsVoiceHint" class="text-[11px] text-[#4d7185]"></p>
+      </div>
+
       <!-- Danh sách mục cài đặt: chạm chọn mục nào mới mở chi tiết mục đó -->
       <div class="space-y-2 mb-3 text-xs sm:text-sm">
         <button type="button" onclick="selectSettingsSection('study20')" id="settings-nav-study20" class="w-full p-3 rounded-xl border text-left flex items-center justify-between transition bg-white hover:bg-[#eaf5fa] border-[#c5e0ec] text-[#124e75] font-bold">
@@ -217,7 +263,7 @@
         </button>
 
         <button type="button" onclick="selectSettingsSection('topics')" id="settings-nav-topics" class="w-full p-3 rounded-xl border text-left flex items-center justify-between transition bg-white hover:bg-[#eaf5fa] border-[#c5e0ec] text-[#124e75] font-bold">
-          <span id="settingsNavTopicsLabel">4. Âm thanh, Chủ đề, Ôn 10 ngày & Khôi phục dữ liệu</span>
+          <span id="settingsNavTopicsLabel">4. Chủ đề, Ôn 10 ngày & Khôi phục dữ liệu</span>
           <span class="text-xs text-[#4d7185]">Mở ▾</span>
         </button>
       </div>
@@ -335,43 +381,6 @@
             <button type="button" onclick="resetToDefaultCatalog()" class="btn-pill px-3.5 py-2 bg-[#fdeaea] hover:bg-[#fad6d6] text-[#a62626] border border-[#ebb3b3] text-xs font-semibold">
               Khôi phục mặc định
             </button>
-          </div>
-
-          <div class="mt-3 pt-3 border-t border-[#e5f1f7] space-y-2.5">
-            <div class="flex flex-wrap items-center justify-between gap-2">
-              <label class="text-xs font-semibold text-[#155780]" for="ttsModeSelect">Giọng đọc to (🔊):</label>
-              <div class="flex flex-wrap items-center gap-1.5">
-                <select id="ttsModeSelect" onchange="setTtsMode(this.value)" class="px-2.5 py-1 rounded-lg border border-[#b6d9e9] bg-white text-xs">
-                  <option value="auto">Tự động (Ưu tiên Google Tiếng Việt)</option>
-                  <option value="device">Giọng thiết bị (nếu máy có Tiếng Việt)</option>
-                  <option value="google">Chỉ dùng giọng Google (cần mạng)</option>
-                </select>
-                <button type="button" onclick="testSpeechNow()" class="btn-pill px-2.5 py-1 bg-[#e8f4ff] hover:bg-[#d6ecff] text-[#1b6ca1] border border-[#b6d8f0] text-xs font-semibold">
-                  🔊 Thử âm thanh
-                </button>
-              </div>
-            </div>
-
-            <div class="p-2.5 rounded-xl bg-[#f4fafe] border border-[#cde5f0] space-y-2">
-              <div class="flex flex-wrap items-center justify-between gap-2">
-                <label class="text-xs font-semibold text-[#155780]" for="ttsRateRange">
-                  Tốc độ đọc: <span id="ttsRateValueBadge" class="inline-block px-2 py-0.5 rounded-md bg-[#e1f4e8] text-[#216648] font-bold">0.9x</span>
-                </label>
-                <div class="flex flex-wrap items-center gap-1">
-                  <button type="button" data-tts-preset="0.75" onclick="setTtsRate(0.75, true)" class="px-2 py-0.5 rounded-lg border text-[11px] font-semibold bg-white hover:bg-[#e5f3f9] text-[#124e75] border-[#b6d9e9]">0.75x Chậm</button>
-                  <button type="button" data-tts-preset="0.9" onclick="setTtsRate(0.9, true)" class="px-2 py-0.5 rounded-lg border text-[11px] font-semibold bg-white hover:bg-[#e5f3f9] text-[#124e75] border-[#b6d9e9]">0.9x Vừa</button>
-                  <button type="button" data-tts-preset="1.0" onclick="setTtsRate(1.0, true)" class="px-2 py-0.5 rounded-lg border text-[11px] font-semibold bg-white hover:bg-[#e5f3f9] text-[#124e75] border-[#b6d9e9]">1.0x Chuẩn</button>
-                  <button type="button" data-tts-preset="1.2" onclick="setTtsRate(1.2, true)" class="px-2 py-0.5 rounded-lg border text-[11px] font-semibold bg-white hover:bg-[#e5f3f9] text-[#124e75] border-[#b6d9e9]">1.2x Nhanh</button>
-                </div>
-              </div>
-              <div class="flex items-center gap-2">
-                <span class="text-[11px] text-[#4d7185] shrink-0">0.6x</span>
-                <input id="ttsRateRange" type="range" min="0.6" max="1.4" step="0.05" value="0.9" oninput="setTtsRate(this.value, false)" onchange="setTtsRate(this.value, true)" class="w-full accent-[#1b6ca1] cursor-pointer" />
-                <span class="text-[11px] text-[#4d7185] shrink-0">1.4x</span>
-              </div>
-            </div>
-
-            <p id="ttsVoiceHint" class="text-[11px] text-[#4d7185]"></p>
           </div>
         </section>
       </div>
@@ -3228,9 +3237,9 @@
       const tools = document.getElementById('adminTopicTools');
       if (tools) tools.style.display = isAdmin() ? '' : 'none';
       const navLabel = document.getElementById('settingsNavTopicsLabel');
-      if (navLabel) navLabel.textContent = isAdmin() ? '4. Âm thanh, Chủ đề, Ôn 10 ngày & Khôi phục' : '4. Âm thanh & Chu kỳ ôn 10 ngày';
+      if (navLabel) navLabel.textContent = isAdmin() ? '4. Chủ đề, Ôn 10 ngày & Khôi phục dữ liệu' : '4. Chu kỳ ôn 10 ngày';
       const topicsTitle = document.getElementById('settingsTopicsTitle');
-      if (topicsTitle) topicsTitle.textContent = isAdmin() ? '4. Âm thanh, Chủ đề, Chu kỳ 10 ngày & Khôi phục' : '4. Âm thanh & Chu kỳ ôn 10 ngày';
+      if (topicsTitle) topicsTitle.textContent = isAdmin() ? '4. Đặt lại chủ đề, Chu kỳ 10 ngày & Khôi phục dữ liệu' : '4. Chu kỳ ôn 10 ngày';
       const simInput = document.getElementById('simDateInput');
       if (simInput) simInput.value = appState.simulatedToday || '';
       const badge = document.getElementById('settingsNavStudyBadge');
@@ -4015,8 +4024,23 @@
               const lastSeg = si === segs.length - 1;
               pause = lastSeg ? (li === lines.length - 1 ? 0 : 800) : (/[.!?…]$/.test(seg) ? 700 : 450);
             }
-            out.push({ t: words.slice(start, start + sz).join(' '), pause });
+            const chunkWords = words.slice(start, start + sz);
             start += sz;
+            let buf = '';
+            const subChunks = [];
+            chunkWords.forEach(w => {
+              const cand = buf ? `${buf} ${w}` : w;
+              if (cand.length > 150 && buf) {
+                subChunks.push(buf);
+                buf = w;
+              } else {
+                buf = cand;
+              }
+            });
+            if (buf) subChunks.push(buf);
+            subChunks.forEach((txt, idx) => {
+              out.push({ t: txt, pause: idx === subChunks.length - 1 ? pause : 120 });
+            });
           });
         });
       });
@@ -4035,8 +4059,17 @@
     let speechTimers = [];
     let speechResumeInterval = null;
     let googleTtsBlocked = false;
+    let googleTtsBlockedAt = 0;
+    let workingGoogleVariant = 0;
     let cachedViVoice = null;
     let speechPrimed = false;
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('online', () => {
+        googleTtsBlocked = false;
+        googleTtsBlockedAt = 0;
+      });
+    }
 
     function getTtsMode() {
       try {
@@ -4173,10 +4206,13 @@
       return sharedAudio;
     }
 
-    // Mở khóa Web Speech API ngay trong sự kiện chạm/bấm để iOS/Safari/Chrome không chặn khi fallback
+    // Mở khóa Web Speech API ngay trong sự kiện chạm/bấm trên iOS/Safari để không bị chặn khi fallback
     function primeSpeechSynthesis() {
       if (speechPrimed) return;
       try {
+        const ua = navigator.userAgent || '';
+        const isAppleWebKit = /iPad|iPhone|iPod/.test(ua) || (/Safari/.test(ua) && !/Chrome|Chromium|Edg|OPR/.test(ua));
+        if (!isAppleWebKit) return;
         const synth = window.speechSynthesis;
         if (!synth || typeof SpeechSynthesisUtterance === 'undefined') return;
         const u = new SpeechSynthesisUtterance(' ');
@@ -4196,7 +4232,6 @@
         try {
           sharedAudio.onended = sharedAudio.onerror = sharedAudio.onplaying = sharedAudio.oncanplay = null;
           sharedAudio.pause();
-          sharedAudio.removeAttribute('src');
         } catch (_) {}
       }
       if (activeUtterance) {
@@ -4217,9 +4252,10 @@
     function buildGoogleTtsUrls(phrase) {
       const q = encodeURIComponent(phrase);
       return [
+        `https://translate.googleapis.com/translate_tts?ie=UTF-8&client=gtx&tl=vi&q=${q}`,
+        `https://clients5.google.com/translate_tts?ie=UTF-8&client=dict-chrome-ex&tl=vi&q=${q}`,
         `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=vi&q=${q}`,
-        `https://translate.google.com/translate_tts?ie=UTF-8&client=gtx&tl=vi&q=${q}`,
-        `https://translate.googleapis.com/translate_tts?ie=UTF-8&client=gtx&tl=vi&q=${q}`
+        `https://translate.google.com/translate_tts?ie=UTF-8&client=gtx&tl=vi&q=${q}`
       ];
     }
 
@@ -4238,9 +4274,13 @@
       updateSpeakButtons();
 
       const mode = getTtsMode();
+      if (googleTtsBlocked && (mode === 'google' || (navigator.onLine !== false && Date.now() - googleTtsBlockedAt > 20000))) {
+        googleTtsBlocked = false;
+        googleTtsBlockedAt = 0;
+      }
       const viVoice = cachedViVoice || refreshViVoice();
 
-      if (mode !== 'device') primeSpeechSynthesis();
+      if (mode === 'auto') primeSpeechSynthesis();
 
       const finish = () => {
         if (token !== speakToken) return;
@@ -4251,12 +4291,17 @@
       };
 
       const failAudioNotice = () => {
-        showToast('Không phát được âm thanh. Hãy kiểm tra mạng hoặc thử đổi sang Giọng thiết bị trong Cài đặt ⚙️.', 'warn');
+        showToast('Không phát được âm thanh Google. Hãy kiểm tra mạng/trình chặn quảng cáo hoặc thử chọn "Giọng thiết bị" trong Cài đặt ⚙️.', 'warn');
         finish();
       };
 
-      const noViVoiceNotice = () => {
-        showToast('Thiết bị chưa có giọng Tiếng Việt nên không thể đọc bằng giọng thiết bị. Hãy chọn "Tự động" hoặc "Ưu tiên giọng Google" trong Cài đặt ⚙️.', 'warn');
+      const noViVoiceNotice = (googleFailedFirst = false) => {
+        showToast(
+          googleFailedFirst
+            ? 'Không kết nối được giọng Google (do mạng hoặc trình chặn) và máy chưa có giọng Tiếng Việt offline. Hãy tắt trình chặn quảng cáo/kiểm tra mạng rồi bấm Thử âm thanh.'
+            : 'Thiết bị chưa có giọng Tiếng Việt offline. Hãy chọn "Tự động" trong Cài đặt ⚙️ để dùng giọng Google khi có mạng.',
+          'warn'
+        );
         finish();
       };
 
@@ -4280,10 +4325,10 @@
           if (allVoices.length > 0) {
             if (!googleTtsBlocked && navigator.onLine !== false) {
               showToast('Máy chưa cài giọng Tiếng Việt offline — đang đọc bằng giọng Google Tiếng Việt.', 'info');
-              playGoogleChunk(chunkIdx, 0);
+              playGoogleChunk(chunkIdx, workingGoogleVariant, 0);
               return;
             }
-            noViVoiceNotice();
+            noViVoiceNotice(googleTtsBlocked);
             return;
           }
           // Nếu trình duyệt ẩn danh sách giọng (allVoices.length === 0, như iOS WebView/Firefox): vẫn thử lang vi-VN
@@ -4357,13 +4402,15 @@
         }
       };
 
-      const playGoogleChunk = (i, urlVariant = 0) => {
+      const playGoogleChunk = (i, urlVariant = workingGoogleVariant, triedCount = 0) => {
         if (token !== speakToken) return;
         if (i >= chunks.length) { finish(); return; }
 
         const urls = buildGoogleTtsUrls(chunks[i].t);
-        if (urlVariant >= urls.length) {
+        const safeVariant = ((urlVariant % urls.length) + urls.length) % urls.length;
+        if (triedCount >= urls.length) {
           googleTtsBlocked = true;
+          googleTtsBlockedAt = Date.now();
           if (mode === 'google') {
             failAudioNotice();
           } else {
@@ -4379,10 +4426,11 @@
           handled = true;
           clearSpeechTimers();
           audio.onended = audio.onerror = audio.onplaying = audio.oncanplay = null;
-          if (i === 0 && urlVariant + 1 < urls.length) {
-            playGoogleChunk(i, urlVariant + 1);
+          if (triedCount + 1 < urls.length) {
+            playGoogleChunk(i, (safeVariant + 1) % urls.length, triedCount + 1);
           } else {
             googleTtsBlocked = true;
+            googleTtsBlockedAt = Date.now();
             if (mode === 'google') {
               failAudioNotice();
             } else {
@@ -4391,9 +4439,11 @@
           }
         };
 
-        const timeoutTimer = addSpeechTimer(onFail, 2500);
+        const timeoutTimer = addSpeechTimer(onFail, 4500);
         audio.onplaying = () => {
           clearTimeout(timeoutTimer);
+          workingGoogleVariant = safeVariant;
+          googleTtsBlocked = false;
           try { audio.playbackRate = getTtsRate(); } catch (_) {}
         };
         audio.onerror = onFail;
@@ -4403,13 +4453,14 @@
           clearTimeout(timeoutTimer);
           const rateNow = getTtsRate();
           const scaledPause = Math.round(chunks[i].pause / Math.max(0.65, rateNow));
-          addSpeechTimer(() => playGoogleChunk(i + 1, 0), scaledPause);
+          addSpeechTimer(() => playGoogleChunk(i + 1, workingGoogleVariant, 0), scaledPause);
         };
 
         const targetRate = getTtsRate();
         audio.defaultPlaybackRate = targetRate;
-        audio.src = urls[urlVariant];
+        audio.src = urls[safeVariant];
         audio.playbackRate = targetRate;
+        try { audio.load(); } catch (_) {}
         try {
           const pr = audio.play();
           if (pr && typeof pr.catch === 'function') {
@@ -4432,7 +4483,7 @@
         if (mode === 'device' && deviceHasNoViVoice) {
           showToast('Máy chưa cài giọng Tiếng Việt offline — đang đọc bằng giọng Google Tiếng Việt.', 'info');
         }
-        playGoogleChunk(0, 0);
+        playGoogleChunk(0, workingGoogleVariant, 0);
       } else if (viVoice || mode === 'device' || (synth && typeof SpeechSynthesisUtterance !== 'undefined')) {
         startBrowserSpeech();
       } else {
@@ -4441,7 +4492,54 @@
     }
 
     function testSpeechNow() {
+      googleTtsBlocked = false;
+      googleTtsBlockedAt = 0;
       playSpeech('Công cha như núi Thái Sơn\nNghĩa mẹ như nước trong nguồn chảy ra', null);
+    }
+
+    async function downloadStandaloneHtml() {
+      try {
+        let html = '';
+        if (window.location && /^https?:$/i.test(window.location.protocol)) {
+          try {
+            const res = await fetch(window.location.href, { cache: 'no-store' });
+            if (res.ok) {
+              const raw = await res.text();
+              if (raw.includes('ttsModeSelect') && raw.includes('BASE_DATA')) {
+                html = raw.replace(/<script[^>]*\/@vite\/client[^>]*><\/script>\s*/gi, '');
+              }
+            }
+          } catch (_) {}
+        }
+        if (!html) {
+          const clone = document.documentElement.cloneNode(true);
+          clone.querySelectorAll('head style').forEach(st => {
+            if (/tailwindcss|--tw-/i.test(st.textContent || '')) st.remove();
+          });
+          clone.querySelectorAll('script[src*="/@vite/"]').forEach(sc => sc.remove());
+          const modal = clone.querySelector('#settingsModal');
+          if (modal) modal.setAttribute('hidden', '');
+          const appModal = clone.querySelector('#appModal');
+          if (appModal) appModal.setAttribute('hidden', '');
+          const toast = clone.querySelector('#toastBanner');
+          if (toast) toast.classList.add('hidden');
+          const main = clone.querySelector('#mainContainer');
+          if (main) main.innerHTML = '';
+          html = '<!DOCTYPE html>\n' + clone.outerHTML;
+        }
+        const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'index.html';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        showToast('Đã tải xuống file index.html sạch, đầy đủ (có sẵn chọn giọng & tốc độ đọc).', 'ok');
+      } catch (_) {
+        showToast('Không thể tự tải file trong trình duyệt này.', 'warn');
+      }
     }
 
     window.addEventListener('message', (ev) => {
