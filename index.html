@@ -121,7 +121,52 @@
 
     /* Ô nhập 16px trên điện thoại: tránh iOS tự phóng to khi chạm vào ô */
     @media (max-width: 639px) {
-      input[type="text"], input[type="date"], select { font-size: 16px !important; }
+      input[type="text"], input[type="number"], input[type="url"], input[type="date"], select { font-size: 16px !important; }
+    }
+
+    @keyframes giftBoxShake {
+      0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); }
+      15% { transform: translate3d(-6px, -3px, 0) rotate(-5deg) scale(1.04); }
+      30% { transform: translate3d(6px, -5px, 0) rotate(5deg) scale(1.06); }
+      45% { transform: translate3d(-7px, -2px, 0) rotate(-6deg) scale(1.08); }
+      60% { transform: translate3d(7px, -6px, 0) rotate(6deg) scale(1.1); }
+      75% { transform: translate3d(-4px, -3px, 0) rotate(-3deg) scale(1.06); }
+      90% { transform: translate3d(4px, -1px, 0) rotate(3deg) scale(1.03); }
+    }
+
+    @keyframes giftCardReveal {
+      0% { opacity: 0; transform: scale(0.55) translateY(18px); }
+      65% { opacity: 1; transform: scale(1.04) translateY(-4px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    @keyframes confettiBurst {
+      0% { opacity: 0; transform: translate3d(0, 0, 0) scale(0.4) rotate(0deg); }
+      25% { opacity: 1; }
+      100% { opacity: 0; transform: translate3d(var(--tx, 0px), var(--ty, -90px), 0) scale(1) rotate(var(--rot, 180deg)); }
+    }
+
+    .animate-gift-shake {
+      animation: giftBoxShake 0.85s ease-in-out infinite;
+    }
+
+    .animate-gift-reveal {
+      animation: giftCardReveal 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .confetti-piece {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+      animation: confettiBurst 1.1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .animate-gift-shake, .animate-gift-reveal, .confetti-piece {
+        animation: none !important;
+      }
     }
   </style>
 <script src="/_aistudio-iframe.js?v=29045eb3"></script></head>
@@ -245,6 +290,15 @@
         <p id="ttsVoiceHint" class="text-[11px] text-[#4d7185]"></p>
       </div>
 
+      <!-- Trạng thái đồng bộ đám mây Firebase -->
+      <div id="cloudSyncSettingsCard" class="mb-3 p-3 rounded-xl bg-white border border-[#cde7f2] flex flex-wrap items-center justify-between gap-2 text-xs">
+        <div class="min-w-0">
+          <div id="cloudSyncSettingsTitle" class="font-bold text-[#124e75]">☁️ Đồng bộ dữ liệu qua tài khoản Google</div>
+          <div id="cloudSyncSettingsSub" class="text-[11px] text-[#4d7185] truncate">Đang kiểm tra kết nối đám mây...</div>
+        </div>
+        <div id="cloudSyncSettingsActions" class="flex flex-wrap items-center gap-1.5 shrink-0"></div>
+      </div>
+
       <!-- Danh sách mục cài đặt: chạm chọn mục nào mới mở chi tiết mục đó -->
       <div class="space-y-2 mb-3 text-xs sm:text-sm">
         <button type="button" onclick="selectSettingsSection('study20')" id="settings-nav-study20" class="w-full p-3 rounded-xl border text-left flex items-center justify-between transition bg-white hover:bg-[#eaf5fa] border-[#c5e0ec] text-[#124e75] font-bold">
@@ -265,6 +319,11 @@
         <button type="button" onclick="selectSettingsSection('topics')" id="settings-nav-topics" class="w-full p-3 rounded-xl border text-left flex items-center justify-between transition bg-white hover:bg-[#eaf5fa] border-[#c5e0ec] text-[#124e75] font-bold">
           <span id="settingsNavTopicsLabel">4. Chủ đề, Ôn 10 ngày & Khôi phục dữ liệu</span>
           <span class="text-xs text-[#4d7185]">Mở ▾</span>
+        </button>
+
+        <button type="button" onclick="selectSettingsSection('gifts')" id="settings-nav-gifts" class="w-full p-3 rounded-xl border text-left flex items-center justify-between transition bg-white hover:bg-[#eaf5fa] border-[#c5e0ec] text-[#124e75] font-bold">
+          <span>5. Cài đặt 4 phần quà đổi Kim Cương (URL / Ảnh)</span>
+          <span class="text-xs px-2 py-0.5 rounded-lg bg-[#fff3d6] text-[#8a5900]">4 quà ▾</span>
         </button>
       </div>
 
@@ -383,6 +442,20 @@
             </button>
           </div>
         </section>
+
+        <!-- 5. Cài đặt 4 phần quà đổi Kim Cương -->
+        <section id="settings-panel-gifts" hidden class="bg-white rounded-xl border border-[#cde7f2] p-3.5 space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <h3 class="font-bold text-[#124e75]">5. Cài đặt 4 phần quà đổi Kim Cương</h3>
+              <p class="text-xs text-[#4d7185]">Phụ huynh tự đặt tên quà, số kim cương quy đổi và dán link URL ảnh hoặc đính kèm ảnh từ máy. Dữ liệu quà tự động đồng bộ theo tài khoản.</p>
+            </div>
+            <button type="button" onclick="saveGiftSettingsFromUI()" class="btn-pill px-3.5 py-1.5 bg-[#2a7a58] hover:bg-[#205f44] text-white text-xs font-semibold">
+              💾 Lưu 4 phần quà
+            </button>
+          </div>
+          <div id="giftSettingsEditorList" class="space-y-3"></div>
+        </section>
       </div>
     </div>
   </div>
@@ -396,6 +469,37 @@
       <div id="appModalBody" class="text-xs sm:text-sm space-y-3"></div>
     </div>
   </div>
+
+  <!-- Hộp thoại mở hộp quà Blind Box -->
+  <div id="giftRevealModal" hidden role="dialog" aria-modal="true" aria-labelledby="giftRevealTitle" class="fixed inset-0 z-[65] bg-[#0d2738]/65 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="relative bg-[#f4fbfe] border-2 border-[#f2c675] rounded-3xl max-w-md w-full p-5 sm:p-6 text-center shadow-2xl overflow-hidden">
+      <div id="giftConfettiLayer" class="absolute inset-0 pointer-events-none overflow-hidden"></div>
+      <div id="giftRevealCharging" class="relative z-10 py-4 space-y-3">
+        <div class="w-40 h-40 mx-auto rounded-2xl overflow-hidden border-2 border-[#f0cf8a] bg-white shadow-lg animate-gift-shake flex items-center justify-center">
+          <img src="src/assets/images/gift_blind_box_1795568346363.jpg" alt="Hộp quà bí mật" referrerPolicy="no-referrer" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" class="w-full h-full object-cover" />
+          <div style="display:none" class="w-full h-full items-center justify-center text-6xl bg-[#fff7e2]">🎁</div>
+        </div>
+        <h3 class="text-lg font-extrabold text-[#124e75]">Đang bung hộp quà bí mật...</h3>
+        <p class="text-xs text-[#4d7185]">Bé chờ một chút nhé, phần thưởng sắp xuất hiện rồi!</p>
+      </div>
+
+      <div id="giftRevealOpened" hidden class="relative z-10 space-y-3 animate-gift-reveal">
+        <p class="text-xs font-bold text-[#2a7a58]">🎉 Chúc mừng bé đã đổi quà thành công!</p>
+        <div class="w-48 h-48 mx-auto rounded-2xl overflow-hidden border-2 border-[#9fd4b3] bg-white shadow-xl flex items-center justify-center">
+          <img id="giftRevealImage" src="" alt="Phần quà của bé" referrerPolicy="no-referrer" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" class="w-full h-full object-cover" />
+          <div style="display:none" class="w-full h-full items-center justify-center text-6xl bg-gradient-to-br from-[#e4f3fa] to-[#e7f6ec]">🎁</div>
+        </div>
+        <h3 id="giftRevealTitle" class="text-xl font-extrabold text-[#124e75]"></h3>
+        <p id="giftRevealMeta" class="text-xs sm:text-sm text-[#355a6f] font-medium tabular-nums"></p>
+        <div class="pt-2">
+          <button type="button" onclick="closeGiftRevealModal()" class="btn-pill px-6 py-2.5 bg-[#2a7a58] hover:bg-[#205f44] text-white text-sm font-bold">
+            Tuyệt vời! Nhận quà 🎁
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div id="authOverlay" hidden class="fixed inset-0 z-[70] bg-[#e4f3fa] overflow-y-auto p-4">
     <div id="authBox" class="max-w-md mx-auto mt-6 bg-white rounded-2xl border-2 border-[#a4d1e4] p-5 shadow-xl"></div>
   </div>
@@ -1434,6 +1538,13 @@
     const PROGRESS_PREFIX = 'net_dep_tieng_viet_progress_v2:';
     const FEEDBACK_KEY = 'net_dep_tieng_viet_feedback_v2';
     const LEGACY_PENDING_KEY = 'net_dep_tieng_viet_legacy_pending_v2';
+    const GIFTS_STORAGE_KEY = 'net_dep_tieng_viet_gifts_v1';
+    const DEFAULT_GIFTS = [
+      { id: 'gift-1', slotIndex: 1, name: 'Sách truyện cổ tích Việt Nam', cost: 15, imageUrl: 'src/assets/images/gift_storybook_1795568345661.jpg' },
+      { id: 'gift-2', slotIndex: 2, name: 'Bộ bút màu & vẽ tranh', cost: 25, imageUrl: 'src/assets/images/gift_art_kit_1795568346918.jpg' },
+      { id: 'gift-3', slotIndex: 3, name: 'Gấu bông khăn quàng xanh', cost: 40, imageUrl: 'src/assets/images/gift_plush_bear_1795568346846.jpg' },
+      { id: 'gift-4', slotIndex: 4, name: 'Chuyến đi chơi cuối tuần', cost: 60, imageUrl: 'src/assets/images/gift_family_outing_1795568346891.jpg' }
+    ];
     let authMode = 'login';
     let authPendingId = null;
     const VALID_CATEGORIES = ['Ca dao', 'Tục ngữ', 'Thành ngữ'];
@@ -1442,6 +1553,7 @@
     let searchDebounceTimer = null;
     let toastTimer = null;
     let idCounter = 0;
+    let applyingCloudSnapshot = false;
 
     let appState = {
       activeTab: 'all',
@@ -1460,6 +1572,9 @@
       retiredNorms: [],
       favoriteIds: [],
       gameTotals: { game1: 0, game2: 0, game3: 0, game4: 0 },
+      spentDiamonds: 0,
+      redemptions: [],
+      gifts: DEFAULT_GIFTS.map(g => ({ ...g })),
       accounts: [],
       currentAccount: null,
       history: [],
@@ -1634,12 +1749,54 @@
       return base;
     }
 
-    // Kho bài (dùng chung) lưu riêng; tiến độ + lịch sử lưu theo từng tài khoản
-    function saveStateSafe(showAutoSaveNotice = false) {
+    // Kho bài (dùng chung) lưu riêng; tiến độ + lịch sử + quà lưu theo từng tài khoản và đồng bộ Firebase
+    function normalizeGiftsList(rawList) {
+      const byId = new Map();
+      if (Array.isArray(rawList)) {
+        rawList.forEach((g, idx) => {
+          if (!g || typeof g !== 'object') return;
+          const slot = Math.min(4, Math.max(1, parseInt(g.slotIndex || idx + 1, 10) || (idx + 1)));
+          const id = `gift-${slot}`;
+          const def = DEFAULT_GIFTS[slot - 1];
+          const costNum = Number(g.cost);
+          byId.set(id, {
+            id,
+            slotIndex: slot,
+            name: String(g.name || def.name).trim().slice(0, 80) || def.name,
+            cost: Number.isFinite(costNum) && costNum >= 1 ? Math.min(100000, Math.round(costNum)) : def.cost,
+            imageUrl: typeof g.imageUrl === 'string' && g.imageUrl.trim() ? g.imageUrl.trim().slice(0, 250000) : def.imageUrl
+          });
+        });
+      }
+      return DEFAULT_GIFTS.map(def => byId.get(def.id) || { ...def });
+    }
+
+    function loadGiftsLocal() {
+      const raw = lsGet(GIFTS_STORAGE_KEY, null);
+      appState.gifts = normalizeGiftsList(raw);
+      return appState.gifts;
+    }
+
+    function saveGiftsSafe(syncImmediate = true) {
+      try {
+        appState.gifts = normalizeGiftsList(appState.gifts);
+        localStorage.setItem(GIFTS_STORAGE_KEY, JSON.stringify(appState.gifts));
+        if (!applyingCloudSnapshot && window.ndtvCloud && window.ndtvCloud.syncGifts) {
+          window.ndtvCloud.syncGifts(appState.gifts, syncImmediate);
+        }
+        return true;
+      } catch (_) {
+        showToast('Không lưu được cấu hình quà tặng (ảnh quá lớn hoặc bộ nhớ đầy).', 'warn');
+        return false;
+      }
+    }
+
+    function saveStateSafe(showAutoSaveNotice = false, syncImmediate = false) {
       try {
         const cat = JSON.stringify({ items: appState.items.map(stripItem), retiredNorms: appState.retiredNorms });
         const prev = localStorage.getItem(CATALOG_KEY);
-        if (prev !== cat) {
+        const catalogChanged = prev !== cat;
+        if (catalogChanged) {
           localStorage.setItem(CATALOG_KEY, cat);
           if (prev) {
             try { localStorage.setItem(CATALOG_BACKUP_KEY, prev); } catch (_) { localStorage.removeItem(CATALOG_BACKUP_KEY); }
@@ -1657,6 +1814,8 @@
             history: appState.history,
             favoriteIds: appState.favoriteIds,
             gameTotals: appState.gameTotals,
+            spentDiamonds: Number(appState.spentDiamonds) || 0,
+            redemptions: Array.isArray(appState.redemptions) ? appState.redemptions.slice(-200) : [],
             ui: {
               activeTab: appState.activeTab, pages: appState.pages, searchQuery: appState.searchQuery,
               categoryFilter: appState.categoryFilter, filterMode: appState.filterMode, topicFilter: appState.topicFilter,
@@ -1666,6 +1825,14 @@
           }));
         }
         updateHeaderSummary();
+        if (!applyingCloudSnapshot && window.ndtvCloud) {
+          if (acc && window.ndtvCloud.scheduleProfileSync) {
+            window.ndtvCloud.scheduleProfileSync(acc.id, Boolean(syncImmediate));
+          }
+          if (catalogChanged && isAdmin() && window.ndtvCloud.syncCatalog) {
+            window.ndtvCloud.syncCatalog();
+          }
+        }
         if (showAutoSaveNotice) showToast('Đã tự động lưu vào bộ nhớ.', 'success');
         return true;
       } catch (err) {
@@ -1747,6 +1914,8 @@
         appState.history.filter(e => e.type === 'game').forEach(e => { if (gt[e.game] !== undefined) gt[e.game] += Number(e.score) || 0; });
       }
       appState.gameTotals = gt;
+      appState.spentDiamonds = Math.max(0, Number(data.spentDiamonds) || 0);
+      appState.redemptions = Array.isArray(data.redemptions) ? data.redemptions.slice(-200) : [];
       appState.game = null;
       appState.editingItemId = null;
       syncReviewWindowsWithToday();
@@ -1754,12 +1923,17 @@
 
     function loadStateWithRecovery() {
       loadCatalog();
+      loadGiftsLocal();
       const store = lsGet(ACCOUNTS_KEY, { accounts: [], currentId: null });
       appState.accounts = Array.isArray(store.accounts) ? store.accounts : [];
       appState.currentAccount = appState.accounts.find(a => a.id === store.currentId) || null;
       try {
-        // Tài khoản quản trị phải nhập lại PIN ở mỗi phiên mới
-        if (appState.currentAccount && isAdminAcc(appState.currentAccount) && !sessionStorage.getItem('ndtv_admin_ok')) appState.currentAccount = null;
+        // Tài khoản quản trị phải nhập lại PIN ở mỗi phiên mới (trừ khi đã đăng nhập Google chính chủ)
+        const googleEmail = window.ndtvCloud && window.ndtvCloud.getUser ? normEmail(window.ndtvCloud.getUser()?.email) : '';
+        const googleAdminVerified = googleEmail === ADMIN_EMAIL && Boolean(window.ndtvCloud.getUser()?.emailVerified);
+        if (appState.currentAccount && isAdminAcc(appState.currentAccount) && !googleAdminVerified && !sessionStorage.getItem('ndtv_admin_ok')) {
+          appState.currentAccount = null;
+        }
       } catch (_) {}
       applyAccountProgress();
       saveStateSafe(false);
@@ -2862,6 +3036,8 @@
               </button>
             </div>
           </div>
+
+          ${renderGiftRedemptionSection()}
         `;
         return;
       }
@@ -3209,8 +3385,8 @@
        HỘP THOẠI CÀI ĐẶT: DANH SÁCH GỌN, 20 BÀI, SỬA/XÓA TOÀN QUYỀN, BACKUP / JSON
     ========================================================================= */
     function selectSettingsSection(sectionKey) {
-      if (!isAdmin() && sectionKey !== 'study20' && sectionKey !== 'topics') sectionKey = 'study20';
-      const sections = ['study20', 'editor', 'backup', 'topics'];
+      if (!isAdmin() && sectionKey !== 'study20' && sectionKey !== 'topics' && sectionKey !== 'gifts') sectionKey = 'study20';
+      const sections = ['study20', 'editor', 'backup', 'topics', 'gifts'];
       appState.activeSettingsSection = appState.activeSettingsSection === sectionKey ? null : sectionKey;
       sections.forEach(key => {
         const panel = document.getElementById(`settings-panel-${key}`);
@@ -3225,9 +3401,10 @@
       });
       if (appState.activeSettingsSection === 'study20') renderStudyPickerList();
       else if (appState.activeSettingsSection === 'editor') renderEditableMatches();
+      else if (appState.activeSettingsSection === 'gifts') renderGiftSettingsEditor();
     }
 
-    function openSettingsModal() {
+    function openSettingsModal(initialSection = null) {
       const modal = document.getElementById('settingsModal');
       modal.hidden = false;
       ['editor', 'backup'].forEach(k => {
@@ -3245,7 +3422,17 @@
       const badge = document.getElementById('settingsNavStudyBadge');
       if (badge) badge.textContent = `${appState.studyIds.length} bài`;
       updateTtsModeUI();
-      selectSettingsSection(appState.activeSettingsSection || 'study20');
+      updateCloudSyncUI();
+      if (initialSection) {
+        appState.activeSettingsSection = null;
+        selectSettingsSection(initialSection);
+      } else {
+        selectSettingsSection(appState.activeSettingsSection || 'study20');
+      }
+    }
+
+    function openGiftSettingsDirectly() {
+      openSettingsModal('gifts');
     }
 
     function closeSettingsModal() {
@@ -3696,7 +3883,7 @@
       saveAccounts();
       applyAccountProgress();
       logHistory('login');
-      saveStateSafe(false);
+      saveStateSafe(false, true);
       authMode = 'login';
       renderAuth();
       renderCurrentView();
@@ -3724,37 +3911,47 @@
       const box = document.getElementById('authBox');
       if (appState.currentAccount) { ov.hidden = true; return; }
       ov.hidden = false;
-      const head = '<div class="text-center mb-4"><div class="text-3xl mb-1">🌾</div><h1 class="text-lg font-bold text-[#124e75]">Nét Đẹp Tiếng Việt</h1></div>';
+      const head = '<div class="text-center mb-4"><div class="text-3xl mb-1">🌾</div><h1 class="text-lg font-bold text-[#124e75]">Nét Đẹp Tiếng Việt</h1><p class="text-xs text-[#4d7185] mt-0.5">Đăng nhập Google để tự động lưu & đồng bộ lịch sử học, kim cương và quà tặng trên mọi thiết bị</p></div>';
       const err = '<p id="authError" role="alert" class="text-xs font-semibold text-[#a62626] min-h-[1rem] mt-2"></p>';
       const accs = appState.accounts;
+      const gUser = window.ndtvCloud && window.ndtvCloud.getUser ? window.ndtvCloud.getUser() : null;
+      const visibleAccs = gUser ? accs.filter(a => !a.cloudUid || a.cloudUid === gUser.uid) : accs;
+      const gBar = gUser
+        ? `<div class="mb-3 p-2.5 rounded-xl bg-[#e1f4e8] border border-[#9fd4b3] flex items-center justify-between gap-2 text-xs">
+            <div class="min-w-0"><b class="text-[#216648] block truncate">☁️ Đã kết nối: ${escapeHtml(gUser.email || gUser.displayName)}</b><span class="text-[11px] text-[#326b51]">Dữ liệu đồng bộ tự động mọi thiết bị</span></div>
+            <button type="button" onclick="signOutGoogleAccount()" class="px-2.5 py-1 rounded-lg bg-white border border-[#9fd4b3] text-[#216648] font-semibold shrink-0">Đổi Google</button>
+          </div>`
+        : `<button type="button" onclick="signInWithGoogleAccount()" class="btn-pill w-full mb-3 py-2.5 px-3 bg-[#1b6ca1] hover:bg-[#124e75] text-white text-sm font-bold flex items-center justify-center gap-2">
+            <span>☁️ Đăng nhập bằng Google (Đồng bộ mọi máy)</span>
+          </button>`;
 
       if (authMode === 'pin') {
         const acc = accs.find(a => a.id === authPendingId);
         if (!acc) { authMode = 'login'; return renderAuth(); }
-        box.innerHTML = head + `<p class="text-sm mb-2">${acc.pinHash ? 'Nhập mã PIN quản trị của' : 'Tạo mã PIN (4–8 chữ số) cho tài khoản quản trị'} <b>${escapeHtml(acc.name)}</b>:</p>
+        box.innerHTML = head + gBar + `<p class="text-sm mb-2">${acc.pinHash ? 'Nhập mã PIN quản trị của' : 'Tạo mã PIN (4–8 chữ số) cho tài khoản quản trị'} <b>${escapeHtml(acc.name)}</b>:</p>
           <input id="authPin" type="password" inputmode="numeric" maxlength="8" autocomplete="off" class="${A_IN}" onkeydown="if(event.key==='Enter')submitPin()" />${err}
           <div class="flex gap-2 mt-3"><button type="button" onclick="submitPin()" class="${A_BTN}">Vào</button><button type="button" onclick="authMode='login';renderAuth()" class="${A_BTN2}">Quay lại</button></div>`;
         return;
       }
 
-      if (authMode === 'register' || accs.length === 0) {
-        const first = accs.length === 0;
-        box.innerHTML = head + `<h2 class="font-bold text-[#124e75] mb-2">Tạo tài khoản mới</h2>
+      if (authMode === 'register' || visibleAccs.length === 0) {
+        const first = visibleAccs.length === 0;
+        box.innerHTML = head + gBar + `<h2 class="font-bold text-[#124e75] mb-2">Tạo hồ sơ học mới</h2>
           <div class="space-y-2">
-            <input id="regName" type="text" maxlength="40" placeholder="Tên của bạn *" class="${A_IN}" />
+            <input id="regName" type="text" maxlength="40" placeholder="Tên của bé *" value="${gUser ? escapeAttr(gUser.displayName || '') : ''}" class="${A_IN}" />
             <input id="regSchool" type="text" maxlength="60" placeholder="Trường *" class="${A_IN}" />
             <input id="regGrade" type="text" maxlength="10" placeholder="Lớp * (ví dụ: 3A)" class="${A_IN}" />
-            <input id="regEmail" type="email" maxlength="80" placeholder="Email (không bắt buộc)" oninput="toggleRegPin(this)" class="${A_IN}" />
+            <input id="regEmail" type="email" maxlength="80" placeholder="Email (không bắt buộc)" value="${gUser ? escapeAttr(gUser.email || '') : ''}" oninput="toggleRegPin(this)" class="${A_IN}" />
             <div id="regPinBox" hidden><input id="regPin" type="password" inputmode="numeric" maxlength="8" placeholder="Tạo mã PIN quản trị (4–8 chữ số)" class="${A_IN}" /></div>
-          </div>${first ? '<p class="text-[11px] text-[#4d7185] mt-2">Dữ liệu học đã có trên máy này (nếu có) sẽ được gắn vào tài khoản đầu tiên.</p>' : ''}${err}
+          </div>${first ? '<p class="text-[11px] text-[#4d7185] mt-2">Dữ liệu học đã có trên máy này (nếu có) sẽ được gắn vào hồ sơ đầu tiên.</p>' : ''}${err}
           <div class="flex gap-2 mt-3"><button type="button" onclick="submitRegister()" class="${A_BTN}">Tạo & vào học</button>${first ? '' : `<button type="button" onclick="authMode='login';renderAuth()" class="${A_BTN2}">Quay lại</button>`}</div>`;
         return;
       }
 
-      box.innerHTML = head + `<h2 class="font-bold text-[#124e75] mb-2">Chọn tài khoản</h2>
-        <div class="space-y-1.5 max-h-60 overflow-y-auto">${accs.map(a => `<button type="button" onclick="loginAs('${escapeAttr(a.id)}')" class="w-full text-left p-2.5 rounded-xl border border-[#c5e0ec] bg-[#f6fbfe] hover:bg-[#e3f3fa]"><span class="font-bold text-[#124e75]">${isAdminAcc(a) ? '🔑 ' : ''}${escapeHtml(a.name)}</span><span class="block text-[11px] text-[#4d7185]">${escapeHtml(a.school)} · Lớp ${escapeHtml(a.grade)}</span></button>`).join('')}</div>
+      box.innerHTML = head + gBar + `<h2 class="font-bold text-[#124e75] mb-2">Chọn hồ sơ học</h2>
+        <div class="space-y-1.5 max-h-60 overflow-y-auto">${visibleAccs.map(a => `<button type="button" onclick="loginAs('${escapeAttr(a.id)}')" class="w-full text-left p-2.5 rounded-xl border border-[#c5e0ec] bg-[#f6fbfe] hover:bg-[#e3f3fa]"><span class="font-bold text-[#124e75]">${isAdminAcc(a) ? '🔑 ' : ''}${escapeHtml(a.name)}</span><span class="block text-[11px] text-[#4d7185]">${escapeHtml(a.school)} · Lớp ${escapeHtml(a.grade)}</span></button>`).join('')}</div>
         <div class="flex gap-1.5 mt-3"><input id="loginEmail" type="email" placeholder="Hoặc đăng nhập bằng email" class="${A_IN}" onkeydown="if(event.key==='Enter')loginByEmail()" /><button type="button" onclick="loginByEmail()" class="${A_BTN} shrink-0">Vào</button></div>${err}
-        <button type="button" onclick="authMode='register';renderAuth()" class="${A_BTN2} w-full mt-2">+ Tạo tài khoản mới</button>`;
+        <button type="button" onclick="authMode='register';renderAuth()" class="${A_BTN2} w-full mt-2">+ Tạo hồ sơ học mới</button>`;
     }
 
     function toggleRegPin(el) { document.getElementById('regPinBox').hidden = normEmail(el.value) !== ADMIN_EMAIL; }
@@ -3826,14 +4023,55 @@
       if (e.type === 'login') return '🔓 Đăng nhập';
       if (e.type === 'star') return `⭐ Đã thuộc: “${escapeHtml(e.text)}”`;
       if (e.type === 'unstar') return `☆ Bỏ sao: “${escapeHtml(e.text)}”`;
+      if (e.type === 'redeem') return `🎁 Đổi quà: “${escapeHtml(e.name)}” (-${escapeHtml(e.cost)} 💎)`;
       if (e.type === 'game') return `🎮 ${escapeHtml(({ game1: 'Điền vào chỗ trống', game2: 'Sắp xếp từ theo hàng', game3: 'Chọn ý nghĩa đúng', game4: 'Nối thẻ' })[e.game] || 'Trò chơi')}: ${escapeHtml(e.score)}/${escapeHtml(e.max)} 💎`;
       return escapeHtml(e.type);
+    }
+
+    function signInWithGoogleAccount() {
+      if (window.ndtvCloud && window.ndtvCloud.signIn) {
+        window.ndtvCloud.signIn();
+      } else {
+        showToast('Đang khởi tạo kết nối Firebase, vui lòng thử lại sau giây lát.', 'info');
+      }
+    }
+
+    function signOutGoogleAccount() {
+      if (window.ndtvCloud && window.ndtvCloud.signOut) {
+        window.ndtvCloud.signOut();
+      }
+    }
+
+    function triggerManualCloudSync() {
+      if (window.ndtvCloud && window.ndtvCloud.syncAllNow) {
+        window.ndtvCloud.syncAllNow(true);
+      }
+    }
+
+    function updateCloudSyncUI() {
+      const titleEl = document.getElementById('cloudSyncSettingsTitle');
+      const subEl = document.getElementById('cloudSyncSettingsSub');
+      const actEl = document.getElementById('cloudSyncSettingsActions');
+      if (!titleEl || !subEl || !actEl) return;
+      const gUser = window.ndtvCloud && window.ndtvCloud.getUser ? window.ndtvCloud.getUser() : null;
+      if (gUser) {
+        const lastAt = window.ndtvCloud.getLastSyncAt ? window.ndtvCloud.getLastSyncAt() : '';
+        titleEl.textContent = `☁️ Đã đồng bộ đám mây (${gUser.email || gUser.displayName})`;
+        subEl.textContent = lastAt ? `Cập nhật gần nhất: ${fmtTime(lastAt)} · Mở bất cứ máy nào cùng Google sẽ tự có dữ liệu` : 'Tự động lưu lịch sử học, kim cương & 4 phần quà theo thời gian thực';
+        actEl.innerHTML = `<button type="button" onclick="triggerManualCloudSync()" class="btn-pill px-2.5 py-1 bg-[#e1f4e8] hover:bg-[#ccebd7] text-[#216648] border border-[#9fd4b3] text-xs font-semibold">🔄 Đồng bộ ngay</button>
+          <button type="button" onclick="signOutGoogleAccount()" class="btn-pill px-2.5 py-1 bg-white hover:bg-[#eef6fa] text-[#4d7185] border border-[#cbd9e0] text-xs font-semibold">Ngắt Google</button>`;
+      } else {
+        titleEl.textContent = '☁️ Chưa kết nối đồng bộ đám mây';
+        subEl.textContent = 'Hiện chỉ lưu trên máy này. Đăng nhập Google để đồng bộ lịch sử học & quà trên mọi thiết bị.';
+        actEl.innerHTML = `<button type="button" onclick="signInWithGoogleAccount()" class="btn-pill px-3 py-1 bg-[#1b6ca1] hover:bg-[#124e75] text-white text-xs font-semibold">🔵 Đăng nhập Google</button>`;
+      }
     }
 
     function openProfile(tab = 'profile', viewId = null) {
       const me = appState.currentAccount;
       if (!me) return;
       const admin = isAdmin();
+      const gUser = window.ndtvCloud && window.ndtvCloud.getUser ? window.ndtvCloud.getUser() : null;
       const tabs = [['profile', 'Hồ sơ'], ['history', 'Lịch sử học']].concat(admin ? [['admin', 'Tài khoản'], ['inbox', 'Hộp thư']] : []);
       const nav = `<div class="flex flex-wrap gap-1.5">${tabs.map(([k, l]) => `<button type="button" onclick="openProfile('${k}')" class="btn-pill px-3 py-1.5 text-xs border ${k === tab ? 'bg-[#1b6ca1] text-white border-[#124e75]' : 'bg-white text-[#124e75] border-[#b6dceb]'}">${l}</button>`).join('')}</div>`;
       let body = '';
@@ -3841,13 +4079,22 @@
       if (tab === 'profile') {
         const st = accData(me.id);
         const games = st.history.filter(e => e.type === 'game').length;
-        body = `<div class="p-3 rounded-xl bg-white border border-[#cde7f2] space-y-1">
+        const syncBox = gUser
+          ? `<div class="p-3 rounded-xl bg-[#e1f4e8] border border-[#9fd4b3] flex flex-wrap items-center justify-between gap-2">
+              <div class="min-w-0"><p class="font-bold text-[#216648]">☁️ Đang đồng bộ đám mây qua Google</p><p class="text-[11px] text-[#326b51] truncate">${escapeHtml(gUser.email || gUser.displayName)} — Lịch sử học, kim cương & quà tự động lưu giữa các máy.</p></div>
+              <div class="flex gap-1.5 shrink-0"><button type="button" onclick="triggerManualCloudSync()" class="btn-pill px-2.5 py-1 bg-white text-[#216648] border border-[#9fd4b3] text-xs font-semibold">🔄 Đồng bộ</button><button type="button" onclick="signOutGoogleAccount()" class="btn-pill px-2.5 py-1 bg-white text-[#4d7185] border border-[#cbd9e0] text-xs font-semibold">Ngắt Google</button></div>
+            </div>`
+          : `<div class="p-3 rounded-xl bg-[#fff7e6] border border-[#f2c675] flex flex-wrap items-center justify-between gap-2">
+              <div class="min-w-0"><p class="font-bold text-[#7a4b00]">⚠️ Chưa bật đồng bộ liên máy</p><p class="text-[11px] text-[#855400]">Đăng nhập Google để mang lịch sử học, kim cương và 4 phần quà sang điện thoại/máy tính khác.</p></div>
+              <button type="button" onclick="signInWithGoogleAccount()" class="btn-pill px-3 py-1.5 bg-[#1b6ca1] text-white text-xs font-semibold shrink-0">🔵 Kết nối Google</button>
+            </div>`;
+        body = `${syncBox}<div class="p-3 rounded-xl bg-white border border-[#cde7f2] space-y-1">
           <p><b>${escapeHtml(me.name)}</b> ${admin ? '<span class="px-1.5 py-0.5 rounded bg-[#fff3cd] text-[#8a5900] text-[11px] font-bold">Quản trị viên</span>' : ''}</p>
           <p>Trường: ${escapeHtml(me.school)} · Lớp: ${escapeHtml(me.grade)}</p>
           <p>Email: ${escapeHtml(me.email || '(chưa có)')}</p>
           <p>Tạo ngày: ${escapeHtml(fmtTime(me.createdAt))}</p></div>
-          <div class="grid grid-cols-2 gap-2"><div class="p-3 rounded-xl bg-[#e1f4e8] text-center"><div class="text-xl font-bold text-[#216648]">${st.mastered}</div>bài đã thuộc ⭐</div><div class="p-3 rounded-xl bg-[#e3f3fa] text-center"><div class="text-xl font-bold text-[#124e75]">${games}</div>lượt chơi hoàn thành</div></div>
-          <button type="button" onclick="logoutAccount()" class="${A_BTN2}">Đăng xuất / đổi tài khoản</button>`;
+          <div class="grid grid-cols-2 gap-2"><div class="p-3 rounded-xl bg-[#e1f4e8] text-center"><div class="text-xl font-bold text-[#216648] tabular-nums">${st.mastered}</div>bài đã thuộc ⭐</div><div class="p-3 rounded-xl bg-[#e3f3fa] text-center"><div class="text-xl font-bold text-[#124e75] tabular-nums">${games}</div>lượt chơi hoàn thành</div></div>
+          <button type="button" onclick="logoutAccount()" class="${A_BTN2}">Đăng xuất / đổi hồ sơ</button>`;
       } else if (tab === 'history') {
         const id = viewId || me.id;
         const acc = appState.accounts.find(a => a.id === id) || me;
@@ -3865,7 +4112,7 @@
         }).join('');
       } else if (tab === 'inbox' && admin) {
         const fbs = lsGet(FEEDBACK_KEY, []).slice().reverse();
-        body = '<p class="text-[11px] text-[#4d7185]">Chỉ hiển thị phản hồi được gửi từ thiết bị này. Phản hồi từ thiết bị khác sẽ đến qua email của bạn.</p>' +
+        body = '<p class="text-[11px] text-[#4d7185]">Phản hồi được đồng bộ qua Firebase khi đăng nhập Google (hoặc lưu cục bộ trên máy này).</p>' +
           (fbs.length ? fbs.map(f => `<div class="p-3 rounded-xl bg-white border ${f.status === 'done' ? 'border-[#cde7f2] opacity-70' : 'border-[#f0c674]'}">
             <div class="flex justify-between gap-2"><b>${escapeHtml(f.type)}</b><span class="text-[11px] text-[#6a8a9b]">${escapeHtml(fmtTime(f.createdAt))}</span></div>
             <div class="text-[11px] text-[#4d7185]">${escapeHtml(f.name)} · ${escapeHtml(f.school)} · Lớp ${escapeHtml(f.grade)}${f.email ? ' · ' + escapeHtml(f.email) : ''}</div>
@@ -3881,18 +4128,28 @@
       appState.accounts = appState.accounts.filter(a => a.id !== id);
       try { localStorage.removeItem(PROGRESS_PREFIX + id); } catch (_) {}
       saveAccounts();
+      if (window.ndtvCloud && window.ndtvCloud.deleteProfile) {
+        window.ndtvCloud.deleteProfile(id);
+      }
       openProfile('admin');
     }
 
     function toggleFeedback(id) {
       if (!requireAdmin()) return;
-      const l = lsGet(FEEDBACK_KEY, []).map(f => f.id === id ? Object.assign(f, { status: f.status === 'done' ? 'new' : 'done' }) : f);
-      localStorage.setItem(FEEDBACK_KEY, JSON.stringify(l));
+      const list = lsGet(FEEDBACK_KEY, []).map(f => f.id === id ? Object.assign(f, { status: f.status === 'done' ? 'new' : 'done' }) : f);
+      localStorage.setItem(FEEDBACK_KEY, JSON.stringify(list));
+      const updated = list.find(f => f.id === id);
+      if (updated && window.ndtvCloud && window.ndtvCloud.updateFeedbackStatus) {
+        window.ndtvCloud.updateFeedbackStatus(id, updated.status);
+      }
       openProfile('inbox');
     }
     function deleteFeedback(id) {
       if (!requireAdmin() || !confirmTwice('delfb-' + id, 'Sắp xóa phản hồi này.')) return;
       localStorage.setItem(FEEDBACK_KEY, JSON.stringify(lsGet(FEEDBACK_KEY, []).filter(f => f.id !== id)));
+      if (window.ndtvCloud && window.ndtvCloud.deleteFeedbackDoc) {
+        window.ndtvCloud.deleteFeedbackDoc(id);
+      }
       openProfile('inbox');
     }
 
@@ -3922,11 +4179,15 @@
       const me = appState.currentAccount;
       const f = feedbackMail();
       if (f.msg.length < 5) { showToast('Vui lòng nhập nội dung phản hồi (ít nhất 5 ký tự).', 'warn'); return; }
+      const fbRecord = { id: genId('fb'), accountId: me.id, name: me.name, school: me.school, grade: me.grade, email: me.email || '', type: f.type, message: f.msg, createdAt: new Date().toISOString(), status: 'new' };
       try {
         const list = lsGet(FEEDBACK_KEY, []);
-        list.push({ id: genId('fb'), accountId: me.id, name: me.name, school: me.school, grade: me.grade, email: me.email || '', type: f.type, message: f.msg, createdAt: new Date().toISOString(), status: 'new' });
+        list.push(fbRecord);
         localStorage.setItem(FEEDBACK_KEY, JSON.stringify(list.slice(-200)));
       } catch (_) {}
+      if (window.ndtvCloud && window.ndtvCloud.submitFeedback) {
+        window.ndtvCloud.submitFeedback(fbRecord);
+      }
       window.location.href = `mailto:${ADMIN_EMAIL}?subject=${encodeURIComponent(f.subject)}&body=${encodeURIComponent(f.body)}`;
       showToast(`Đã lưu phản hồi. Nếu ứng dụng email không tự mở, hãy bấm “Sao chép nội dung” rồi gửi tới ${ADMIN_EMAIL}.`, 'success');
     }
@@ -3961,12 +4222,23 @@
     }
 
     /* =========================================================================
-       ĐIỂM TRÒ CHƠI (💎), YÊU THÍCH (❤️) VÀ ĐỌC TO CÓ NGẮT NHỊP (🔊)
+       ĐIỂM TRÒ CHƠI (💎), ĐỔI QUÀ BLIND BOX (🎁), YÊU THÍCH (❤️) VÀ ĐỌC TO (🔊)
     ========================================================================= */
     let speakingId = null;
     let speakToken = 0;
+    let giftRevealTimer = null;
 
     function fmtPts(n) { return String(Number((Number(n) || 0).toFixed(1))); }
+
+    function getEarnedDiamonds() {
+      const t = appState.gameTotals || {};
+      return ['game1', 'game2', 'game3', 'game4'].reduce((sum, k) => sum + (Number(t[k]) || 0), 0);
+    }
+
+    function getAvailableDiamonds() {
+      const avail = getEarnedDiamonds() - (Number(appState.spentDiamonds) || 0);
+      return Math.max(0, Number(avail.toFixed(1)));
+    }
 
     function addGameScore(type, score) {
       if (!(type in appState.gameTotals)) return;
@@ -3981,20 +4253,300 @@
         ['game3', '🎯', 'Chọn ý nghĩa đúng', 'from-[#fff3d6] to-[#ffe9bd]'],
         ['game4', '🔗', 'Nối thẻ: Câu & Ý nghĩa', 'from-[#f1e8ff] to-[#e4d6fb]']
       ];
-      const total = rows.reduce((sum, r) => sum + (Number(t[r[0]]) || 0), 0);
+      const earned = getEarnedDiamonds();
+      const spent = Number(appState.spentDiamonds) || 0;
+      const available = getAvailableDiamonds();
       return `<div class="mt-3 rounded-2xl p-3.5 bg-gradient-to-br from-[#e8f6ff] via-[#f3f0ff] to-[#fff3e0] border border-[#bfe0f0]">
-        <div class="flex items-center gap-3">
-          <div class="text-4xl leading-none">💎</div>
-          <div><div class="text-xs font-semibold text-[#456b80]">Số điểm bé đã đạt được</div>
-          <div class="text-2xl font-extrabold text-[#124e75]">${fmtPts(total)} <span class="text-sm font-bold text-[#5b7f93]">💎 tổng 4 trò chơi</span></div></div>
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center gap-3">
+            <div class="text-4xl leading-none">💎</div>
+            <div>
+              <div class="text-xs font-semibold text-[#456b80]">Kim cương hiện có để đổi quà</div>
+              <div class="text-2xl font-extrabold text-[#124e75] tabular-nums">${fmtPts(available)} 💎</div>
+              <div class="text-[11px] text-[#5b7f93] tabular-nums">Tổng đã đạt: ${fmtPts(earned)} 💎 · Đã đổi quà: ${fmtPts(spent)} 💎</div>
+            </div>
+          </div>
+          <a href="#giftExchangeZone" class="btn-pill px-3 py-1.5 bg-white/90 hover:bg-white text-[#124e75] border border-[#b6d9e9] text-xs font-semibold">🎁 Tới mục Đổi quà ↓</a>
         </div>
         <div class="grid grid-cols-2 gap-2 mt-3">${rows.map(([k, icon, name, grad]) => `
           <div class="rounded-xl bg-gradient-to-br ${grad} border border-white/70 p-2.5 flex items-center gap-2 shadow-sm">
             <span class="text-xl">${icon}</span>
             <div class="min-w-0"><div class="text-[11px] font-semibold text-[#456b80] leading-tight">Trò chơi “${escapeHtml(name)}”</div>
-            <div class="font-bold text-[#124e75] text-sm">${fmtPts(t[k])} 💎</div></div>
+            <div class="font-bold text-[#124e75] text-sm tabular-nums">${fmtPts(t[k])} 💎</div></div>
           </div>`).join('')}</div>
       </div>`;
+    }
+
+    function renderGiftRedemptionSection() {
+      const gifts = normalizeGiftsList(appState.gifts);
+      const available = getAvailableDiamonds();
+      const historyList = (appState.redemptions || []).slice().reverse().slice(0, 12);
+
+      const cardsHtml = gifts.map((g) => {
+        const enough = available >= g.cost;
+        const need = Math.max(0, Number((g.cost - available).toFixed(1)));
+        return `
+          <div class="folk-card p-3.5 flex flex-col justify-between bg-white">
+            <div class="flex items-start gap-3">
+              <div class="relative w-20 h-20 rounded-2xl overflow-hidden border-2 border-[#f0cf8a] bg-[#fffaf0] shrink-0 shadow-sm">
+                <img src="src/assets/images/gift_blind_box_1795568346363.jpg" alt="Hộp quà bí mật" referrerPolicy="no-referrer" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" class="w-full h-full object-cover" />
+                <div style="display:none" class="w-full h-full items-center justify-center text-3xl bg-[#fff4de]">🎁</div>
+                <div class="absolute bottom-1 right-1 w-8 h-8 rounded-lg overflow-hidden border border-white shadow bg-white">
+                  <img src="${escapeAttr(g.imageUrl)}" alt="${escapeAttr(g.name)}" referrerPolicy="no-referrer" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" class="w-full h-full object-cover" />
+                  <div style="display:none" class="w-full h-full items-center justify-center text-sm bg-[#e4f3fa]">🎀</div>
+                </div>
+              </div>
+              <div class="min-w-0 flex-1">
+                <div class="text-[11px] font-semibold text-[#6a8a9b]">Hộp quà ${g.slotIndex} · Cần ${g.cost} 💎</div>
+                <h4 class="font-bold text-[#124e75] text-sm leading-snug mt-0.5">${escapeHtml(g.name)}</h4>
+                <p class="text-[11px] mt-1 font-semibold ${enough ? 'text-[#216648]' : 'text-[#8a5900]'} tabular-nums">
+                  ${enough ? '✓ Đủ kim cương để mở hộp ngay!' : `Còn thiếu ${fmtPts(need)} 💎 nữa`}
+                </p>
+              </div>
+            </div>
+            <button type="button" onclick="redeemGift('${escapeAttr(g.id)}')" ${enough ? '' : 'disabled'} class="mt-3 btn-pill w-full py-2 px-3 ${enough ? 'bg-[#2a7a58] hover:bg-[#205f44] text-white' : 'bg-[#eef4f7] text-[#6d8594] border border-[#d1e0e8]'} text-xs sm:text-sm font-bold">
+              ${enough ? `🎁 Mở hộp & Đổi quà (${g.cost} 💎)` : `🔒 Cần ${g.cost} 💎`}
+            </button>
+          </div>
+        `;
+      }).join('');
+
+      const redeemedHtml = historyList.length
+        ? `<div class="mt-3 pt-3 border-t border-[#d8ecf5]">
+            <p class="text-xs font-bold text-[#124e75] mb-2">🎉 Quà bé đã đổi gần đây (${(appState.redemptions || []).length})</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              ${historyList.map(r => `
+                <div class="p-2.5 rounded-xl bg-[#f8fcfe] border border-[#d6eaf3] flex items-center gap-2.5">
+                  <div class="w-11 h-11 rounded-lg overflow-hidden border border-[#cde7f2] bg-white shrink-0 flex items-center justify-center">
+                    <img src="${escapeAttr(r.imageUrl || '')}" alt="${escapeAttr(r.name)}" referrerPolicy="no-referrer" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" class="w-full h-full object-cover" />
+                    <div style="display:none" class="w-full h-full items-center justify-center text-xl bg-[#e4f3fa]">🎁</div>
+                  </div>
+                  <div class="min-w-0 flex-1">
+                    <div class="font-bold text-xs text-[#124e75] truncate">${escapeHtml(r.name)}</div>
+                    <div class="text-[11px] text-[#4d7185] tabular-nums">-${escapeHtml(r.cost)} 💎 · ${escapeHtml(fmtTime(r.redeemedAt))}</div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>`
+        : '<p class="mt-3 text-xs text-[#5d7f93]">Bé chưa đổi món quà nào. Chơi game tích kim cương để mở hộp quà nhé!</p>';
+
+      return `
+        <section id="giftExchangeZone" class="mt-4 bg-white/92 border border-[#c3e2ef] rounded-2xl p-4 shadow-sm">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <div>
+              <h3 class="text-base font-bold text-[#124e75]">🎁 Đổi quà bằng Kim Cương (Blind Box)</h3>
+              <p class="text-xs text-[#456b80]">Chọn 1 trong 4 hộp quà bên dưới để bung quà bất ngờ bằng số kim cương bé tích lũy được.</p>
+            </div>
+            <button type="button" onclick="openGiftSettingsDirectly()" class="btn-pill px-3 py-1.5 bg-[#fff3d6] hover:bg-[#ffe8b5] text-[#855400] border border-[#efc97a] text-xs font-semibold">
+              ⚙️ Cài đặt 4 phần quà
+            </button>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">${cardsHtml}</div>
+          ${redeemedHtml}
+        </section>
+      `;
+    }
+
+    function redeemGift(giftId) {
+      const gifts = normalizeGiftsList(appState.gifts);
+      const gift = gifts.find(g => g.id === giftId);
+      if (!gift) return;
+      const available = getAvailableDiamonds();
+      if (available < gift.cost) {
+        showToast(`Bé cần thêm ${fmtPts(gift.cost - available)} 💎 nữa để đổi “${gift.name}”.`, 'warn');
+        return;
+      }
+      appState.spentDiamonds = Number(((Number(appState.spentDiamonds) || 0) + gift.cost).toFixed(1));
+      const redemption = {
+        id: genId('gift'),
+        giftId: gift.id,
+        name: gift.name,
+        cost: gift.cost,
+        imageUrl: gift.imageUrl,
+        redeemedAt: new Date().toISOString()
+      };
+      if (!Array.isArray(appState.redemptions)) appState.redemptions = [];
+      appState.redemptions.push(redemption);
+      if (appState.redemptions.length > 200) appState.redemptions.splice(0, appState.redemptions.length - 200);
+      logHistory('redeem', { name: gift.name, cost: gift.cost });
+      saveStateSafe(false, true);
+      renderCurrentView();
+      openGiftRevealModal(gift, getAvailableDiamonds());
+    }
+
+    function openGiftRevealModal(gift, remaining) {
+      clearTimeout(giftRevealTimer);
+      const modal = document.getElementById('giftRevealModal');
+      const charging = document.getElementById('giftRevealCharging');
+      const opened = document.getElementById('giftRevealOpened');
+      const confettiLayer = document.getElementById('giftConfettiLayer');
+      const imgEl = document.getElementById('giftRevealImage');
+      const titleEl = document.getElementById('giftRevealTitle');
+      const metaEl = document.getElementById('giftRevealMeta');
+      if (!modal || !charging || !opened) return;
+
+      charging.hidden = false;
+      opened.hidden = true;
+      confettiLayer.innerHTML = '';
+
+      imgEl.style.display = '';
+      if (imgEl.nextElementSibling) imgEl.nextElementSibling.style.display = 'none';
+      imgEl.src = gift.imageUrl || '';
+      titleEl.textContent = gift.name;
+      metaEl.textContent = `Đã dùng ${gift.cost} 💎 · Số dư còn lại: ${fmtPts(remaining)} 💎`;
+      modal.hidden = false;
+
+      const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      giftRevealTimer = setTimeout(() => {
+        charging.hidden = true;
+        opened.hidden = false;
+        if (!reduced) {
+          const colors = ['#1b6ca1', '#2a7a58', '#e6a117', '#e0566b', '#7b4fd1', '#38bdf8'];
+          const pieces = [];
+          for (let i = 0; i < 26; i++) {
+            const angle = (Math.PI * 2 * i) / 26 + (Math.random() * 0.25);
+            const dist = 70 + Math.random() * 110;
+            const tx = Math.round(Math.cos(angle) * dist);
+            const ty = Math.round(Math.sin(angle) * dist - 20);
+            const rot = Math.round(120 + Math.random() * 360);
+            const c = colors[i % colors.length];
+            pieces.push(`<span class="confetti-piece" style="left:50%;top:42%;background:${c};--tx:${tx}px;--ty:${ty}px;--rot:${rot}deg;animation-delay:${(i % 4) * 40}ms"></span>`);
+          }
+          confettiLayer.innerHTML = pieces.join('');
+        }
+      }, reduced ? 80 : 1050);
+    }
+
+    function closeGiftRevealModal() {
+      clearTimeout(giftRevealTimer);
+      const modal = document.getElementById('giftRevealModal');
+      if (modal) modal.hidden = true;
+    }
+
+    function renderGiftSettingsEditor() {
+      const box = document.getElementById('giftSettingsEditorList');
+      if (!box) return;
+      const gifts = normalizeGiftsList(appState.gifts);
+      box.innerHTML = gifts.map(g => {
+        const s = g.slotIndex;
+        return `
+          <div class="p-3 rounded-xl border border-[#cde7f2] bg-[#f8fcfe] space-y-2">
+            <div class="flex items-start gap-3">
+              <div class="w-16 h-16 rounded-xl overflow-hidden border border-[#b6d9e9] bg-white shrink-0 flex items-center justify-center">
+                <img id="giftPreview-${s}" src="${escapeAttr(g.imageUrl)}" alt="${escapeAttr(g.name)}" referrerPolicy="no-referrer" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" class="w-full h-full object-cover" />
+                <div style="display:none" class="w-full h-full items-center justify-center text-2xl bg-[#e4f3fa]">🎁</div>
+              </div>
+              <div class="flex-1 min-w-0 grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <div class="sm:col-span-2">
+                  <label class="block text-[11px] font-semibold text-[#155780] mb-0.5" for="giftName-${s}">Tên phần quà ${s}</label>
+                  <input id="giftName-${s}" type="text" maxlength="80" value="${escapeAttr(g.name)}" class="w-full px-2.5 py-1.5 rounded-lg border border-[#b9dceb] bg-white text-xs" />
+                </div>
+                <div>
+                  <label class="block text-[11px] font-semibold text-[#155780] mb-0.5" for="giftCost-${s}">Số kim cương (💎)</label>
+                  <input id="giftCost-${s}" type="number" min="1" max="100000" value="${escapeAttr(g.cost)}" class="w-full px-2.5 py-1.5 rounded-lg border border-[#b9dceb] bg-white text-xs tabular-nums" />
+                </div>
+              </div>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <input id="giftUrl-${s}" type="url" maxlength="250000" value="${escapeAttr(g.imageUrl)}" oninput="previewGiftUrlInput(${s}, this.value)" placeholder="Dán link URL ảnh (https://...) hoặc chọn ảnh bên cạnh" class="flex-1 min-w-[180px] px-2.5 py-1.5 rounded-lg border border-[#b9dceb] bg-white text-xs" />
+              <label class="btn-pill px-2.5 py-1.5 bg-[#e8f4ff] hover:bg-[#d6ecff] text-[#1b6ca1] border border-[#b6d8f0] text-xs font-semibold cursor-pointer shrink-0">
+                📎 Đính kèm ảnh
+                <input type="file" accept="image/*" onchange="handleGiftImageUpload(event, ${s})" class="hidden" />
+              </label>
+              <button type="button" onclick="resetGiftSlotDefault(${s})" class="px-2.5 py-1.5 rounded-lg bg-white hover:bg-[#eef6fa] text-[#4d7185] border border-[#cbd9e0] text-xs font-semibold shrink-0">
+                Ảnh mẫu
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function previewGiftUrlInput(slotIndex, val) {
+      const img = document.getElementById(`giftPreview-${slotIndex}`);
+      if (!img) return;
+      img.style.display = '';
+      if (img.nextElementSibling) img.nextElementSibling.style.display = 'none';
+      img.src = (val || '').trim() || DEFAULT_GIFTS[slotIndex - 1].imageUrl;
+    }
+
+    function handleGiftImageUpload(event, slotIndex) {
+      const file = event.target?.files?.[0];
+      if (!file) return;
+      if (!file.type || !file.type.startsWith('image/')) {
+        showToast('Vui lòng chọn tệp hình ảnh (JPG, PNG, WebP...).', 'warn');
+        event.target.value = '';
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = () => {
+        const tmpImg = new Image();
+        tmpImg.onload = () => {
+          try {
+            const maxDim = 420;
+            let w = tmpImg.width || maxDim;
+            let h = tmpImg.height || maxDim;
+            if (w > maxDim || h > maxDim) {
+              const ratio = Math.min(maxDim / w, maxDim / h);
+              w = Math.max(1, Math.round(w * ratio));
+              h = Math.max(1, Math.round(h * ratio));
+            }
+            const canvas = document.createElement('canvas');
+            canvas.width = w;
+            canvas.height = h;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(tmpImg, 0, 0, w, h);
+            let dataUrl = canvas.toDataURL('image/jpeg', 0.78);
+            if (dataUrl.length > 220000) {
+              dataUrl = canvas.toDataURL('image/jpeg', 0.58);
+            }
+            if (dataUrl.length > 240000) {
+              showToast('Ảnh vẫn quá nặng sau khi nén, hãy chọn ảnh nhỏ hơn hoặc dán link URL.', 'warn');
+              return;
+            }
+            const urlInput = document.getElementById(`giftUrl-${slotIndex}`);
+            if (urlInput) urlInput.value = dataUrl;
+            previewGiftUrlInput(slotIndex, dataUrl);
+            saveGiftSettingsFromUI(true);
+            showToast(`Đã đính kèm ảnh cho Quà ${slotIndex} và lưu tự động.`, 'success');
+          } catch (_) {
+            showToast('Không xử lý được file ảnh này.', 'warn');
+          }
+        };
+        tmpImg.onerror = () => showToast('Không đọc được định dạng ảnh này.', 'warn');
+        tmpImg.src = String(reader.result || '');
+      };
+      reader.readAsDataURL(file);
+      event.target.value = '';
+    }
+
+    function resetGiftSlotDefault(slotIndex) {
+      const def = DEFAULT_GIFTS[slotIndex - 1];
+      if (!def) return;
+      const urlInput = document.getElementById(`giftUrl-${slotIndex}`);
+      if (urlInput) urlInput.value = def.imageUrl;
+      previewGiftUrlInput(slotIndex, def.imageUrl);
+      showToast(`Đã đặt lại ảnh mẫu cho Quà ${slotIndex}. Bấm “Lưu 4 phần quà” để xác nhận.`, 'info');
+    }
+
+    function saveGiftSettingsFromUI(silent = false) {
+      const updated = DEFAULT_GIFTS.map(def => {
+        const s = def.slotIndex;
+        const nameEl = document.getElementById(`giftName-${s}`);
+        const costEl = document.getElementById(`giftCost-${s}`);
+        const urlEl = document.getElementById(`giftUrl-${s}`);
+        const name = (nameEl?.value || def.name).trim().slice(0, 80) || def.name;
+        const rawCost = Number(costEl?.value);
+        const cost = Number.isFinite(rawCost) && rawCost >= 1 ? Math.min(100000, Math.round(rawCost)) : def.cost;
+        const imageUrl = (urlEl?.value || def.imageUrl).trim().slice(0, 250000) || def.imageUrl;
+        return { id: def.id, slotIndex: s, name, cost, imageUrl };
+      });
+      appState.gifts = normalizeGiftsList(updated);
+      if (saveGiftsSafe(true)) {
+        renderCurrentView();
+        if (!silent) showToast('Đã lưu cài đặt 4 phần quà và đồng bộ!', 'success');
+      }
     }
 
     function toggleFavorite(id) {
@@ -4635,8 +5187,12 @@
       if (e.key !== 'Escape') return;
       const modal = document.getElementById('settingsModal');
       if (modal && !modal.hidden) closeSettingsModal();
+      closeGiftRevealModal();
       closeAppModal();
     });
   </script>
+
+  <!-- Firebase Auth & Firestore Cloud Sync Module -->
+  <script type="module" src="/index.html?html-proxy&amp;index=0.js"></script>
 </body>
 </html>
