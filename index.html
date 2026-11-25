@@ -4028,12 +4028,23 @@
       return escapeHtml(e.type);
     }
 
-    function signInWithGoogleAccount() {
-      if (window.ndtvCloud && window.ndtvCloud.signIn) {
-        window.ndtvCloud.signIn();
-      } else {
-        showToast('Đang khởi tạo kết nối Firebase, vui lòng thử lại sau giây lát.', 'info');
+    async function signInWithGoogleAccount() {
+      if (window.location && window.location.protocol === 'file:') {
+        showToast('Đăng nhập Google cần mở qua trang web (https:// hoặc localhost), không hỗ trợ mở trực tiếp dạng file://.', 'warn');
+        return;
       }
+      if (window.ndtvCloud && window.ndtvCloud.signIn) {
+        return window.ndtvCloud.signIn();
+      }
+      if (window.__ndtvCloudReady) {
+        showToast('Đang kết nối tới Firebase...', 'info');
+        try { await window.__ndtvCloudReady; } catch (_) {}
+        if (window.ndtvCloud && window.ndtvCloud.signIn) {
+          return window.ndtvCloud.signIn();
+        }
+      }
+      const errDetail = window.__ndtvCloudError ? (' (' + window.__ndtvCloudError + ')') : '';
+      showToast('Chưa tải được kết nối Firebase' + errDetail + '. Hãy kiểm tra mạng và tải lại trang.', 'warn');
     }
 
     function signOutGoogleAccount() {
@@ -5192,7 +5203,621 @@
     });
   </script>
 
-  <!-- Firebase Auth & Firestore Cloud Sync Module -->
-  <script type="module" src="/index.html?html-proxy&amp;index=0.js"></script>
+  <!-- Firebase Auth & Firestore Cloud Sync (Self-contained inline script) -->
+  <script>
+    window.__ndtvCloudError = '';
+    window.__ndtvCloudReady = (async function initNdtvFirebaseCloud() {
+      try {
+        const [
+          { initializeApp },
+          { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged },
+          {
+            getFirestore, doc, getDoc, getDocFromServer, setDoc, deleteDoc, updateDoc,
+            collection, getDocs, onSnapshot, serverTimestamp
+          }
+        ] = await Promise.all([
+          import(/* @vite-ignore */ 'https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js'),
+          import(/* @vite-ignore */ 'https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js'),
+          import(/* @vite-ignore */ 'https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js')
+        ]);
+
+    const firebaseConfig = {
+      projectId: 'balmy-circuit-kn2tx',
+      appId: '1:133750553911:web:3f018fc890b8d98e406eb2',
+      apiKey: 'AIzaSyCc7KS8aQ7hSVojR7Qz8bn8AORNpZzTAQA',
+      authDomain: 'balmy-circuit-kn2tx.firebaseapp.com',
+      firestoreDatabaseId: 'ai-studio-ntptingvit-a6570987-5844-4b94-9538-d8dd30fd3abb',
+      storageBucket: 'balmy-circuit-kn2tx.firebasestorage.app',
+      messagingSenderId: '133750553911'
+    };
+
+    const OperationType = {
+      CREATE: 'create',
+      UPDATE: 'update',
+      DELETE: 'delete',
+      LIST: 'list',
+      GET: 'get',
+      WRITE: 'write'
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
+    const auth = getAuth(app);
+    const googleProvider = new GoogleAuthProvider();
+    googleProvider.setCustomParameters({ prompt: 'select_account' });
+
+    function handleFirestoreError(error, operationType, path) {
+      const errInfo = {
+        error: error instanceof Error ? error.message : String(error),
+        authInfo: {
+          userId: auth.currentUser?.uid || null,
+          email: auth.currentUser?.email || null,
+          emailVerified: auth.currentUser?.emailVerified ?? null,
+          isAnonymous: auth.currentUser?.isAnonymous ?? null,
+          tenantId: auth.currentUser?.tenantId || null,
+          providerInfo: auth.currentUser?.providerData?.map(p => ({
+            providerId: p.providerId,
+            email: p.email
+          })) || []
+        },
+        operationType,
+        path
+      };
+      console.error('Firestore Error: ', JSON.stringify(errInfo));
+      throw new Error(JSON.stringify(errInfo));
+    }
+
+    async function testConnection() {
+      try {
+        await getDocFromServer(doc(db, 'test', 'connection'));
+      } catch (error) {
+        if (error instanceof Error && error.message.includes('the client is offline')) {
+          console.error('Please check your Firebase configuration.');
+        }
+      }
+    }
+    testConnection();
+
+    let currentUser = null;
+    let userRootEnsured = false;
+    let syncTimer = null;
+    let lastSyncAt = '';
+    let unsubs = [];
+
+    function clearListeners() {
+      unsubs.forEach(fn => { try { fn(); } catch (_) {} });
+      unsubs = [];
+    }
+
+    function safeStr(v, maxLen) {
+      return String(v ?? '').slice(0, maxLen);
+    }
+
+    function buildProfilePayload(uid, acc, progData, hasExistingCloud) {
+      const gt = { game1: 0, game2: 0, game3: 0, game4: 0 };
+      if (progData?.gameTotals && typeof progData.gameTotals === 'object') {
+        Object.keys(gt).forEach(k => { gt[k] = Number(progData.gameTotals[k]) || 0; });
+      }
+      const ui = progData?.ui || {};
+      const activeTab = ['all', 'study', 'games', 'mastered'].includes(ui.activeTab) ? ui.activeTab : 'all';
+      const payload = {
+        id: acc.id,
+        ownerId: uid,
+        name: safeStr(acc.name || 'Bé học', 60) || 'Bé học',
+        school: safeStr(acc.school || '', 80),
+        grade: safeStr(acc.grade || '', 20),
+        email: safeStr(acc.email || '', 100),
+        pinHash: safeStr(acc.pinHash || '', 64),
+        activeTab,
+        searchQuery: safeStr(ui.searchQuery || '', 120),
+        categoryFilter: safeStr(ui.categoryFilter || 'all', 40),
+        filterMode: safeStr(ui.filterMode || 'all', 20),
+        topicFilter: safeStr(ui.topicFilter || 'all', 80),
+        letterFilter: safeStr(ui.letterFilter || 'all', 20),
+        sortOrder: safeStr(ui.sortOrder || 'default', 20),
+        simulatedToday: safeStr(progData?.simulatedToday || '', 20),
+        studyIds: Array.isArray(progData?.studyIds) ? progData.studyIds.slice(0, 30).map(x => String(x)) : [],
+        forgottenReviewIds: Array.isArray(progData?.forgottenReviewIds) ? progData.forgottenReviewIds.slice(0, 120).map(x => String(x)) : [],
+        favoriteIds: Array.isArray(progData?.favoriteIds) ? progData.favoriteIds.slice(0, 1000).map(x => String(x)) : [],
+        progress: progData?.progress && typeof progData.progress === 'object' ? progData.progress : {},
+        gameTotals: gt,
+        spentDiamonds: Math.max(0, Number(progData?.spentDiamonds) || 0),
+        history: Array.isArray(progData?.history) ? progData.history.slice(-500) : [],
+        redemptions: Array.isArray(progData?.redemptions) ? progData.redemptions.slice(-200) : [],
+        lastLoginAt: safeStr(acc.lastLoginAt || '', 40),
+        updatedAt: serverTimestamp()
+      };
+      if (!hasExistingCloud) {
+        payload.createdAt = serverTimestamp();
+      }
+      return payload;
+    }
+
+    async function ensureUserRootDoc(user) {
+      if (!user) return;
+      const rootPath = `users/${user.uid}`;
+      const rootRef = doc(db, 'users', user.uid);
+      try {
+        const snap = await getDoc(rootRef);
+        const activeId = safeStr(appState.currentAccount?.id || '', 128);
+        if (!snap.exists()) {
+          await setDoc(rootRef, {
+            uid: user.uid,
+            email: safeStr(user.email || '', 120),
+            displayName: safeStr(user.displayName || user.email || 'Người dùng', 80),
+            activeProfileId: activeId,
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp()
+          });
+        } else if (activeId && snap.data().activeProfileId !== activeId) {
+          await updateDoc(rootRef, {
+            email: safeStr(user.email || '', 120),
+            displayName: safeStr(user.displayName || user.email || 'Người dùng', 80),
+            activeProfileId: activeId,
+            updatedAt: serverTimestamp()
+          });
+        }
+        userRootEnsured = true;
+      } catch (error) {
+        handleFirestoreError(error, OperationType.WRITE, rootPath);
+      }
+    }
+
+    async function pushProfileToCloud(profileId) {
+      if (!currentUser || !userRootEnsured || !profileId) return;
+      const acc = appState.accounts.find(a => a.id === profileId);
+      if (!acc) return;
+      const progData = lsGet(PROGRESS_PREFIX + profileId, {});
+      const path = `users/${currentUser.uid}/profiles/${profileId}`;
+      const ref = doc(db, 'users', currentUser.uid, 'profiles', profileId);
+      try {
+        const existing = await getDoc(ref);
+        if (!existing.exists()) {
+          await setDoc(ref, buildProfilePayload(currentUser.uid, acc, progData, false));
+        } else {
+          await updateDoc(ref, buildProfilePayload(currentUser.uid, acc, progData, true));
+        }
+        lastSyncAt = new Date().toISOString();
+        updateCloudSyncUI();
+      } catch (error) {
+        handleFirestoreError(error, OperationType.WRITE, path);
+      }
+    }
+
+    async function pushGiftsToCloud(giftsList) {
+      if (!currentUser || !userRootEnsured) return;
+      const list = normalizeGiftsList(giftsList);
+      for (const g of list) {
+        const path = `users/${currentUser.uid}/gifts/${g.id}`;
+        const ref = doc(db, 'users', currentUser.uid, 'gifts', g.id);
+        try {
+          const existing = await getDoc(ref);
+          const payload = {
+            id: g.id,
+            ownerId: currentUser.uid,
+            slotIndex: Number(g.slotIndex) || 1,
+            name: safeStr(g.name, 80) || 'Phần quà',
+            cost: Math.max(1, Math.min(100000, Number(g.cost) || 10)),
+            imageUrl: safeStr(g.imageUrl, 250000),
+            updatedAt: serverTimestamp()
+          };
+          if (!existing.exists()) await setDoc(ref, payload);
+          else await updateDoc(ref, {
+            slotIndex: payload.slotIndex,
+            name: payload.name,
+            cost: payload.cost,
+            imageUrl: payload.imageUrl,
+            updatedAt: serverTimestamp()
+          });
+        } catch (error) {
+          handleFirestoreError(error, OperationType.WRITE, path);
+        }
+      }
+      lastSyncAt = new Date().toISOString();
+      updateCloudSyncUI();
+    }
+
+    function applyCloudProfileDoc(d, ownerUid = '') {
+      if (!d || !d.id) return;
+      const cleanId = String(d.id).replace(/[^\w-]/g, '');
+      if (!cleanId) return;
+      let acc = appState.accounts.find(a => a.id === cleanId);
+      if (!acc) {
+        acc = {
+          id: cleanId,
+          name: d.name || 'Bé học',
+          school: d.school || '',
+          grade: d.grade || '',
+          email: d.email || '',
+          cloudUid: ownerUid || undefined,
+          createdAt: new Date().toISOString(),
+          lastLoginAt: d.lastLoginAt || null
+        };
+        if (d.pinHash) acc.pinHash = d.pinHash;
+        appState.accounts.push(acc);
+      } else {
+        acc.name = d.name || acc.name;
+        acc.school = d.school ?? acc.school;
+        acc.grade = d.grade ?? acc.grade;
+        acc.email = d.email ?? acc.email;
+        if (ownerUid) acc.cloudUid = ownerUid;
+        if (d.pinHash) acc.pinHash = d.pinHash;
+        if (d.lastLoginAt) acc.lastLoginAt = d.lastLoginAt;
+      }
+
+      const localProg = lsGet(PROGRESS_PREFIX + cleanId, null);
+      const localCount = (localProg?.history?.length || 0) + Object.keys(localProg?.progress || {}).length;
+      const cloudCount = (Array.isArray(d.history) ? d.history.length : 0) + Object.keys(d.progress || {}).length;
+      const cloudMillis = d.updatedAt && typeof d.updatedAt.toMillis === 'function' ? d.updatedAt.toMillis() : 0;
+      const localMillis = localProg?.savedAt ? Date.parse(localProg.savedAt) : 0;
+
+      // Nếu cloud mới hơn hoặc đầy đủ hơn, cập nhật localStorage cho tài khoản này
+      if (!localProg || cloudMillis >= localMillis || cloudCount >= localCount) {
+        const storedObj = {
+          progress: d.progress || {},
+          studyIds: Array.isArray(d.studyIds) ? d.studyIds : [],
+          forgottenReviewIds: Array.isArray(d.forgottenReviewIds) ? d.forgottenReviewIds : [],
+          simulatedToday: d.simulatedToday || null,
+          history: Array.isArray(d.history) ? d.history : [],
+          favoriteIds: Array.isArray(d.favoriteIds) ? d.favoriteIds : [],
+          gameTotals: d.gameTotals || { game1: 0, game2: 0, game3: 0, game4: 0 },
+          spentDiamonds: Number(d.spentDiamonds) || 0,
+          redemptions: Array.isArray(d.redemptions) ? d.redemptions : [],
+          ui: {
+            activeTab: d.activeTab || 'all',
+            pages: { all: 1, study: 1, mastered: 1 },
+            searchQuery: d.searchQuery || '',
+            categoryFilter: d.categoryFilter || 'all',
+            filterMode: d.filterMode || 'all',
+            topicFilter: d.topicFilter || 'all',
+            letterFilter: d.letterFilter || 'all',
+            sortOrder: d.sortOrder || 'default'
+          },
+          savedAt: cloudMillis ? new Date(cloudMillis).toISOString() : new Date().toISOString()
+        };
+        try { localStorage.setItem(PROGRESS_PREFIX + cleanId, JSON.stringify(storedObj)); } catch (_) {}
+      }
+    }
+
+    async function hydrateAndSubscribe(user) {
+      clearListeners();
+      userRootEnsured = false;
+      await ensureUserRootDoc(user);
+
+      // 1. Tải danh sách hồ sơ học trên cloud & hợp nhất với máy hiện tại
+      const profilesPath = `users/${user.uid}/profiles`;
+      const profilesCol = collection(db, 'users', user.uid, 'profiles');
+      let cloudProfileIds = new Set();
+      try {
+        const snap = await getDocs(profilesCol);
+        snap.forEach(docSnap => {
+          cloudProfileIds.add(docSnap.id);
+          applyCloudProfileDoc(docSnap.data(), user.uid);
+        });
+      } catch (error) {
+        handleFirestoreError(error, OperationType.LIST, profilesPath);
+      }
+
+      // Đẩy các hồ sơ cục bộ chưa có trên cloud lên (không đẩy nhầm hồ sơ thuộc Google khác)
+      for (const localAcc of appState.accounts) {
+        if (!cloudProfileIds.has(localAcc.id) && (!localAcc.cloudUid || localAcc.cloudUid === user.uid)) {
+          localAcc.cloudUid = user.uid;
+          await pushProfileToCloud(localAcc.id);
+        }
+      }
+
+      const myAccounts = appState.accounts.filter(a => !a.cloudUid || a.cloudUid === user.uid);
+      if (appState.currentAccount && appState.currentAccount.cloudUid && appState.currentAccount.cloudUid !== user.uid) {
+        appState.currentAccount = null;
+      }
+
+      // Nếu tài khoản Google mới tinh chưa có hồ sơ nào -> tự tạo 1 hồ sơ khởi đầu
+      if (myAccounts.length === 0) {
+        const starterAcc = {
+          id: genId('acc'),
+          name: safeStr(user.displayName || (user.email ? user.email.split('@')[0] : 'Bé học'), 40),
+          school: 'Gia đình',
+          grade: '1',
+          email: safeStr(user.email || '', 80),
+          cloudUid: user.uid,
+          createdAt: new Date().toISOString(),
+          lastLoginAt: new Date().toISOString()
+        };
+        appState.accounts.push(starterAcc);
+        appState.currentAccount = starterAcc;
+        saveAccounts();
+        applyAccountProgress();
+        saveStateSafe(false);
+        await pushProfileToCloud(starterAcc.id);
+      } else if (!appState.currentAccount) {
+        try {
+          const rootSnap = await getDoc(doc(db, 'users', user.uid));
+          const activeId = rootSnap.exists() ? rootSnap.data().activeProfileId : '';
+          const matched = myAccounts.find(a => a.id === activeId) || myAccounts[0];
+          if (matched) {
+            if (isAdminAcc(matched) && normEmail(user.email) === ADMIN_EMAIL && user.emailVerified) {
+              try { sessionStorage.setItem('ndtv_admin_ok', '1'); } catch (_) {}
+              appState.currentAccount = matched;
+            } else if (!isAdminAcc(matched)) {
+              appState.currentAccount = matched;
+            }
+          }
+        } catch (_) {}
+      }
+
+      saveAccounts();
+      applyingCloudSnapshot = true;
+      try {
+        applyAccountProgress();
+        updateAccountButton();
+        renderAuth();
+        renderCurrentView();
+      } finally {
+        applyingCloudSnapshot = false;
+      }
+
+      // 2. Tải 4 phần quà từ cloud (hoặc khởi tạo lên cloud nếu chưa có)
+      const giftsPath = `users/${user.uid}/gifts`;
+      const giftsCol = collection(db, 'users', user.uid, 'gifts');
+      try {
+        const gSnap = await getDocs(giftsCol);
+        if (gSnap.empty) {
+          await pushGiftsToCloud(appState.gifts);
+        } else {
+          const cloudGifts = [];
+          gSnap.forEach(d => cloudGifts.push(d.data()));
+          applyingCloudSnapshot = true;
+          appState.gifts = normalizeGiftsList(cloudGifts);
+          saveGiftsSafe(false);
+          applyingCloudSnapshot = false;
+          renderCurrentView();
+        }
+      } catch (error) {
+        handleFirestoreError(error, OperationType.LIST, giftsPath);
+      }
+
+      // 3. Lắng nghe thay đổi thời gian thực từ các thiết bị khác
+      const unsubProfiles = onSnapshot(profilesCol, (snapshot) => {
+        if (snapshot.metadata.hasPendingWrites) return;
+        let activeUpdated = false;
+        snapshot.forEach(docSnap => {
+          applyCloudProfileDoc(docSnap.data(), user.uid);
+          if (appState.currentAccount && docSnap.id === appState.currentAccount.id) {
+            activeUpdated = true;
+          }
+        });
+        saveAccounts();
+        if (activeUpdated && !appState.game) {
+          applyingCloudSnapshot = true;
+          try {
+            applyAccountProgress();
+            renderCurrentView();
+          } finally {
+            applyingCloudSnapshot = false;
+          }
+        }
+        lastSyncAt = new Date().toISOString();
+        updateCloudSyncUI();
+      }, (error) => {
+        handleFirestoreError(error, OperationType.GET, profilesPath);
+      });
+      unsubs.push(unsubProfiles);
+
+      const unsubGifts = onSnapshot(giftsCol, (snapshot) => {
+        if (snapshot.metadata.hasPendingWrites || snapshot.empty) return;
+        const list = [];
+        snapshot.forEach(d => list.push(d.data()));
+        applyingCloudSnapshot = true;
+        appState.gifts = normalizeGiftsList(list);
+        saveGiftsSafe(false);
+        applyingCloudSnapshot = false;
+        if (appState.activeTab === 'games') renderCurrentView();
+        if (appState.activeSettingsSection === 'gifts') renderGiftSettingsEditor();
+        lastSyncAt = new Date().toISOString();
+        updateCloudSyncUI();
+      }, (error) => {
+        handleFirestoreError(error, OperationType.GET, giftsPath);
+      });
+      unsubs.push(unsubGifts);
+
+      // 4. Đồng bộ kho bài dùng chung (nếu admin từng chỉnh sửa trên máy khác)
+      const catalogRef = doc(db, 'catalog', 'shared');
+      try {
+        const cSnap = await getDoc(catalogRef);
+        if (cSnap.exists()) {
+          const cd = cSnap.data();
+          if (Array.isArray(cd.items) && cd.items.length >= 1) {
+            applyingCloudSnapshot = true;
+            appState.items = cd.items.map((it, idx) => normalizeItemShape(it, idx));
+            appState.retiredNorms = Array.isArray(cd.retiredNorms) ? cd.retiredNorms : [];
+            applyAccountProgress();
+            applyingCloudSnapshot = false;
+            renderCurrentView();
+          }
+        }
+      } catch (_) {}
+
+      // 5. Nếu là Admin Google verified, đồng bộ hộp thư phản hồi
+      if (normEmail(user.email) === ADMIN_EMAIL && user.emailVerified) {
+        const fbCol = collection(db, 'feedbacks');
+        const unsubFb = onSnapshot(fbCol, (snap) => {
+          const merged = [];
+          snap.forEach(d => {
+            const x = d.data();
+            merged.push({
+              id: x.id,
+              accountId: x.accountId,
+              name: x.name,
+              school: x.school || '',
+              grade: x.grade || '',
+              email: x.email || '',
+              type: x.type,
+              message: x.message,
+              createdAt: x.createdAt && x.createdAt.toDate ? x.createdAt.toDate().toISOString() : new Date().toISOString(),
+              status: x.status || 'new'
+            });
+          });
+          try { localStorage.setItem(FEEDBACK_KEY, JSON.stringify(merged.slice(-200))); } catch (_) {}
+        }, (error) => {
+          handleFirestoreError(error, OperationType.LIST, 'feedbacks');
+        });
+        unsubs.push(unsubFb);
+      }
+
+      lastSyncAt = new Date().toISOString();
+      updateCloudSyncUI();
+    }
+
+    onAuthStateChanged(auth, async (user) => {
+      currentUser = user || null;
+      if (!user) {
+        clearListeners();
+        userRootEnsured = false;
+        updateCloudSyncUI();
+        renderAuth();
+        return;
+      }
+      try {
+        await hydrateAndSubscribe(user);
+      } catch (e) {
+        console.error('Cloud sync init error:', e);
+        showToast('Kết nối đám mây gặp trục trặc tạm thời, dữ liệu vẫn đang lưu trên máy.', 'warn');
+      }
+      updateCloudSyncUI();
+    });
+
+    window.ndtvCloud = {
+      getUser: () => currentUser,
+      getLastSyncAt: () => lastSyncAt,
+      async signIn() {
+        try {
+          await signInWithPopup(auth, googleProvider);
+          showToast('Đã đăng nhập Google và bật đồng bộ mọi thiết bị!', 'success');
+        } catch (err) {
+          const code = err?.code || '';
+          if (code === 'auth/popup-closed-by-user') return;
+          if (code === 'auth/unauthorized-domain') {
+            const host = window.location.hostname || 'tên miền hiện tại';
+            const msg = `Tên miền "${host}" chưa được cấp phép trong Firebase Console → Authentication → Settings → Authorized domains.`;
+            authError(msg);
+            showToast(msg, 'warn');
+          } else if (code === 'auth/popup-blocked') {
+            showToast('Trình duyệt đang chặn cửa sổ đăng nhập Google, hãy cho phép popup rồi thử lại.', 'warn');
+          } else {
+            showToast('Chưa đăng nhập được Google: ' + (err?.message || code), 'warn');
+          }
+        }
+      },
+      async signOut() {
+        clearListeners();
+        userRootEnsured = false;
+        await signOut(auth);
+        updateCloudSyncUI();
+        renderAuth();
+        showToast('Đã ngắt kết nối đồng bộ Google.', 'info');
+      },
+      scheduleProfileSync(profileId, immediate = false) {
+        if (!currentUser || !userRootEnsured || !profileId) return;
+        clearTimeout(syncTimer);
+        if (immediate) {
+          pushProfileToCloud(profileId).catch(() => {});
+          ensureUserRootDoc(currentUser).catch(() => {});
+        } else {
+          syncTimer = setTimeout(() => {
+            pushProfileToCloud(profileId).catch(() => {});
+          }, 700);
+        }
+      },
+      syncGifts(giftsList, immediate = true) {
+        if (!currentUser || !userRootEnsured) return;
+        if (immediate) pushGiftsToCloud(giftsList).catch(() => {});
+      },
+      async syncCatalog() {
+        if (!currentUser || normEmail(currentUser.email) !== ADMIN_EMAIL || !currentUser.emailVerified) return;
+        const path = 'catalog/shared';
+        try {
+          const ref = doc(db, 'catalog', 'shared');
+          const snap = await getDoc(ref);
+          const payload = {
+            items: appState.items.map(stripItem).slice(0, 2500),
+            retiredNorms: (appState.retiredNorms || []).slice(0, 2500),
+            updatedBy: currentUser.uid,
+            updatedAt: serverTimestamp()
+          };
+          if (!snap.exists()) await setDoc(ref, payload);
+          else await updateDoc(ref, payload);
+        } catch (error) {
+          handleFirestoreError(error, OperationType.WRITE, path);
+        }
+      },
+      async deleteProfile(profileId) {
+        if (!currentUser || !profileId) return;
+        const path = `users/${currentUser.uid}/profiles/${profileId}`;
+        try {
+          await deleteDoc(doc(db, 'users', currentUser.uid, 'profiles', profileId));
+        } catch (error) {
+          handleFirestoreError(error, OperationType.DELETE, path);
+        }
+      },
+      async submitFeedback(fb) {
+        if (!currentUser || !fb?.id) return;
+        const path = `feedbacks/${fb.id}`;
+        try {
+          await setDoc(doc(db, 'feedbacks', fb.id), {
+            id: fb.id,
+            authorId: currentUser.uid,
+            accountId: safeStr(fb.accountId, 128),
+            name: safeStr(fb.name, 60),
+            school: safeStr(fb.school || '', 80),
+            grade: safeStr(fb.grade || '', 20),
+            email: safeStr(fb.email || '', 100),
+            type: safeStr(fb.type, 40),
+            message: safeStr(fb.message, 1500),
+            status: 'new',
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp()
+          });
+        } catch (error) {
+          handleFirestoreError(error, OperationType.CREATE, path);
+        }
+      },
+      async updateFeedbackStatus(id, status) {
+        if (!currentUser || !id) return;
+        const path = `feedbacks/${id}`;
+        try {
+          await updateDoc(doc(db, 'feedbacks', id), {
+            status: status === 'done' ? 'done' : 'new',
+            updatedAt: serverTimestamp()
+          });
+        } catch (error) {
+          handleFirestoreError(error, OperationType.UPDATE, path);
+        }
+      },
+      async deleteFeedbackDoc(id) {
+        if (!currentUser || !id) return;
+        const path = `feedbacks/${id}`;
+        try {
+          await deleteDoc(doc(db, 'feedbacks', id));
+        } catch (error) {
+          handleFirestoreError(error, OperationType.DELETE, path);
+        }
+      },
+      async syncAllNow(announce = false) {
+        if (!currentUser) {
+          showToast('Bạn cần đăng nhập Google trước khi đồng bộ.', 'warn');
+          return;
+        }
+        await ensureUserRootDoc(currentUser);
+        if (appState.currentAccount) await pushProfileToCloud(appState.currentAccount.id);
+        await pushGiftsToCloud(appState.gifts);
+        if (announce) showToast('Đã đồng bộ toàn bộ lịch sử học, kim cương và quà tặng lên đám mây!', 'success');
+      }
+    };
+      } catch (initErr) {
+        window.__ndtvCloudError = initErr instanceof Error ? initErr.message : String(initErr);
+        console.error('Firebase init failed:', initErr);
+      }
+    })();
+  </script>
 </body>
 </html>
